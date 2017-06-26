@@ -36,10 +36,7 @@ pre-publish:
 # CircleCI test
 ci_test: build
 	./gradlew test
-	make -C examples/jre-simple run
 
-# The version of the Android and JRE libraries is kept in lock-step as the
-# majority of the code is the same.
 inc-version:
 	@git diff-index --quiet HEAD || (echo "git has uncommitted changes. Refusing to publish." && false)
 	awk 'BEGIN { FS = "." }; { printf("%s.%d.%d", $$1, $$2, $$3+1) }' gradle.properties > gradle.properties.incr
