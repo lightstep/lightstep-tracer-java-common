@@ -8,7 +8,7 @@ see [lightstep-com.lightstep.tracer-java](https://github.com/lightstep/lightstep
 
 # common
 
-Houses the com.lightstep.tracer.shared source files and assets for the JRE and Android libraries, including the generated LightStep Thrift code.
+Houses the com.lightstep.tracer.shared source files and assets for the JRE and Android libraries.
 
 ## Development info
 
