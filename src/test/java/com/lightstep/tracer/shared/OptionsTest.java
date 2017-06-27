@@ -117,10 +117,6 @@ public class OptionsTest {
         Object componentName = options.tags.get(COMPONENT_NAME_KEY);
         assertNotNull(componentName);
 
-        // the actual value will vary depending on how the tests are run, but should always
-        // contain 'Main'
-        assertTrue("Unexpected sun.java.command value", componentName.toString().contains("Main"));
-
         Object legacyComponentName = options.tags.get(LEGACY_COMPONENT_NAME_KEY);
         assertEquals(componentName, legacyComponentName);
     }
