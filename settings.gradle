@@ -1,4 +1,0 @@
-rootProject.name = 'lightstep-tracer-java-common'
-
-include "java-common"
-project(":java-common").projectDir = file("common")
