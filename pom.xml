@@ -6,7 +6,7 @@
     
     <groupId>com.lightstep.tracer</groupId>
     <artifactId>java-common</artifactId>
-    <version>0.12.6</version>
+    <version>0.12.7</version>
     <packaging>jar</packaging>
     <description>The LightStep OpenTracing Tracer implementation for Java</description>
     <url>https://github.com/lightstep/lightstep-tracer-java-common</url>
