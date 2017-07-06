@@ -30,7 +30,4 @@ publish: build
 	@test -n "$$BINTRAY_GPG_PASSPHRASE" || (echo "$$BINTRAY_GPG_PASSPHRASE must be defined to publish" && false)
 
 	@git diff-index --quiet HEAD || (echo "git has uncommitted changes. Refusing to publish." && false)
-	#./inc-version.sh
-	#mvn deploy
-
-	curl -H "X-GPG-PASSPHRASE:$$$$BINTRAY_GPG_PASSPHRASE" -u $$BINTRAY_USER:$$BINTRAY_API_KEY -X POST https://api.bintray.com/gpg/lightstep/maven/java-common/versions/0.12.7
+	./inc-version.sh
