@@ -1,6 +1,24 @@
 <a name="Pending Release"></a>
 ## [Pending Release](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/master...0.12.5)
 
+<a name="0.13.0"></a>
+## [0.13.0](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.12.7...0.13.0)
+* Fixed issues with Bintray Maven sync
+* Minor Java IDE warning cleanup, it is not believed that these changes will impact users, but some 
+access levels did change, and some variables were removed
+* Upgrade from io.grpc 1.2.0 to 1.4.0
+* Upgrade io.netty from 1.1.33.Fork26 to 2.0.5.Final
+* Changed netty dependencies to scope provided
+
+<a name="0.12.7"></a>
+## [0.12.7](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.12.6...0.12.7)
+* Converted repository from Gradle to Maven
+
+<a name="0.12.6"></a>
+## [0.12.6](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.12.5...0.12.6)
+* Create new repository for just java-common code
+* Added null checks to SpanBuilder
+
 <a name="0.12.5"></a>
 ## [0.12.5](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.12.4...0.12.5)
 * Bugfix: upgrade to grpc:1.2.0 everywhere
