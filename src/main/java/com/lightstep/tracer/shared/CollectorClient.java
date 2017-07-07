@@ -12,7 +12,7 @@ import io.grpc.StatusRuntimeException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class CollectorClient {
+class CollectorClient {
 
   private final ManagedChannelBuilder<?> channelBuilder;
   private ManagedChannel channel;
@@ -21,23 +21,16 @@ public class CollectorClient {
   private final AbstractTracer tracer;
 
   /**
-   * Constructor client for accessing CollectorService at {@code host:port}
-   */
-  public CollectorClient(AbstractTracer tracer, String host, int port) {
-    this(tracer, ManagedChannelBuilder.forAddress(host, port));
-  }
-
-  /**
    * Constructor client for accessing CollectorService using the existing channel
    */
-  public CollectorClient(AbstractTracer tracer, ManagedChannelBuilder<?> channelBuilder) {
+  CollectorClient(AbstractTracer tracer, ManagedChannelBuilder<?> channelBuilder) {
     this.tracer = tracer;
     this.channelBuilder = channelBuilder;
     connect();
-    clientMetrics = new ClientMetrics(Util.epochTimeMicrosToProtoTime(Util.nowMicrosApproximate()));
+    clientMetrics = new ClientMetrics();
   }
 
-  public synchronized void shutdown() {
+  synchronized void shutdown() {
     try {
       channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
@@ -49,13 +42,13 @@ public class CollectorClient {
   /**
    * Blocking call to report
    */
-  public synchronized ReportResponse report(ReportRequest.Builder reqBuilder) {
+  synchronized ReportResponse report(ReportRequest.Builder reqBuilder) {
     ReportResponse resp = null;
     if (clientMetrics != null) {
       reqBuilder.setInternalMetrics(clientMetrics.toGrpc());
     }
     // reset client metrics
-    clientMetrics = new ClientMetrics(Util.epochTimeMicrosToProtoTime(Util.nowMicrosApproximate()));
+    clientMetrics = new ClientMetrics();
 
     // send report to collector
     boolean success = false;
@@ -90,20 +83,20 @@ public class CollectorClient {
     blockingStub = CollectorServiceGrpc.newBlockingStub(channel);
   }
 
-  public synchronized void reconnect() {
+  synchronized void reconnect() {
     this.shutdown();
     connect();
   }
 
-  public synchronized void dropSpan() {
+  synchronized void dropSpan() {
     clientMetrics.spansDropped++;
   }
 
-  public synchronized void dropSpans(List<Span> spans) {
+  private synchronized void dropSpans(List<Span> spans) {
     clientMetrics.spansDropped += spans.size();
   }
 
-  public ClientMetrics getClientMetrics() {
+  ClientMetrics getClientMetrics() {
     return clientMetrics;
   }
 }

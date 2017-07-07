@@ -21,14 +21,17 @@ public class Status {
         }
     }
 
+    @SuppressWarnings("unused")
     public long getSpansDropped() {
         return spansDropped;
     }
 
+    @SuppressWarnings("unused")
     public boolean hasTag(String key) {
         return tags.containsKey(key);
     }
 
+    @SuppressWarnings("unused")
     public String getTag(String key) {
         return tags.get(key);
     }
