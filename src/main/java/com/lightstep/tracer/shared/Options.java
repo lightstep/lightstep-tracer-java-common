@@ -39,6 +39,7 @@ public final class Options {
     /**
      * Default maximum number of Spans buffered locally (a protective mechanism)
      */
+    @SuppressWarnings("WeakerAccess")
     public static final int DEFAULT_MAX_BUFFERED_SPANS = 1000;
 
     /**
@@ -273,6 +274,7 @@ public final class Options {
          * only occur on explicit calls to Flush(); If not set, will default to
          * {@code DEFAULT_REPORTING_INTERVAL_MILLIS}.
          */
+        @SuppressWarnings("SameParameterValue")
         public OptionsBuilder withDisableReportingLoop(boolean disable) {
             this.disableReportingLoop = disable;
             return this;
@@ -287,7 +289,8 @@ public final class Options {
             return this;
         }
 
-	public OptionsBuilder withClockSkewCorrection(boolean clockCorrection) {
+	@SuppressWarnings("SameParameterValue")
+    public OptionsBuilder withClockSkewCorrection(boolean clockCorrection) {
 	    this.useClockCorrection = clockCorrection;
 	    return this;
 	}
@@ -379,6 +382,7 @@ public final class Options {
      *              object is current set to the default value for maxReportingIntervalMillis.
      * @throws IllegalArgumentException If this Options object has an malformed collector url.
      */
+    @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
     public Options setDefaultReportingIntervalMillis(int value) {
         if (maxReportingIntervalMillis != DEFAULT_REPORTING_INTERVAL_MILLIS) {
             return this;
@@ -397,6 +401,7 @@ public final class Options {
      * Provided so implementations of AbstractTracer can turn off resetClient by default.
      * For example, Android tracer may not want resetClient.
      */
+    @SuppressWarnings("unused")
     public Options disableResetClient() {
         try {
             return new OptionsBuilder(this).withResetClient(false).build();

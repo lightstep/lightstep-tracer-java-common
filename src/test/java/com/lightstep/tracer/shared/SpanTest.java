@@ -3,7 +3,6 @@ package com.lightstep.tracer.shared;
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Log;
 import com.lightstep.tracer.grpc.Span.Builder;
-import java.util.logging.LogRecord;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

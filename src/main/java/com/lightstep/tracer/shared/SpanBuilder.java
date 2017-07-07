@@ -1,16 +1,15 @@
 package com.lightstep.tracer.shared;
 
 import com.lightstep.tracer.grpc.KeyValue;
-
 import com.lightstep.tracer.grpc.Reference;
 import com.lightstep.tracer.grpc.Reference.Relationship;
 import io.opentracing.ActiveSpan;
 import io.opentracing.BaseSpan;
+import io.opentracing.Tracer;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.opentracing.Tracer;
 
 import static io.opentracing.References.CHILD_OF;
 import static io.opentracing.References.FOLLOWS_FROM;
@@ -112,12 +111,14 @@ public class SpanBuilder implements Tracer.SpanBuilder {
      * Sets the traceId and the spanId for the span being created. If the span has a parent, the
      * traceId of the parent will override this traceId value.
      */
+    @SuppressWarnings({"WeakerAccess", "UnusedReturnValue", "SameParameterValue"})
     public Tracer.SpanBuilder withTraceIdAndSpanId(long traceId, long spanId) {
         this.traceId = traceId;
         this.spanId = spanId;
         return this;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Iterable<Map.Entry<String, String>> baggageItems() {
         if (parent == null) {
             return Collections.emptySet();

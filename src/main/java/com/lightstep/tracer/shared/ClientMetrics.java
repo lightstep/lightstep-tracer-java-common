@@ -1,8 +1,8 @@
 package com.lightstep.tracer.shared;
 
-import com.google.protobuf.Timestamp;
 import com.lightstep.tracer.grpc.InternalMetrics;
 import com.lightstep.tracer.grpc.MetricsSample;
+
 import java.util.ArrayList;
 
 /**
@@ -16,24 +16,9 @@ class ClientMetrics {
      */
     private static final int NUMBER_OF_COUNTS = 1;
     long spansDropped;
-    final Timestamp startTime;
 
-
-    ClientMetrics(Timestamp startTime) {
+    ClientMetrics() {
         spansDropped = 0;
-        this.startTime = startTime;
-    }
-
-    ClientMetrics(ClientMetrics that) {
-        spansDropped = that.spansDropped;
-        startTime = that.startTime;
-    }
-
-    void merge(ClientMetrics that) {
-        if (that == null) {
-            return;
-        }
-        spansDropped += that.spansDropped;
     }
 
     InternalMetrics toGrpc() {
