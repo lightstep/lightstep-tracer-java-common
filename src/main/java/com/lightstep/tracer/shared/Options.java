@@ -126,7 +126,7 @@ public final class Options {
         this.disableReportingLoop = disableReportingLoop;
         this.resetClient = resetClient;
         this.tags = tags;
-	    this.useClockCorrection = useClockCorrection;
+        this.useClockCorrection = useClockCorrection;
         this.spanSource = spanSource;
         this.deadlineMillis = deadlineMillis;
     }
