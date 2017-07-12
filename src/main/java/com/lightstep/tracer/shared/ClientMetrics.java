@@ -4,6 +4,7 @@ import com.lightstep.tracer.grpc.InternalMetrics;
 import com.lightstep.tracer.grpc.MetricsSample;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Tracks client metrics for internal purposes.
@@ -15,17 +16,25 @@ class ClientMetrics {
      * tracked.
      */
     private static final int NUMBER_OF_COUNTS = 1;
-    long spansDropped;
+    private final AtomicLong spansDropped;
 
     ClientMetrics() {
-        spansDropped = 0;
+        spansDropped = new AtomicLong(0);
     }
 
-    InternalMetrics toGrpc() {
+    void dropSpans(int size) {
+        spansDropped.addAndGet(size);
+    }
+
+    InternalMetrics toGrpcAndReset() {
+        long val = spansDropped.getAndSet(0);
         ArrayList<MetricsSample> counts = new ArrayList<>(NUMBER_OF_COUNTS);
         counts.add(MetricsSample.newBuilder().setName("spans.dropped")
-            .setIntValue(spansDropped).build());
+                .setIntValue(val).build());
         return InternalMetrics.newBuilder().addAllCounts(counts).build();
+    }
 
+    long getSpansDropped() {
+        return spansDropped.get();
     }
 }

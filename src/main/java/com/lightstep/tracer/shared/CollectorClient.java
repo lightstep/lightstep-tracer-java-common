@@ -18,7 +18,7 @@ class CollectorClient {
   private final ManagedChannelBuilder<?> channelBuilder;
   private ManagedChannel channel;
   private CollectorServiceBlockingStub blockingStub;
-  private ClientMetrics clientMetrics;
+  private final ClientMetrics clientMetrics;
   private final AbstractTracer tracer;
   private final CallOptions callOptions;
 
@@ -47,11 +47,7 @@ class CollectorClient {
    */
   synchronized ReportResponse report(ReportRequest.Builder reqBuilder) {
     ReportResponse resp = null;
-    if (clientMetrics != null) {
-      reqBuilder.setInternalMetrics(clientMetrics.toGrpc());
-    }
-    // reset client metrics
-    clientMetrics = new ClientMetrics();
+    reqBuilder.setInternalMetrics(clientMetrics.toGrpcAndReset());
 
     // send report to collector
     boolean success = false;
@@ -91,12 +87,12 @@ class CollectorClient {
     connect();
   }
 
-  synchronized void dropSpan() {
-    clientMetrics.spansDropped++;
+  void dropSpan() {
+    clientMetrics.dropSpans(1);
   }
 
-  private synchronized void dropSpans(List<Span> spans) {
-    clientMetrics.spansDropped += spans.size();
+  private void dropSpans(List<Span> spans) {
+    clientMetrics.dropSpans(spans.size());
   }
 
   ClientMetrics getClientMetrics() {
