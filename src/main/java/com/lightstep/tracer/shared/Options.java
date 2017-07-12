@@ -47,6 +47,11 @@ public final class Options {
      */
     private static final long DEFAULT_REPORTING_INTERVAL_MILLIS = 3000;
 
+    /**
+     * Default duration the tracer should wait for a response from the collector when sending a report.
+     */
+    private static final long DEFAULT_DEADLINE_MILLIS = 30000;
+
     static final String HTTPS = "https";
 
     static final String HTTP = "http";
@@ -105,9 +110,14 @@ public final class Options {
     final boolean useClockCorrection;
     final ActiveSpanSource spanSource;
 
+    /**
+     * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
+     */
+    final long deadlineMillis;
+
     private Options(String accessToken, URL collectorUrl, long maxReportingIntervalMillis,
                     int maxBufferedSpans, int verbosity, boolean disableReportingLoop, boolean resetClient, Map<String, Object> tags,
-                    boolean useClockCorrection, ActiveSpanSource spanSource) {
+                    boolean useClockCorrection, ActiveSpanSource spanSource, long deadlineMillis) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
         this.maxReportingIntervalMillis = maxReportingIntervalMillis;
@@ -116,8 +126,9 @@ public final class Options {
         this.disableReportingLoop = disableReportingLoop;
         this.resetClient = resetClient;
         this.tags = tags;
-	this.useClockCorrection = useClockCorrection;
+        this.useClockCorrection = useClockCorrection;
         this.spanSource = spanSource;
+        this.deadlineMillis = deadlineMillis;
     }
 
     long getGuid() {
@@ -138,6 +149,7 @@ public final class Options {
         private boolean useClockCorrection = true;
         private Map<String, Object> tags = new HashMap<>();
         private ActiveSpanSource spanSource;
+        private long deadlineMillis = -1;
 
         public OptionsBuilder() {
         }
@@ -155,6 +167,7 @@ public final class Options {
             this.tags = options.tags;
             this.spanSource = options.spanSource;
             this.useClockCorrection = options.useClockCorrection;
+            this.deadlineMillis = options.deadlineMillis;
         }
 
         /**
@@ -308,9 +321,10 @@ public final class Options {
             defaultMaxReportingIntervalMillis();
             defaultMaxBufferedSpans();
             defaultSpanSource();
+            defaultDeadlineMillis();
 
             return new Options(accessToken, getCollectorUrl(), maxReportingIntervalMillis, maxBufferedSpans, verbosity,
-                    disableReportingLoop, resetClient, tags, useClockCorrection, spanSource);
+                    disableReportingLoop, resetClient, tags, useClockCorrection, spanSource, deadlineMillis);
         }
 
         private void defaultSpanSource() {
@@ -351,6 +365,12 @@ public final class Options {
                         tags.put(LEGACY_COMPONENT_NAME_KEY, name);
                     }
                 }
+            }
+        }
+
+        private void defaultDeadlineMillis() {
+            if (deadlineMillis < 0) {
+                deadlineMillis = DEFAULT_DEADLINE_MILLIS;
             }
         }
 

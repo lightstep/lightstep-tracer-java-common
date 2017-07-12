@@ -1,5 +1,7 @@
 package com.lightstep.tracer.grpc;
 
+import io.grpc.CallOptions;
+
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 import static io.grpc.stub.ClientCalls.asyncUnaryCall;
 import static io.grpc.stub.ClientCalls.blockingUnaryCall;
@@ -40,8 +42,8 @@ public class CollectorServiceGrpc {
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
   public static CollectorServiceBlockingStub newBlockingStub(
-      io.grpc.Channel channel) {
-    return new CollectorServiceBlockingStub(channel);
+          io.grpc.Channel channel, CallOptions callOptions) {
+    return new CollectorServiceBlockingStub(channel, callOptions);
   }
 
   /**
