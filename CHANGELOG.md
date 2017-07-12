@@ -1,5 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/master...0.12.5)
+## [Pending Release](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/master...0.13.1)
+
+<a name="0.13.1"></a>
+## [0.13.1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.13.0...0.13.1)
+* Removed unnecessary locks in CollectorClient around droppedSpans count
+* Added deadlineMillis option (default 30s) to control amount of time report request will wait for a collector response
 
 <a name="0.13.0"></a>
 ## [0.13.0](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.12.7...0.13.0)
