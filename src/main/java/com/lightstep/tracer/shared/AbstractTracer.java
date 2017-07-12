@@ -621,7 +621,7 @@ public abstract class AbstractTracer implements Tracer {
         synchronized (mutex) {
             long spansDropped = 0;
             if (client != null) {
-                spansDropped = client.getClientMetrics().spansDropped;
+                spansDropped = client.getClientMetrics().getSpansDropped();
             }
             return new Status(reporter.getTagsList(), spansDropped);
         }

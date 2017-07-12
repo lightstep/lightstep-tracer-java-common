@@ -33,4 +33,8 @@ class ClientMetrics {
                 .setIntValue(val).build());
         return InternalMetrics.newBuilder().addAllCounts(counts).build();
     }
+
+    long getSpansDropped() {
+        return spansDropped.get();
+    }
 }
