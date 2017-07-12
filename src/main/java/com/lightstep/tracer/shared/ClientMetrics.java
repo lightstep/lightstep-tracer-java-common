@@ -16,7 +16,7 @@ class ClientMetrics {
      * tracked.
      */
     private static final int NUMBER_OF_COUNTS = 1;
-    private AtomicLong spansDropped;
+    private final AtomicLong spansDropped;
 
     ClientMetrics() {
         spansDropped = new AtomicLong(0);
