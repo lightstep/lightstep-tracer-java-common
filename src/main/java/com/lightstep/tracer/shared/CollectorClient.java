@@ -1,12 +1,11 @@
 package com.lightstep.tracer.shared;
 
 import com.google.protobuf.ByteString;
-import com.lightstep.tracer.grpc.Span;
 import com.lightstep.tracer.grpc.CollectorServiceGrpc;
 import com.lightstep.tracer.grpc.CollectorServiceGrpc.CollectorServiceBlockingStub;
 import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
-import io.grpc.CallOptions;
+import com.lightstep.tracer.grpc.Span;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
@@ -20,7 +19,7 @@ class CollectorClient {
   private CollectorServiceBlockingStub blockingStub;
   private final ClientMetrics clientMetrics;
   private final AbstractTracer tracer;
-  private final CallOptions callOptions;
+  private final long deadlineMillis;
 
   /**
    * Constructor client for accessing CollectorService using the existing channel
@@ -28,7 +27,7 @@ class CollectorClient {
   CollectorClient(AbstractTracer tracer, ManagedChannelBuilder<?> channelBuilder, long deadlineMillis) {
     this.tracer = tracer;
     this.channelBuilder = channelBuilder;
-    callOptions = CallOptions.DEFAULT.withDeadlineAfter(deadlineMillis, TimeUnit.MILLISECONDS);
+    this.deadlineMillis = deadlineMillis;
     connect();
     clientMetrics = new ClientMetrics();
   }
@@ -52,7 +51,9 @@ class CollectorClient {
     // send report to collector
     boolean success = false;
     try {
-      resp = blockingStub.report(reqBuilder.build());
+      resp = blockingStub.
+              withDeadlineAfter(deadlineMillis, TimeUnit.MILLISECONDS).
+              report(reqBuilder.build());
 
       // check response for errors
       if (resp.getErrorsCount() != 0) {
@@ -79,7 +80,7 @@ class CollectorClient {
 
   private synchronized void connect() {
     channel = channelBuilder.build();
-    blockingStub = CollectorServiceGrpc.newBlockingStub(channel, callOptions);
+    blockingStub = CollectorServiceGrpc.newBlockingStub(channel);
   }
 
   synchronized void reconnect() {
