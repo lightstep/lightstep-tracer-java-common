@@ -1,5 +1,11 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/master...0.13.1)
+## [Pending Release](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/master...0.13.2)
+
+<a name="0.13.2"></a>
+## [0.13.2](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.13.1...0.13.2)
+* Fixed bug in 0.13.1 use of deadline for GRPC calls. Was setting a single deadline so all calls after
+30s would fail. Now sets the deadline per call.
+* Send report once buffer reaches 50% capacity.
 
 <a name="0.13.1"></a>
 ## [0.13.1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.13.0...0.13.1)
