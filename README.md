@@ -3,8 +3,8 @@
 [![MIT license](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 The core LightStep distributed tracing library for the Java runtime environment. For specific documentation
-see [lightstep-com.lightstep.tracer-java](https://github.com/lightstep/lightstep-com.lightstep.tracer-java) or 
-[lightstep-com.lightstep.tracer-android](https://github.com/lightstep/lightstep-com.lightstep.tracer-android).
+see [lightstep-tracer-java](https://github.com/lightstep/lightstep-tracer-java) or
+[lightstep-tracer-android](https://github.com/lightstep/lightstep-tracer-android).
 
 # common
 
