@@ -1,6 +1,11 @@
 <a name="Pending Release"></a>
 ## [Pending Release](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/master...0.13.2)
 
+<a name="0.13.3-RC1"></a>
+## [0.13.3-RC1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.13.3-RC1...0.13.2)
+
+* Upgraded to io.opentracing 0.31.0-RC1
+
 <a name="0.13.2"></a>
 ## [0.13.2](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.13.1...0.13.2)
 * Fixed bug in 0.13.1 use of deadline for GRPC calls. Was setting a single deadline so all calls after

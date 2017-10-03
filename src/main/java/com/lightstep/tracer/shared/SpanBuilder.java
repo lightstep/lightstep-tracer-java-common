@@ -3,8 +3,7 @@ package com.lightstep.tracer.shared;
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Reference;
 import com.lightstep.tracer.grpc.Reference.Relationship;
-import io.opentracing.ActiveSpan;
-import io.opentracing.BaseSpan;
+import io.opentracing.Scope;
 import io.opentracing.Tracer;
 
 import java.util.Collections;
@@ -47,11 +46,11 @@ public class SpanBuilder implements Tracer.SpanBuilder {
     }
 
     @Override
-    public Tracer.SpanBuilder asChildOf(BaseSpan<?> parent) {
+    public Tracer.SpanBuilder asChildOf(io.opentracing.Span parent) {
         if (parent == null) {
             return this;
         }
-        return asChildOf(parent.context());
+        return addReference(CHILD_OF, parent.context());
     }
 
     @Override
@@ -97,9 +96,13 @@ public class SpanBuilder implements Tracer.SpanBuilder {
     }
 
     @Override
-    public ActiveSpan startActive() {
-        io.opentracing.Span span = this.startManual();
-        return tracer.makeActive(span);
+    public Scope startActive() {
+        return tracer.scopeManager().activate(startManual());
+    }
+
+    @Override
+    public Scope startActive(boolean finishOnClose) {
+        return tracer.scopeManager().activate(startManual(), finishOnClose);
     }
 
     @Override
@@ -128,12 +131,12 @@ public class SpanBuilder implements Tracer.SpanBuilder {
     }
 
     private SpanContext activeSpanContext() {
-        ActiveSpan handle = this.tracer.activeSpan();
-        if (handle == null) {
+        Scope handle = this.tracer.scopeManager().active();
+        if (handle == null || handle.span() == null) {
             return null;
         }
 
-        io.opentracing.SpanContext spanContext = handle.context();
+        io.opentracing.SpanContext spanContext = handle.span().context();
         if(spanContext instanceof SpanContext) {
             return (SpanContext) spanContext;
         }
