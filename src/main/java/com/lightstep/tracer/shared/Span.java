@@ -158,13 +158,7 @@ public class Span implements io.opentracing.Span {
         return log(timestampMicroseconds, message, null);
     }
 
-    @Override
-    public Span log(String message, /* @Nullable */ Object payload) {
-        return log(nowMicros(), message, payload);
-    }
-
-    @Override
-    public Span log(long timestampMicroseconds, String message, /* @Nullable */ Object payload) {
+    private Span log(long timestampMicroseconds, String message, /* @Nullable */ Object payload) {
         Map<String, Object> fields = new HashMap<>();
         fields.put("message", message);
         if (payload != null) {
