@@ -1,6 +1,11 @@
 package com.lightstep.tracer.shared;
 
-import com.lightstep.tracer.grpc.*;
+import com.lightstep.tracer.grpc.Auth;
+import com.lightstep.tracer.grpc.Command;
+import com.lightstep.tracer.grpc.KeyValue;
+import com.lightstep.tracer.grpc.ReportRequest;
+import com.lightstep.tracer.grpc.ReportResponse;
+import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.ManagedChannelProvider.ProviderNotFoundException;
@@ -19,7 +24,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.DEBUG;
 import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.ERROR;
-import static com.lightstep.tracer.shared.Options.*;
+import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
+import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
+import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
 
 public abstract class AbstractTracer implements Tracer {
     // Maximum interval between reports
@@ -101,11 +108,11 @@ public abstract class AbstractTracer implements Tracer {
         // System.currentTimeMillis()). We store an absolute start timestamp but at
         // least get a precise duration at Span.finish() time via
         // startTimestampRelativeNanos (search for it below).
-	if (options.useClockCorrection) {
-	    clockState = new ClockState();
-	} else {
-	    clockState = new ClockState.NoopClockState();
-	}
+        if (options.useClockCorrection) {
+            clockState = new ClockState();
+        } else {
+            clockState = new ClockState.NoopClockState();
+        }
 
         auth = Auth.newBuilder().setAccessToken(options.accessToken);
         reporter = Reporter.newBuilder().setReporterId(options.getGuid());
@@ -381,7 +388,6 @@ public abstract class AbstractTracer implements Tracer {
      */
     @SuppressWarnings("unused")
     protected boolean sendReport(boolean explicitRequest) {
-
         synchronized (mutex) {
             if (reportInProgress) {
                 debug("Report in progress. Skipping.");
@@ -441,9 +447,11 @@ public abstract class AbstractTracer implements Tracer {
             }
         }
 
-        ReportRequest.Builder reqBuilder = ReportRequest.newBuilder().setReporter(reporter)
-            .setAuth(auth).addAllSpans(spans)
-            .setTimestampOffsetMicros(Util.safeLongToInt(clockState.offsetMicros()));
+        ReportRequest.Builder reqBuilder = ReportRequest.newBuilder()
+                .setReporter(reporter)
+                .setAuth(auth)
+                .addAllSpans(spans)
+                .setTimestampOffsetMicros(Util.safeLongToInt(clockState.offsetMicros()));
 
         long originMicros = Util.nowMicrosApproximate();
         long originRelativeNanos = System.nanoTime();
