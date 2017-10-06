@@ -1,75 +1,78 @@
 package com.lightstep.tracer.shared;
 
-import com.lightstep.tracer.grpc.SpanContext.Builder;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class SpanContext implements io.opentracing.SpanContext {
-    private final Builder ctxBuilder = com.lightstep.tracer.grpc.SpanContext.newBuilder();
+    private final long traceId;
+    private final long spanId;
+    private final Map<String, String> baggage;
 
     public SpanContext() {
-        ctxBuilder.setTraceId(Util.generateRandomGUID());
-        ctxBuilder.setSpanId(Util.generateRandomGUID());
+        this(Util.generateRandomGUID(), Util.generateRandomGUID());
     }
 
     public SpanContext(long traceId, long spanId) {
-        ctxBuilder.setTraceId(traceId);
-        ctxBuilder.setSpanId(spanId);
-    }
-
-    SpanContext(long traceId, long spanId, Map<String, String> baggage) {
-        this(traceId, spanId);
-        if (baggage != null) {
-            ctxBuilder.putAllBaggage(baggage);
-        }
-    }
-
-    SpanContext(long traceId, Map<String, String> baggage) {
-        ctxBuilder.setTraceId(traceId);
-        ctxBuilder.setSpanId(Util.generateRandomGUID());
-        if (baggage != null) {
-            ctxBuilder.putAllBaggage(baggage);
-        }
+        this(traceId, spanId, null);
     }
 
     SpanContext(long traceId) {
-        this(traceId, null);
+        this(traceId, Util.generateRandomGUID());
+    }
+
+    SpanContext(long traceId, Map<String, String> baggage) {
+        this(traceId, Util.generateRandomGUID(), baggage);
+    }
+
+    SpanContext(Long traceId, Long spanId, Map<String, String> baggage) {
+        if (traceId == null) {
+            traceId = Util.generateRandomGUID();
+        }
+
+        if (spanId == null) {
+            spanId = Util.generateRandomGUID();
+        }
+
+        if (baggage == null) {
+            baggage = new HashMap<>();
+        }
+
+        this.traceId = traceId;
+        this.spanId = spanId;
+        this.baggage = baggage;
     }
 
     @SuppressWarnings("WeakerAccess")
     public long getSpanId() {
-        return ctxBuilder.getSpanId();
+        return this.spanId;
     }
 
     @SuppressWarnings("WeakerAccess")
     public long getTraceId() {
-        return ctxBuilder.getTraceId();
+        return this.traceId;
     }
 
     String getBaggageItem(String key) {
-        return ctxBuilder.getBaggageOrDefault(key, null);
+        return this.baggage.get(key);
     }
 
     SpanContext withBaggageItem(String key, String value) {
-        Map<String, String> baggageCopy;
-        if (ctxBuilder.getBaggageMap() != null) {
-            baggageCopy = new HashMap<>(ctxBuilder.getBaggageMap());
-        } else {
-            baggageCopy = new HashMap<>();
-        }
-        baggageCopy.put(key, value);
-        ctxBuilder.putBaggage(key, value);
-        return new SpanContext(ctxBuilder.getTraceId(), ctxBuilder.getSpanId(), baggageCopy);
+        // This is really a "set" not a "with" but keeping as is to preserve behavior.
+        this.baggage.put(key, value);
+        return new SpanContext(this.getTraceId(), this.getSpanId(), this.baggage);
     }
 
     @Override
     public Iterable<Map.Entry<String, String>> baggageItems() {
-        return ctxBuilder.getBaggageMap().entrySet();
+        return this.baggage.entrySet();
     }
 
     @SuppressWarnings("WeakerAccess")
-    public Builder getInnerSpanCtx() {
-        return ctxBuilder;
+    public com.lightstep.tracer.grpc.SpanContext getInnerSpanCtx() {
+        return com.lightstep.tracer.grpc.SpanContext.newBuilder()
+                .setTraceId(this.getTraceId())
+                .setSpanId(this.getSpanId())
+                .putAllBaggage(this.baggage)
+                .build();
     }
 }

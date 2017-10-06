@@ -203,12 +203,12 @@ public class Span implements io.opentracing.Span {
         out.append("\"");
         for (int i = 0, length = value.length(); i < length; i++) {
             char c = value.charAt(i);
-      /*
-       * From RFC 4627, "All Unicode characters may be placed within the
-       * quotation marks except for the characters that must be escaped:
-       * quotation mark, reverse solidus, and the control characters
-       * (U+0000 through U+001F)."
-       */
+            /*
+             * From RFC 4627, "All Unicode characters may be placed within the
+             * quotation marks except for the characters that must be escaped:
+             * quotation mark, reverse solidus, and the control characters
+             * (U+0000 through U+001F)."
+             */
             switch (c) {
                 case '"':
                 case '\\':

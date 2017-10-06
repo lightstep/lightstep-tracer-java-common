@@ -53,15 +53,4 @@ public class TextMapPropagatorTest {
         assertEquals(spanContext.getTraceId(), result.getTraceId());
         assertEquals(spanContext.getSpanId(), result.getSpanId());
     }
-
-    @Test
-    public void testUnHex() {
-        assertEquals(1, TextMapPropagator.unHex("1"));
-        assertEquals(-1, TextMapPropagator.unHex(Long.toHexString(-1)));
-        assertEquals(Long.MAX_VALUE, TextMapPropagator.unHex(Long.toHexString(Long.MAX_VALUE)));
-        assertEquals(Long.MIN_VALUE, TextMapPropagator.unHex(Long.toHexString(Long.MIN_VALUE)));
-        assertEquals(0, TextMapPropagator.unHex(Long.toHexString(0)));
-        long randomLong = Util.generateRandomGUID();
-        assertEquals(randomLong, TextMapPropagator.unHex(Long.toHexString(randomLong)));
-    }
 }

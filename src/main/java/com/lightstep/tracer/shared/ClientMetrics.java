@@ -10,31 +10,26 @@ import java.util.concurrent.atomic.AtomicLong;
  * Tracks client metrics for internal purposes.
  */
 class ClientMetrics {
+    private final AtomicLong spansDropped = new AtomicLong(0);
 
-    /**
-     * For capacity allocation purposes, keep this in sync with the number of counts actually being
-     * tracked.
-     */
-    private static final int NUMBER_OF_COUNTS = 1;
-    private final AtomicLong spansDropped;
-
-    ClientMetrics() {
-        spansDropped = new AtomicLong(0);
-    }
-
-    void dropSpans(int size) {
+    void addSpansDropped(int size) {
         spansDropped.addAndGet(size);
-    }
-
-    InternalMetrics toGrpcAndReset() {
-        long val = spansDropped.getAndSet(0);
-        ArrayList<MetricsSample> counts = new ArrayList<>(NUMBER_OF_COUNTS);
-        counts.add(MetricsSample.newBuilder().setName("spans.dropped")
-                .setIntValue(val).build());
-        return InternalMetrics.newBuilder().addAllCounts(counts).build();
     }
 
     long getSpansDropped() {
         return spansDropped.get();
+    }
+
+    InternalMetrics toInternalMetricsAndReset() {
+        return InternalMetrics.newBuilder()
+                .addCounts(MetricsSample.newBuilder()
+                        .setName("spans.dropped")
+                        .setIntValue(getAndResetSpansDropped())
+                        .build()
+                ).build();
+    }
+
+    private long getAndResetSpansDropped() {
+        return spansDropped.getAndSet(0);
     }
 }

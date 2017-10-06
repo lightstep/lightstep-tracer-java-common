@@ -11,14 +11,14 @@ import java.util.Map;
  */
 public class Status {
     private final Map<String, String> tags;
-    private long spansDropped;
+    private final long spansDropped;
 
     Status(List<KeyValue> attrs, long spansDropped) {
-        this.spansDropped = spansDropped;
         tags = new HashMap<>(attrs.size());
         for (KeyValue pair : attrs) {
             tags.put(pair.getKey(), pair.getStringValue());
         }
+        this.spansDropped = spansDropped;
     }
 
     @SuppressWarnings("unused")
