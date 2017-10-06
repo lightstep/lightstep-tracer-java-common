@@ -8,6 +8,8 @@ import java.util.Map;
 import io.opentracing.propagation.TextMap;
 
 class TextMapPropagator implements Propagator<TextMap> {
+    private static final Locale english = new Locale("en", "US");
+
     private static final String PREFIX_TRACER_STATE = "ot-tracer-";
     static final String PREFIX_BAGGAGE = "ot-baggage-";
 
@@ -16,8 +18,8 @@ class TextMapPropagator implements Propagator<TextMap> {
     static final String FIELD_NAME_SAMPLED = PREFIX_TRACER_STATE + "sampled";
 
     public void inject(SpanContext spanContext, final TextMap carrier) {
-        carrier.put(FIELD_NAME_TRACE_ID, Long.toHexString(spanContext.getTraceId()));
-        carrier.put(FIELD_NAME_SPAN_ID, Long.toHexString(spanContext.getSpanId()));
+        carrier.put(FIELD_NAME_TRACE_ID, Util.toHexString(spanContext.getTraceId()));
+        carrier.put(FIELD_NAME_SPAN_ID, Util.toHexString(spanContext.getSpanId()));
         carrier.put(FIELD_NAME_SAMPLED, "true");
         for (Map.Entry<String, String> e : spanContext.baggageItems()) {
             carrier.put(PREFIX_BAGGAGE + e.getKey(), e.getValue());
@@ -25,44 +27,31 @@ class TextMapPropagator implements Propagator<TextMap> {
     }
 
     public SpanContext extract(TextMap carrier) {
-        int requiredFieldCount = 0;
+        Long traceId = null;
+        Long spanId = null;
+        Map<String, String> baggage = new HashMap<>();
 
-        // traceId and spanId initial values are guaranteed to be overwritten because of the
-        // requiredFieldCount check
-        long traceId = 0;
-        long spanId = 0;
-        Map<String, String> decodedBaggage = null;
-
-        Locale english = new Locale("en", "US");
         for (Map.Entry<String, String> entry : carrier) {
-            final String key = entry.getKey().toLowerCase(english);
+            String key = entry.getKey().toLowerCase(english);
+
             if (FIELD_NAME_TRACE_ID.equals(key)) {
-                requiredFieldCount++;
-                traceId = unHex(entry.getValue());
-            } else if (FIELD_NAME_SPAN_ID.equals(key)) {
-                requiredFieldCount++;
-                spanId = unHex(entry.getValue());
-            } else {
-                if (key.startsWith(PREFIX_BAGGAGE)) {
-                    if (decodedBaggage == null) {
-                        decodedBaggage = new HashMap<>();
-                        decodedBaggage.put(key.substring(PREFIX_BAGGAGE.length()), entry.getValue());
-                    }
-                }
+                traceId = Util.fromHexString(entry.getValue());
+            }
+
+            if (FIELD_NAME_SPAN_ID.equals(key)) {
+                spanId = Util.fromHexString(entry.getValue());
+            }
+
+            if (key.startsWith(PREFIX_BAGGAGE)) {
+                baggage.put(key.substring(PREFIX_BAGGAGE.length()), entry.getValue());
             }
         }
-        if (requiredFieldCount == 0) {
-            return null;
-        } else if (requiredFieldCount < 2) {
-            // TODO: log a warning via the AbstractTracer?
+
+        if (traceId == null || spanId == null) {
             return null;
         }
 
         // Success.
-        return new SpanContext(traceId, spanId, decodedBaggage);
-    }
-
-    static long unHex(String hexString) throws NumberFormatException {
-        return new BigInteger(hexString, 16).longValue();
+        return new SpanContext(traceId, spanId, baggage);
     }
 }

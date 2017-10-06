@@ -46,7 +46,7 @@ class CollectorClient {
    */
   synchronized ReportResponse report(ReportRequest.Builder reqBuilder) {
     ReportResponse resp = null;
-    reqBuilder.setInternalMetrics(clientMetrics.toGrpcAndReset());
+    reqBuilder.setInternalMetrics(clientMetrics.toInternalMetricsAndReset());
 
     // send report to collector
     boolean success = false;
@@ -89,11 +89,11 @@ class CollectorClient {
   }
 
   void dropSpan() {
-    clientMetrics.dropSpans(1);
+    clientMetrics.addSpansDropped(1);
   }
 
   private void dropSpans(List<Span> spans) {
-    clientMetrics.dropSpans(spans.size());
+    clientMetrics.addSpansDropped(spans.size());
   }
 
   ClientMetrics getClientMetrics() {

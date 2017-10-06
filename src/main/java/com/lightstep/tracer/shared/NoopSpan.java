@@ -8,12 +8,10 @@ import io.opentracing.SpanContext;
 
 // A span which is returned when the tracer is disabled.
 class NoopSpan implements Span {
-
     static final Span INSTANCE = new NoopSpan();
     private static final SpanContext CONTEXT = new NoopSpanContext();
 
-    private NoopSpan() {
-    }
+    private NoopSpan() {}
 
     @Override
     public SpanContext context() {
@@ -21,12 +19,10 @@ class NoopSpan implements Span {
     }
 
     @Override
-    public void finish() {
-    }
+    public void finish() {}
 
     @Override
-    public void finish(long timestamp) {
-    }
+    public void finish(long timestamp) {}
 
     @Override
     public Span setTag(String key, String value) {

@@ -26,7 +26,7 @@ public class SimpleFutureTest {
     public void testGet_futureIsNotReady() throws Exception {
         final SimpleFuture<String> undertest = new SimpleFuture<>();
 
-        new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -36,7 +36,8 @@ public class SimpleFutureTest {
                 }
                 undertest.set(EXPECTED_VALUE);
             }
-        }.run();
+        }).start();
+
         assertEquals(EXPECTED_VALUE, undertest.get());
     }
 

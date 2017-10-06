@@ -22,15 +22,17 @@ public class SpanBuilder implements Tracer.SpanBuilder {
     static final String PARENT_SPAN_GUID_KEY = "parent_span_guid";
 
     private final String operationName;
-    private Long traceId = null;
-    private Long spanId = null;
     private final Map<String, String> stringTags;
     private final Map<String, Boolean> boolTags;
     private final Map<String, Number> numTags;
     private final AbstractTracer tracer;
+
+    private Long traceId = null;
+    private Long spanId = null;
     private SpanContext parent;
     private long startTimestampMicros;
     private boolean ignoringActiveSpan;
+
     private final com.lightstep.tracer.grpc.Span.Builder grpcSpan = com.lightstep.tracer.grpc.Span.newBuilder();
 
     SpanBuilder(String operationName, AbstractTracer tracer) {

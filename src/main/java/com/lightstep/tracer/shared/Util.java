@@ -1,6 +1,8 @@
 package com.lightstep.tracer.shared;
 
 import com.google.protobuf.Timestamp;
+
+import java.math.BigInteger;
 import java.util.Random;
 
 class Util {
@@ -49,5 +51,13 @@ class Util {
 
     static long nowMicrosApproximate() {
         return System.currentTimeMillis() * 1000;
+    }
+
+    static long fromHexString(String hexString) {
+        return new BigInteger(hexString, 16).longValue();
+    }
+
+    static String toHexString(long l) {
+        return Long.toHexString(l);
     }
 }
