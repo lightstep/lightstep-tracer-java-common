@@ -307,30 +307,6 @@ public class SpanTest {
     }
 
     @Test
-    public void testLog_messageAndPayload() {
-        Span result = undertest.log("my message", "{aKey:1}");
-        assertSame(result, undertest);
-        assertEquals(1, grpcSpan.getLogsCount());
-        Log logRecord = grpcSpan.getLogs(0);
-        Map<String, String> fieldMap = getLogFieldMap(logRecord);
-        assertEquals("my message", fieldMap.get("message"));
-        assertEquals("{aKey:1}", fieldMap.get("payload"));
-        assertNotNull(logRecord.getTimestamp());
-    }
-
-    @Test
-    public void testLog_timeMessageAndPayload() {
-        Span result = undertest.log(100L, "my message", "{aKey:1}");
-        assertSame(result, undertest);
-        assertEquals(1, grpcSpan.getLogsCount());
-        Log logRecord = grpcSpan.getLogs(0);
-        Map<String, String> fieldMap = getLogFieldMap(logRecord);
-        assertEquals("my message", fieldMap.get("message"));
-        assertEquals("{aKey:1}", fieldMap.get("payload"));
-        assertEquals(100L, Util.protoTimeToEpochMicros(logRecord.getTimestamp()));
-    }
-
-    @Test
     public void testGenerateTraceURL() {
         String expecteResult = "https://something.com/";
         when(abstractTracer.generateTraceURL(SPAN_ID)).thenReturn(expecteResult);

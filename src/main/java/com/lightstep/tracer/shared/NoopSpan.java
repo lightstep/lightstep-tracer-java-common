@@ -54,16 +54,6 @@ class NoopSpan implements Span {
     }
 
     @Override
-    public Span log(String message, /* @Nullable */ Object payload) {
-        return this;
-    }
-
-    @Override
-    public Span log(long timestampMicroseconds, String message, /* @Nullable */ Object payload) {
-        return this;
-    }
-
-    @Override
     public final Span log(Map<String, ?> fields) {
         return this;
     }
