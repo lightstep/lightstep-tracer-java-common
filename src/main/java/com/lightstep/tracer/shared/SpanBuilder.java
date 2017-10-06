@@ -50,7 +50,7 @@ public class SpanBuilder implements Tracer.SpanBuilder {
         if (parent == null) {
             return this;
         }
-        return addReference(CHILD_OF, parent.context());
+        return asChildOf(parent.context());
     }
 
     @Override
