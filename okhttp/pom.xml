@@ -55,6 +55,11 @@
             <artifactId>java-common</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${com.squareup.okhttp3.version}</version>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>

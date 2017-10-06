@@ -17,7 +17,6 @@ class GrpcCollectorClient extends CollectorClient {
   private final ManagedChannelBuilder<?> channelBuilder;
   private ManagedChannel channel;
   private CollectorServiceBlockingStub blockingStub;
-  private final ClientMetrics clientMetrics;
   private final AbstractTracer tracer;
   private final long deadlineMillis;
 
@@ -27,14 +26,11 @@ class GrpcCollectorClient extends CollectorClient {
   GrpcCollectorClient(
           AbstractTracer tracer,
           ManagedChannelBuilder channelBuilder,
-          long deadlineMillis,
-          ClientMetrics clientMetrics
+          long deadlineMillis
   ) {
     this.tracer = tracer;
     this.channelBuilder = channelBuilder;
     this.deadlineMillis = deadlineMillis;
-    this.clientMetrics = clientMetrics;
-
     connect();
   }
 
@@ -51,35 +47,18 @@ class GrpcCollectorClient extends CollectorClient {
    * Blocking call to report
    */
   synchronized ReportResponse report(ReportRequest request) {
-    // send report to collector
-    boolean success = false;
     try {
       ReportResponse response = blockingStub.
               withDeadlineAfter(deadlineMillis, TimeUnit.MILLISECONDS).
               report(request);
 
-      // check response for errors
-      if (response.getErrorsCount() != 0) {
-        List<ByteString> errs = response.getErrorsList().asByteStringList();
-        for (ByteString err : errs) {
-          tracer.error("Collector response contained error: ", err.toString());
-        }
-      } else {
-        success = true;
-      }
-
       return response;
     } catch (StatusRuntimeException e) {
       tracer.error("Status runtime exception (likely malformed spans): ", e);
-    } catch (RuntimeException e) {
-      tracer.error("Runtime exception: ", e);
     } catch (Exception e) {
       tracer.error("Exception sending report to collector: ", e);
-    } finally {
-      if (!success) {
-        recordDroppedSpans(request.getSpansList());
-      }
     }
+
     return null;
   }
 
@@ -91,9 +70,5 @@ class GrpcCollectorClient extends CollectorClient {
   synchronized void reconnect() {
     this.shutdown();
     this.connect();
-  }
-
-  private void recordDroppedSpans(List<Span> spans) {
-    clientMetrics.addSpansDropped(spans.size());
   }
 }

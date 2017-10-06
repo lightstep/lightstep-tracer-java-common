@@ -24,21 +24,18 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
     }
 
     @Override
-    GrpcCollectorClient forUrl(
+    GrpcCollectorClient forOptions(
             AbstractTracer tracer,
-            URL collectorURL,
-            long deadlineMillis,
-            ClientMetrics clientMetrics
+            Options options
     ) {
         try {
             return new GrpcCollectorClient(
                     tracer,
                     ManagedChannelBuilder.forAddress(
-                            collectorURL.getHost(),
-                            collectorURL.getPort()
-                    ).usePlaintext(collectorURL.getProtocol().equals("http")),
-                    deadlineMillis,
-                    clientMetrics
+                            options.collectorUrl.getHost(),
+                            options.collectorUrl.getPort()
+                    ).usePlaintext(options.collectorUrl.getProtocol().equals("http")),
+                    options.deadlineMillis
             );
         } catch (ManagedChannelProvider.ProviderNotFoundException e) {
             // TODO - let the user know that they need to include a grpc channel dependency.

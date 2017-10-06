@@ -122,10 +122,5 @@ public abstract class CollectorClientProvider {
 
     protected abstract int priority();
 
-    abstract CollectorClient forUrl(
-            AbstractTracer tracer,
-            URL collectorURL,
-            long deadlineMillis,
-            ClientMetrics clientMetrics
-    );
+    abstract CollectorClient forOptions(AbstractTracer abstractTracer, Options options);
 }

@@ -1,5 +1,6 @@
 package com.lightstep.tracer.shared;
 
+import com.google.protobuf.ByteString;
 import com.lightstep.tracer.grpc.Auth;
 import com.lightstep.tracer.grpc.Command;
 import com.lightstep.tracer.grpc.KeyValue;
@@ -13,9 +14,9 @@ import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -69,7 +70,6 @@ public abstract class AbstractTracer implements Tracer {
     private final AtomicLong lastNewSpanMillis;
     private ArrayList<Span> spans;
     private final ClockState clockState;
-    private final URL collectorURL;
 
     // Should *NOT* attempt to take a span's lock while holding this lock.
     @SuppressWarnings("WeakerAccess")
@@ -115,14 +115,13 @@ public abstract class AbstractTracer implements Tracer {
 
         auth = Auth.newBuilder().setAccessToken(options.accessToken);
         reporter = Reporter.newBuilder().setReporterId(options.getGuid());
-        collectorURL = options.collectorUrl;
         resetClient = options.resetClient;
         clientMetrics = new ClientMetrics();
 
         // initialize collector client
         boolean validCollectorClient = true;
         client = CollectorClientProvider.provider()
-                .forUrl(this, collectorURL, options.deadlineMillis, clientMetrics);
+                .forOptions(this, options);
         if (client == null) {
             error("Exception creating client.");
             validCollectorClient = false;
@@ -388,7 +387,9 @@ public abstract class AbstractTracer implements Tracer {
         }
 
         try {
-            return sendReportWorker(explicitRequest);
+            int droppedSpans = sendReportWorker(explicitRequest);
+            this.clientMetrics.addSpansDropped(droppedSpans);
+            return droppedSpans == 0;
         } finally {
             synchronized (mutex) {
                 reportInProgress = false;
@@ -412,9 +413,9 @@ public abstract class AbstractTracer implements Tracer {
      * Private worker function for sendReport() to make the locking and guard
      * variable bracketing a little more straightforward.
      *
-     * Returns false in the case of an error. True if the report was successful.
+     * @return the number of dropped spans.
      */
-    private boolean sendReportWorker(boolean explicitRequest) {
+    private int sendReportWorker(boolean explicitRequest) {
         // Data to be sent.
         ArrayList<Span> spans;
 
@@ -443,28 +444,36 @@ public abstract class AbstractTracer implements Tracer {
         long originMicros = Util.nowMicrosApproximate();
         long originRelativeNanos = System.nanoTime();
 
-        ReportResponse resp = null;
+        ReportResponse response = null;
         if (client != null) {
-            resp = client.report(request);
+            response = client.report(request);
         }
 
-        if (resp == null) {
-            return false;
+        if (response == null) {
+            return spans.size();
         }
 
-        if (resp.hasReceiveTimestamp() && resp.hasTransmitTimestamp()) {
+        if (!response.getErrorsList().isEmpty()) {
+            List<String> errs = response.getErrorsList();
+            for (String err : errs) {
+                this.error("Collector response contained error: ", err);
+            }
+            return spans.size();
+        }
+
+        if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {
             long deltaMicros = (System.nanoTime() - originRelativeNanos) / 1000;
             long destinationMicros = originMicros + deltaMicros;
             clockState.addSample(originMicros,
-                Util.protoTimeToEpochMicros(resp.getReceiveTimestamp()),
-                Util.protoTimeToEpochMicros(resp.getTransmitTimestamp()), destinationMicros);
+                Util.protoTimeToEpochMicros(response.getReceiveTimestamp()),
+                Util.protoTimeToEpochMicros(response.getTransmitTimestamp()), destinationMicros);
         } else {
             warn("Collector response did not include timing info");
         }
 
         // Check whether or not to disable the tracer
-        if (resp.getCommandsCount() != 0) {
-            for (Command command : resp.getCommandsList()) {
+        if (response.getCommandsCount() != 0) {
+            for (Command command : response.getCommandsList()) {
                 if (command.getDisable()) {
                     disable();
                 }
@@ -472,7 +481,8 @@ public abstract class AbstractTracer implements Tracer {
         }
 
         debug(String.format("Report sent successfully (%d spans)", spans.size()));
-        return true;
+
+        return 0;
     }
 
     /**

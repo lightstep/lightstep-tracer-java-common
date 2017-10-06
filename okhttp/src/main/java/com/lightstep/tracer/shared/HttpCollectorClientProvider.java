@@ -19,12 +19,14 @@ public class HttpCollectorClientProvider extends CollectorClientProvider {
     }
 
     @Override
-    public HttpCollectorClient forUrl(
+    HttpCollectorClient forOptions(
             AbstractTracer tracer,
-            URL collectorURL,
-            long deadlineMillis,
-            ClientMetrics clientMetrics
+            Options options
     ) {
-        return new HttpCollectorClient();
+        return new HttpCollectorClient(
+                tracer,
+                options.collectorUrl,
+                options.deadlineMillis
+        );
     }
 }
