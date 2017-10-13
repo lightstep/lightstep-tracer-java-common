@@ -13,7 +13,9 @@ class ClientMetrics {
     private final AtomicLong spansDropped = new AtomicLong(0);
 
     void addSpansDropped(int size) {
-        spansDropped.addAndGet(size);
+        if (size != 0) {
+            spansDropped.addAndGet(size);
+        }
     }
 
     long getSpansDropped() {
