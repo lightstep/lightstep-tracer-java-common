@@ -1,4 +1,4 @@
-# lightstep-com.lightstep.tracer-java-common
+# Lightstep Tracer Common
 
 [![MIT license](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
@@ -6,9 +6,23 @@ The core LightStep distributed tracing library for the Java runtime environment.
 see [lightstep-tracer-java](https://github.com/lightstep/lightstep-tracer-java) or
 [lightstep-tracer-android](https://github.com/lightstep/lightstep-tracer-android).
 
-# common
+## common
 
-Houses the com.lightstep.tracer.shared source files and assets for the JRE and Android libraries.
+Contains the `com.lightstep.tracer.shared` (shared logic) and `com.lightstep.tracer.grpc` (shared compiled proto files) source files and assets for the JRE and Android libraries.
+
+## example
+
+Contains an example implementation of the tracer (used for integration testing).
+
+## grpc
+
+Contains the transport layer specific to the grpc flavor of the lightstep tracer.
+
+## okhttp
+
+Contains the transport layer specific to the okhttp flavor of the lightstep tracer.
+
+_N.B. http is an experimental feature for the lightstep tracer and collector. Please reach out before attempting to enable it._
 
 ## Development info
 
