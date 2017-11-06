@@ -56,7 +56,7 @@ public final class Options {
 
     static final String HTTP = "http";
 
-    static final String COLLECTOR_PATH = "/_rpc/v1/reports/binary";
+    static final String COLLECTOR_PATH = "/api/v2/reports";
 
     // TAG KEYS
 
@@ -115,9 +115,19 @@ public final class Options {
      */
     final long deadlineMillis;
 
-    private Options(String accessToken, URL collectorUrl, long maxReportingIntervalMillis,
-                    int maxBufferedSpans, int verbosity, boolean disableReportingLoop, boolean resetClient, Map<String, Object> tags,
-                    boolean useClockCorrection, ActiveSpanSource spanSource, long deadlineMillis) {
+    private Options(
+            String accessToken,
+            URL collectorUrl,
+            long maxReportingIntervalMillis,
+            int maxBufferedSpans,
+            int verbosity,
+            boolean disableReportingLoop,
+            boolean resetClient,
+            Map<String, Object> tags,
+            boolean useClockCorrection,
+            ActiveSpanSource spanSource,
+            long deadlineMillis
+    ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
         this.maxReportingIntervalMillis = maxReportingIntervalMillis;
@@ -323,8 +333,19 @@ public final class Options {
             defaultSpanSource();
             defaultDeadlineMillis();
 
-            return new Options(accessToken, getCollectorUrl(), maxReportingIntervalMillis, maxBufferedSpans, verbosity,
-                    disableReportingLoop, resetClient, tags, useClockCorrection, spanSource, deadlineMillis);
+            return new Options(
+                    accessToken,
+                    getCollectorUrl(),
+                    maxReportingIntervalMillis,
+                    maxBufferedSpans,
+                    verbosity,
+                    disableReportingLoop,
+                    resetClient,
+                    tags,
+                    useClockCorrection,
+                    spanSource,
+                    deadlineMillis
+            );
         }
 
         private void defaultSpanSource() {

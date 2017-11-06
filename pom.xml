@@ -55,5 +55,6 @@
         <module>grpc</module>
         <module>okhttp</module>
         <module>common</module>
+        <module>example</module>
     </modules>
 </project>

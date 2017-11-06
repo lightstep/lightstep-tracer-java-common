@@ -20,7 +20,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class OptionsTest {
-
     private static final String ACCESS_TOKEN = "my-access-token";
     private static final String COLLECTOR_HOST = "my-collector-host";
     private static final String HTTPS_PROTOCOL = "https";
@@ -164,8 +163,10 @@ public class OptionsTest {
     private void validateFullyPopulatedOptions(Options options) {
         assertEquals(VERBOSITY_DEBUG, options.verbosity);
         assertEquals(ACCESS_TOKEN, options.accessToken);
-        assertEquals("https://my-collector-host:123" + COLLECTOR_PATH,
-                options.collectorUrl.toString());
+        assertEquals(
+                "https://my-collector-host:123" + COLLECTOR_PATH,
+                options.collectorUrl.toString()
+        );
         assertEquals(COMPONENT_NAME, options.tags.get(COMPONENT_NAME_KEY));
         assertTrue(options.disableReportingLoop);
         assertTrue(options.resetClient);
