@@ -23,7 +23,6 @@
             <groupId>com.lightstep.tracer</groupId>
             <artifactId>tracer-okhttp</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

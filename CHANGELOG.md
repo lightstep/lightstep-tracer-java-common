@@ -7,6 +7,30 @@
 * Add okhttp transport support.
 * Split grpc transport support into a separate dependency.
 
+We are splitting out our transport dependency from our main tracer to making binaries smaller.
+
+For the tracer to work, you will now need to provide a transport dependency with your tracer.
+
+### Maven
+
+```
+<dependency>
+   <groupId>com.lightstep.tracer</groupId>
+   <artifactId>tracer-grpc</artifactId>
+   <version>${com.lightstep.version}</version>
+</dependency>
+```
+
+### Gradle
+
+```
+dependencies {
+    ...
+    compile 'com.lightstep.tracer:tracer-grpc:VERSION'
+    ...
+}
+```
+
 <a name="0.13.2"></a>
 ## [0.13.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.13.1...0.13.2)
 * Fixed bug in 0.13.1 use of deadline for GRPC calls. Was setting a single deadline so all calls after
