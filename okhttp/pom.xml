@@ -13,6 +13,7 @@
 
     <properties>
         <com.squareup.okhttp3.version>3.9.0</com.squareup.okhttp3.version>
+        <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
 
     <build>
@@ -34,9 +35,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.0-M1</version>
-                <configuration>
-                    <sourcepath>${project.basedir}/src/main/java/com.lightstep.tracer/shared</sourcepath>
-                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
