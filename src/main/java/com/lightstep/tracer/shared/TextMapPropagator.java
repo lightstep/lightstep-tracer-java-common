@@ -1,6 +1,5 @@
 package com.lightstep.tracer.shared;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -17,6 +16,9 @@ class TextMapPropagator implements Propagator<TextMap> {
     static final String FIELD_NAME_SPAN_ID = PREFIX_TRACER_STATE + "spanid";
     static final String FIELD_NAME_SAMPLED = PREFIX_TRACER_STATE + "sampled";
 
+    static final String FIELD_NAME_X_B3_TRACE_ID = "x-b3-traceid";
+    static final String FIELD_NAME_X_B3_SPAN_ID = "x-b3-spanid";
+
     public void inject(SpanContext spanContext, final TextMap carrier) {
         carrier.put(FIELD_NAME_TRACE_ID, Util.toHexString(spanContext.getTraceId()));
         carrier.put(FIELD_NAME_SPAN_ID, Util.toHexString(spanContext.getSpanId()));
@@ -29,6 +31,8 @@ class TextMapPropagator implements Propagator<TextMap> {
     public SpanContext extract(TextMap carrier) {
         Long traceId = null;
         Long spanId = null;
+        Long xB3TraceId = null;
+        Long xB3SpanId = null;
         Map<String, String> baggage = new HashMap<>();
 
         for (Map.Entry<String, String> entry : carrier) {
@@ -36,22 +40,25 @@ class TextMapPropagator implements Propagator<TextMap> {
 
             if (FIELD_NAME_TRACE_ID.equals(key)) {
                 traceId = Util.fromHexString(entry.getValue());
-            }
-
-            if (FIELD_NAME_SPAN_ID.equals(key)) {
+            } else if(traceId == null && FIELD_NAME_X_B3_TRACE_ID.equals(key)) {
+                xB3TraceId = Util.fromHexString(entry.getValue());
+            } else if (FIELD_NAME_SPAN_ID.equals(key)) {
                 spanId = Util.fromHexString(entry.getValue());
-            }
-
-            if (key.startsWith(PREFIX_BAGGAGE)) {
+            } else if(spanId == null && FIELD_NAME_X_B3_SPAN_ID.equals(key)) {
+                xB3SpanId = Util.fromHexString(entry.getValue());
+            } else if (key.startsWith(PREFIX_BAGGAGE)) {
                 baggage.put(key.substring(PREFIX_BAGGAGE.length()), entry.getValue());
             }
         }
 
-        if (traceId == null || spanId == null) {
-            return null;
+        if(traceId != null && spanId != null) {
+            return new SpanContext(traceId, spanId, baggage);
         }
 
-        // Success.
-        return new SpanContext(traceId, spanId, baggage);
+        if(xB3TraceId != null && xB3SpanId != null) {
+            return new SpanContext(xB3TraceId, xB3SpanId, baggage);
+        }
+
+        return null;
     }
 }

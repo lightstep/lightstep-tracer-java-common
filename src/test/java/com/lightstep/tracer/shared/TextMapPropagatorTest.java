@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static com.lightstep.tracer.shared.TextMapPropagator.FIELD_NAME_X_B3_SPAN_ID;
+import static com.lightstep.tracer.shared.TextMapPropagator.FIELD_NAME_X_B3_TRACE_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -29,6 +31,22 @@ public class TextMapPropagatorTest {
         assertNotNull(span);
         assertEquals(span.getSpanId(), 1);
         assertEquals(span.getTraceId(), 2);
+    }
+
+    @Test
+    public void testExtract_xB3Headers() {
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put(FIELD_NAME_X_B3_TRACE_ID, Long.toHexString(1));
+        headers.put(FIELD_NAME_X_B3_SPAN_ID, Long.toHexString(2));
+
+        TextMapPropagator subject = new TextMapPropagator();
+
+        SpanContext spanContext = subject.extract(new TextMapExtractAdapter(headers));
+
+        assertNotNull(spanContext);
+        assertEquals(spanContext.getTraceId(), 1);
+        assertEquals(spanContext.getSpanId(), 2);
     }
 
     @Test
