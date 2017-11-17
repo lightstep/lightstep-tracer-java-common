@@ -1,4 +1,4 @@
-.PHONY: build publish ci_test clean test
+.PHONY: build publish ci_test clean test inc-version
 
 build: test
 	mvn package
@@ -11,6 +11,9 @@ test: ci_test
 # CircleCI test
 ci_test: clean
 	mvn test
+
+inc-version:
+	./inc-version.sh
 
 # See https://bintray.com/lightstep for published artifacts
 # You must have the following entry in your settings.xml of your .m2 directory
