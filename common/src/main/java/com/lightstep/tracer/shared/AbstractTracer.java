@@ -1,6 +1,5 @@
 package com.lightstep.tracer.shared;
 
-import com.google.protobuf.ByteString;
 import com.lightstep.tracer.grpc.Auth;
 import com.lightstep.tracer.grpc.Command;
 import com.lightstep.tracer.grpc.KeyValue;
@@ -31,6 +30,32 @@ public abstract class AbstractTracer implements Tracer {
     // Maximum interval between reports
     private static final long DEFAULT_CLOCK_STATE_INTERVAL_MILLIS = 500;
     private static final int DEFAULT_CLIENT_RESET_INTERVAL_MILLIS = 5 * 60 * 1000; // 5 min
+
+    private static class ReportResult {
+        private final int droppedSpans;
+        private final boolean success;
+
+        private ReportResult(int droppedSpans, boolean success) {
+            this.droppedSpans = droppedSpans;
+            this.success = success;
+        }
+
+        public static ReportResult Success() {
+            return new ReportResult(0, true);
+        }
+
+        public static ReportResult Error(int droppedSpans) {
+            return new ReportResult(droppedSpans, false);
+        }
+
+        public int getDroppedSpans() {
+            return droppedSpans;
+        }
+
+        public boolean wasSuccessful() {
+            return success;
+        }
+    }
 
     @SuppressWarnings("unused")
     protected static final String LIGHTSTEP_TRACER_PLATFORM_KEY = "lightstep.tracer_platform";
@@ -387,9 +412,9 @@ public abstract class AbstractTracer implements Tracer {
         }
 
         try {
-            int droppedSpans = sendReportWorker(explicitRequest);
-            this.clientMetrics.addSpansDropped(droppedSpans);
-            return droppedSpans == 0;
+            ReportResult result = sendReportWorker(explicitRequest);
+            this.clientMetrics.addSpansDropped(result.getDroppedSpans());
+            return result.wasSuccessful();
         } finally {
             synchronized (mutex) {
                 reportInProgress = false;
@@ -415,7 +440,7 @@ public abstract class AbstractTracer implements Tracer {
      *
      * @return the number of dropped spans.
      */
-    private int sendReportWorker(boolean explicitRequest) {
+    private ReportResult sendReportWorker(boolean explicitRequest) {
         // Data to be sent.
         ArrayList<Span> spans;
 
@@ -450,7 +475,7 @@ public abstract class AbstractTracer implements Tracer {
         }
 
         if (response == null) {
-            return spans.size();
+            return ReportResult.Error(spans.size());
         }
 
         if (!response.getErrorsList().isEmpty()) {
@@ -458,7 +483,7 @@ public abstract class AbstractTracer implements Tracer {
             for (String err : errs) {
                 this.error("Collector response contained error: ", err);
             }
-            return spans.size();
+            return ReportResult.Error(spans.size());
         }
 
         if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {
@@ -482,7 +507,7 @@ public abstract class AbstractTracer implements Tracer {
 
         debug(String.format("Report sent successfully (%d spans)", spans.size()));
 
-        return 0;
+        return ReportResult.Success();
     }
 
     /**
