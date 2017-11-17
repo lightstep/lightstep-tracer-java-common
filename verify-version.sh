@@ -9,6 +9,8 @@
 # Use maven-help-plugin to get the current project.version
 NEW_VERSION=`mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\['`
 
+git commit -m "VERSION $NEW_VERSION"
+
 # Tag the new version
 git tag $NEW_VERSION
 

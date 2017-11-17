@@ -19,4 +19,5 @@ mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
 git add common/pom.xml
 git add grpc/pom.xml
 git add okhttp/pom.xml
+git add example/pom.xml
 git add pom.xml
