@@ -187,6 +187,7 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
         reportingThread = new Thread(reportingLoop);
+        reportingThread.setDaemon(true);
         reportingThread.start();
     }
 
