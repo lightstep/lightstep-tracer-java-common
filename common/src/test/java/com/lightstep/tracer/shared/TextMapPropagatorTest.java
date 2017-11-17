@@ -64,7 +64,30 @@ public class TextMapPropagatorTest {
             }
         };
         SpanContext spanContext = new SpanContext();
-        undertest.inject(spanContext, carrier);
+        undertest.inject(spanContext, carrier, false);
+
+        SpanContext result = undertest.extract(carrier);
+
+        assertEquals(spanContext.getTraceId(), result.getTraceId());
+        assertEquals(spanContext.getSpanId(), result.getSpanId());
+    }
+
+    @Test
+    public void testInjectAndExtractXB3Ids() {
+        TextMapPropagator undertest = new TextMapPropagator();
+        TextMap carrier = new TextMap() {
+            final Map<String, String> textMap = new HashMap<>();
+
+            public void put(String key, String value) {
+                textMap.put(key, value);
+            }
+
+            public Iterator<Map.Entry<String, String>> iterator() {
+                return textMap.entrySet().iterator();
+            }
+        };
+        SpanContext spanContext = new SpanContext();
+        undertest.inject(spanContext, carrier, true);
 
         SpanContext result = undertest.extract(carrier);
 

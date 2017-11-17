@@ -19,12 +19,16 @@ class TextMapPropagator implements Propagator<TextMap> {
     static final String FIELD_NAME_X_B3_TRACE_ID = "x-b3-traceid";
     static final String FIELD_NAME_X_B3_SPAN_ID = "x-b3-spanid";
 
-    public void inject(SpanContext spanContext, final TextMap carrier) {
+    public void inject(SpanContext spanContext, final TextMap carrier, boolean useB3Headers) {
         carrier.put(FIELD_NAME_TRACE_ID, Util.toHexString(spanContext.getTraceId()));
         carrier.put(FIELD_NAME_SPAN_ID, Util.toHexString(spanContext.getSpanId()));
         carrier.put(FIELD_NAME_SAMPLED, "true");
         for (Map.Entry<String, String> e : spanContext.baggageItems()) {
             carrier.put(PREFIX_BAGGAGE + e.getKey(), e.getValue());
+        }
+        if(useB3Headers) {
+            carrier.put(FIELD_NAME_X_B3_TRACE_ID, Util.toHexString(spanContext.getTraceId()));
+            carrier.put(FIELD_NAME_X_B3_SPAN_ID, Util.toHexString(spanContext.getSpanId()));
         }
     }
 

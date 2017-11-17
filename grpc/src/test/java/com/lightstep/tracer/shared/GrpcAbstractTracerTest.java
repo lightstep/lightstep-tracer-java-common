@@ -1,12 +1,10 @@
 package com.lightstep.tracer.shared;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
@@ -186,6 +184,19 @@ public class GrpcAbstractTracerTest {
         undertest.inject(spanContext, Format.Builtin.TEXT_MAP, textMap);
         verify(textMap).put(TextMapPropagator.FIELD_NAME_TRACE_ID, Long.toHexString(TRACE_ID));
         verify(textMap).put(TextMapPropagator.FIELD_NAME_SPAN_ID, Long.toHexString(SPAN_ID));
+        verify(textMap).put(TextMapPropagator.FIELD_NAME_SAMPLED, "true");
+        verify(textMap).put(TextMapPropagator.PREFIX_BAGGAGE + BAGGAGE_KEY, BAGGAGE_VALUE);
+    }
+
+    @Test
+    public void testInject_b3_textMap() throws Exception {
+        StubTracer undertest = createTracer(new Options.OptionsBuilder()
+                .withB3Headers(true)
+                .withAccessToken(ACCESS_TOKEN)
+                .build());
+        undertest.inject(spanContext, Format.Builtin.TEXT_MAP, textMap);
+        verify(textMap).put(TextMapPropagator.FIELD_NAME_X_B3_TRACE_ID, Long.toHexString(TRACE_ID));
+        verify(textMap).put(TextMapPropagator.FIELD_NAME_X_B3_SPAN_ID, Long.toHexString(SPAN_ID));
         verify(textMap).put(TextMapPropagator.FIELD_NAME_SAMPLED, "true");
         verify(textMap).put(TextMapPropagator.PREFIX_BAGGAGE + BAGGAGE_KEY, BAGGAGE_VALUE);
     }

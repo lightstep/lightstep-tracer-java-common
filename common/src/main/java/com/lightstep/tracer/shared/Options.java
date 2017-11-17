@@ -108,6 +108,7 @@ public final class Options {
     // reset GRPC client at regular intervals (for load balancing)
     final boolean resetClient;
     final boolean useClockCorrection;
+    final boolean useB3Headers;
     final ActiveSpanSource spanSource;
 
     /**
@@ -123,6 +124,7 @@ public final class Options {
             int verbosity,
             boolean disableReportingLoop,
             boolean resetClient,
+            boolean useB3Headers,
             Map<String, Object> tags,
             boolean useClockCorrection,
             ActiveSpanSource spanSource,
@@ -135,6 +137,7 @@ public final class Options {
         this.verbosity = verbosity;
         this.disableReportingLoop = disableReportingLoop;
         this.resetClient = resetClient;
+        this.useB3Headers = useB3Headers;
         this.tags = tags;
         this.useClockCorrection = useClockCorrection;
         this.spanSource = spanSource;
@@ -156,6 +159,7 @@ public final class Options {
         private int verbosity = 1;
         private boolean disableReportingLoop = false;
         private boolean resetClient = true;
+        private boolean useB3Headers = false;
         private boolean useClockCorrection = true;
         private Map<String, Object> tags = new HashMap<>();
         private ActiveSpanSource spanSource;
@@ -174,6 +178,7 @@ public final class Options {
             this.verbosity = options.verbosity;
             this.disableReportingLoop = options.disableReportingLoop;
             this.resetClient = options.resetClient;
+            this.useB3Headers = options.useB3Headers;
             this.tags = options.tags;
             this.spanSource = options.spanSource;
             this.useClockCorrection = options.useClockCorrection;
@@ -312,6 +317,14 @@ public final class Options {
             return this;
         }
 
+        /**
+         * If true inject b3 headers
+         */
+        public OptionsBuilder withB3Headers(boolean b3Headers) {
+            this.useB3Headers = b3Headers;
+            return this;
+        }
+
 	@SuppressWarnings("SameParameterValue")
     public OptionsBuilder withClockSkewCorrection(boolean clockCorrection) {
 	    this.useClockCorrection = clockCorrection;
@@ -341,6 +354,7 @@ public final class Options {
                     verbosity,
                     disableReportingLoop,
                     resetClient,
+                    useB3Headers,
                     tags,
                     useClockCorrection,
                     spanSource,
