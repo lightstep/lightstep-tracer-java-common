@@ -30,4 +30,4 @@ publish: build
 	@test -n "$$BINTRAY_GPG_PASSPHRASE" || (echo "$$BINTRAY_GPG_PASSPHRASE must be defined to publish" && false)
 
 	@git diff-index --quiet HEAD || (echo "git has uncommitted changes. Refusing to publish." && false)
-	./inc-version.sh
+	./verify-version.sh
