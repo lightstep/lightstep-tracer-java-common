@@ -1,5 +1,9 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.14.0)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.14.1)
+
+<a name="0.14.1"></a>
+## [0.14.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.14.0...0.14.1)
+* Publish parent pom
 
 <a name="0.14.0"></a>
 ## [0.14.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.13.2...0.14.0)
