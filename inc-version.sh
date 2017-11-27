@@ -15,9 +15,12 @@ NEW_VERSION="${CURRENT_VERSION%.*}.$((${CURRENT_VERSION##*.}+1))"
 # Use maven-help-plugin to update the project.version
 mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
 
-# Commit the changes
+# Add and commit the changes
 git add common/pom.xml
 git add grpc/pom.xml
 git add okhttp/pom.xml
 git add example/pom.xml
 git add pom.xml
+
+git commit -m "VERSION $NEW_VERSION"
+git push
