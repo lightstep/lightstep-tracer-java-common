@@ -3,8 +3,6 @@ package com.lightstep.tracer.shared;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.ManagedChannelProvider;
 
-import java.net.URL;
-
 // public for reflective instantiation.
 public class GrpcCollectorClientProvider extends CollectorClientProvider {
     private static GrpcCollectorClientProvider INSTANCE = new GrpcCollectorClientProvider();
@@ -29,12 +27,16 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
             Options options
     ) {
         try {
+            ManagedChannelBuilder<?> builder = ManagedChannelBuilder.forAddress(
+                    options.collectorUrl.getHost(),
+                    options.collectorUrl.getPort()
+            );
+            if (options.collectorUrl.getProtocol().equals("http")) {
+                builder.usePlaintext(true);
+            }
             return new GrpcCollectorClient(
                     tracer,
-                    ManagedChannelBuilder.forAddress(
-                            options.collectorUrl.getHost(),
-                            options.collectorUrl.getPort()
-                    ).usePlaintext(options.collectorUrl.getProtocol().equals("http")),
+                    builder,
                     options.deadlineMillis
             );
         } catch (ManagedChannelProvider.ProviderNotFoundException e) {
