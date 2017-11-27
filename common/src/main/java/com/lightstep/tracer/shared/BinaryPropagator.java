@@ -7,7 +7,7 @@ class BinaryPropagator implements Propagator<ByteBuffer> {
         // TODO: implement
     }
 
-    public SpanContext extract(ByteBuffer carrier) {
+    public SpanContext extract(ByteBuffer carrier, boolean useB3Headers) {
         // TODO: implement
         return null;
     }

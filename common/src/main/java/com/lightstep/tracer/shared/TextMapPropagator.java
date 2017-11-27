@@ -32,7 +32,7 @@ class TextMapPropagator implements Propagator<TextMap> {
         }
     }
 
-    public SpanContext extract(TextMap carrier) {
+    public SpanContext extract(TextMap carrier, boolean useB3Headers) {
         Long traceId = null;
         Long spanId = null;
         Long xB3TraceId = null;
@@ -42,25 +42,31 @@ class TextMapPropagator implements Propagator<TextMap> {
         for (Map.Entry<String, String> entry : carrier) {
             String key = entry.getKey().toLowerCase(english);
 
-            if (FIELD_NAME_TRACE_ID.equals(key)) {
-                traceId = Util.fromHexString(entry.getValue());
-            } else if(traceId == null && FIELD_NAME_X_B3_TRACE_ID.equals(key)) {
-                xB3TraceId = Util.fromHexString(entry.getValue());
-            } else if (FIELD_NAME_SPAN_ID.equals(key)) {
-                spanId = Util.fromHexString(entry.getValue());
-            } else if(spanId == null && FIELD_NAME_X_B3_SPAN_ID.equals(key)) {
-                xB3SpanId = Util.fromHexString(entry.getValue());
-            } else if (key.startsWith(PREFIX_BAGGAGE)) {
-                baggage.put(key.substring(PREFIX_BAGGAGE.length()), entry.getValue());
+            if (useB3Headers) {
+                if (FIELD_NAME_X_B3_TRACE_ID.equals(key)) {
+                    xB3TraceId = Util.fromHexString(entry.getValue());
+                } else if (FIELD_NAME_X_B3_SPAN_ID.equals(key)) {
+                    xB3SpanId = Util.fromHexString(entry.getValue());
+                }
+            } else {
+                if (FIELD_NAME_TRACE_ID.equals(key)) {
+                    traceId = Util.fromHexString(entry.getValue());
+                } else if (FIELD_NAME_SPAN_ID.equals(key)) {
+                    spanId = Util.fromHexString(entry.getValue());
+                } else if (key.startsWith(PREFIX_BAGGAGE)) {
+                    baggage.put(key.substring(PREFIX_BAGGAGE.length()), entry.getValue());
+                }
             }
         }
 
-        if(traceId != null && spanId != null) {
-            return new SpanContext(traceId, spanId, baggage);
-        }
-
-        if(xB3TraceId != null && xB3SpanId != null) {
-            return new SpanContext(xB3TraceId, xB3SpanId, baggage);
+        if (useB3Headers) {
+            if (xB3TraceId != null && xB3SpanId != null) {
+                return new SpanContext(xB3TraceId, xB3SpanId, baggage);
+            }
+        } else {
+            if (traceId != null && spanId != null) {
+                return new SpanContext(traceId, spanId, baggage);
+            }
         }
 
         return null;

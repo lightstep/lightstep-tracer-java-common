@@ -332,12 +332,12 @@ public abstract class AbstractTracer implements Tracer {
 
     public <C> io.opentracing.SpanContext extract(Format<C> format, C carrier) {
         if (format == Format.Builtin.TEXT_MAP) {
-            return Propagator.TEXT_MAP.extract((TextMap) carrier);
+            return Propagator.TEXT_MAP.extract((TextMap) carrier, useB3Headers);
         } else if (format == Format.Builtin.HTTP_HEADERS) {
-            return Propagator.HTTP_HEADERS.extract((TextMap) carrier);
+            return Propagator.HTTP_HEADERS.extract((TextMap) carrier, useB3Headers);
         } else if (format == Format.Builtin.BINARY) {
             warn("LightStep-java does not yet support binary carriers.");
-            return Propagator.BINARY.extract((ByteBuffer) carrier);
+            return Propagator.BINARY.extract((ByteBuffer) carrier, useB3Headers);
         } else {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;

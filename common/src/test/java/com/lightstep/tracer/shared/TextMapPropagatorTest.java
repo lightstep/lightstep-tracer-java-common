@@ -26,7 +26,7 @@ public class TextMapPropagatorTest {
 
         TextMapPropagator subject = new TextMapPropagator();
 
-        SpanContext span = subject.extract(new TextMapExtractAdapter(mixedCaseHeaders));
+        SpanContext span = subject.extract(new TextMapExtractAdapter(mixedCaseHeaders), false);
 
         assertNotNull(span);
         assertEquals(span.getSpanId(), 1);
@@ -42,7 +42,7 @@ public class TextMapPropagatorTest {
 
         TextMapPropagator subject = new TextMapPropagator();
 
-        SpanContext spanContext = subject.extract(new TextMapExtractAdapter(headers));
+        SpanContext spanContext = subject.extract(new TextMapExtractAdapter(headers), true);
 
         assertNotNull(spanContext);
         assertEquals(spanContext.getTraceId(), 1);
@@ -66,7 +66,7 @@ public class TextMapPropagatorTest {
         SpanContext spanContext = new SpanContext();
         undertest.inject(spanContext, carrier, false);
 
-        SpanContext result = undertest.extract(carrier);
+        SpanContext result = undertest.extract(carrier, false);
 
         assertEquals(spanContext.getTraceId(), result.getTraceId());
         assertEquals(spanContext.getSpanId(), result.getSpanId());
@@ -89,7 +89,7 @@ public class TextMapPropagatorTest {
         SpanContext spanContext = new SpanContext();
         undertest.inject(spanContext, carrier, true);
 
-        SpanContext result = undertest.extract(carrier);
+        SpanContext result = undertest.extract(carrier, false);
 
         assertEquals(spanContext.getTraceId(), result.getTraceId());
         assertEquals(spanContext.getSpanId(), result.getSpanId());
