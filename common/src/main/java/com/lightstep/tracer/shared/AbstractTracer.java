@@ -113,6 +113,8 @@ public abstract class AbstractTracer implements Tracer {
 
     private boolean resetClient;
 
+    private boolean useB3Headers;
+
     private final ActiveSpanSource spanSource;
 
     public AbstractTracer(Options options) {
@@ -141,6 +143,7 @@ public abstract class AbstractTracer implements Tracer {
         auth = Auth.newBuilder().setAccessToken(options.accessToken);
         reporter = Reporter.newBuilder().setReporterId(options.getGuid());
         resetClient = options.resetClient;
+        useB3Headers = options.useB3Headers;
         clientMetrics = new ClientMetrics();
 
         // initialize collector client
@@ -342,13 +345,13 @@ public abstract class AbstractTracer implements Tracer {
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
         if (format == Format.Builtin.TEXT_MAP) {
-            Propagator.TEXT_MAP.inject(lightstepSpanContext, (TextMap) carrier);
+            Propagator.TEXT_MAP.inject(lightstepSpanContext, (TextMap) carrier, useB3Headers);
         } else if (format == Format.Builtin.HTTP_HEADERS) {
-            Propagator.HTTP_HEADERS.inject(lightstepSpanContext, (TextMap) carrier);
+            Propagator.HTTP_HEADERS.inject(lightstepSpanContext, (TextMap) carrier, useB3Headers);
         } else if (format == Format.Builtin.BINARY) {
             warn("LightStep-java does not yet support binary carriers. " +
                     "SpanContext: " + spanContext.toString());
-            Propagator.BINARY.inject(lightstepSpanContext, (ByteBuffer) carrier);
+            Propagator.BINARY.inject(lightstepSpanContext, (ByteBuffer) carrier, useB3Headers);
         } else {
             info("Unsupported carrier type: " + carrier.getClass());
         }
@@ -356,12 +359,12 @@ public abstract class AbstractTracer implements Tracer {
 
     public <C> io.opentracing.SpanContext extract(Format<C> format, C carrier) {
         if (format == Format.Builtin.TEXT_MAP) {
-            return Propagator.TEXT_MAP.extract((TextMap) carrier);
+            return Propagator.TEXT_MAP.extract((TextMap) carrier, useB3Headers);
         } else if (format == Format.Builtin.HTTP_HEADERS) {
-            return Propagator.HTTP_HEADERS.extract((TextMap) carrier);
+            return Propagator.HTTP_HEADERS.extract((TextMap) carrier, useB3Headers);
         } else if (format == Format.Builtin.BINARY) {
             warn("LightStep-java does not yet support binary carriers.");
-            return Propagator.BINARY.extract((ByteBuffer) carrier);
+            return Propagator.BINARY.extract((ByteBuffer) carrier, useB3Headers);
         } else {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;
