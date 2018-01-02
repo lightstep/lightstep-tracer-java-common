@@ -1,5 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.14.1)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.14.4)
+
+<a name="0.14.4-RC1"></a>
+## [0.14.4-RC1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.14.4-RC1...0.14.3)
+
+* Upgraded to io.opentracing 0.31.0-RC2
 
 <a name="0.14.1"></a>
 ## [0.14.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.14.0...0.14.1)
@@ -34,11 +39,6 @@ dependencies {
     ...
 }
 ```
-
-<a name="0.13.3-RC1"></a>
-## [0.13.3-RC1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.13.3-RC1...0.13.2)
-
-* Upgraded to io.opentracing 0.31.0-RC1
 
 <a name="0.13.2"></a>
 ## [0.13.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.13.1...0.13.2)
