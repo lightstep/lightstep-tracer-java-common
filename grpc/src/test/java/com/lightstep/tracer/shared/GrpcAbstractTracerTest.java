@@ -1,14 +1,12 @@
 package com.lightstep.tracer.shared;
 
-import org.junit.Assert;
+import io.opentracing.propagation.Binary;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Map;
 
@@ -48,7 +46,7 @@ public class GrpcAbstractTracerTest {
     private TextMap httpHeaders;
 
     @Mock
-    private ByteBuffer byteBuffer;
+    private Binary binary;
 
     @Mock
     private Format<Object> genericFormat;
@@ -203,9 +201,9 @@ public class GrpcAbstractTracerTest {
     @Test
     public void testInject_binary() throws Exception {
         StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
-        undertest.inject(spanContext, Format.Builtin.BINARY, byteBuffer);
+        undertest.inject(spanContext, Format.Builtin.BINARY, binary);
 
-        verifyZeroInteractions(byteBuffer);
+        verifyZeroInteractions(binary);
     }
 
     /**

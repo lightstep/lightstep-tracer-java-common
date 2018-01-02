@@ -16,7 +16,7 @@
     <url>https://github.com/lightstep/lightstep-tracer-java-common</url>
 
     <properties>
-        <io.opentracing.version>0.31.0-RC1</io.opentracing.version>
+        <io.opentracing.version>0.31.0-RC2</io.opentracing.version>
         <com.google.protobuf.version>3.4.0</com.google.protobuf.version>
     </properties>
 

@@ -7,12 +7,13 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
+import io.opentracing.Scope;
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
+import io.opentracing.propagation.Binary;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -325,6 +326,12 @@ public abstract class AbstractTracer implements Tracer {
         return scopeManager;
     }
 
+    @Override
+    public io.opentracing.Span activeSpan() {
+        Scope scope = scopeManager.active();
+        return scope == null ? null : scope.span();
+    }
+
     public Tracer.SpanBuilder buildSpan(String operationName) {
         return new com.lightstep.tracer.shared.SpanBuilder(operationName, this);
     }
@@ -342,7 +349,7 @@ public abstract class AbstractTracer implements Tracer {
         } else if (format == Format.Builtin.BINARY) {
             warn("LightStep-java does not yet support binary carriers. " +
                     "SpanContext: " + spanContext.toString());
-            Propagator.BINARY.inject(lightstepSpanContext, (ByteBuffer) carrier);
+            Propagator.BINARY.inject(lightstepSpanContext, (Binary) carrier);
         } else {
             info("Unsupported carrier type: " + carrier.getClass());
         }
@@ -355,7 +362,7 @@ public abstract class AbstractTracer implements Tracer {
             return Propagator.HTTP_HEADERS.extract((TextMap) carrier);
         } else if (format == Format.Builtin.BINARY) {
             warn("LightStep-java does not yet support binary carriers.");
-            return Propagator.BINARY.extract((ByteBuffer) carrier);
+            return Propagator.BINARY.extract((Binary) carrier);
         } else {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;

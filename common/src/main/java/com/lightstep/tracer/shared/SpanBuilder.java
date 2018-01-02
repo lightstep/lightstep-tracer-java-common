@@ -98,11 +98,6 @@ public class SpanBuilder implements Tracer.SpanBuilder {
     }
 
     @Override
-    public Scope startActive() {
-        return tracer.scopeManager().activate(startManual());
-    }
-
-    @Override
     public Scope startActive(boolean finishOnClose) {
         return tracer.scopeManager().activate(startManual(), finishOnClose);
     }
