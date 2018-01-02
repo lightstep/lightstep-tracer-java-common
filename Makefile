@@ -1,4 +1,4 @@
-.PHONY: build publish ci_test clean test
+.PHONY: build publish ci_test clean test inc-version
 
 build: test
 	mvn package
@@ -11,6 +11,9 @@ test: ci_test
 # CircleCI test
 ci_test: clean
 	mvn test
+
+inc-version:
+	./inc-version.sh
 
 # See https://bintray.com/lightstep for published artifacts
 # You must have the following entry in your settings.xml of your .m2 directory
@@ -30,4 +33,4 @@ publish: build
 	@test -n "$$BINTRAY_GPG_PASSPHRASE" || (echo "$$BINTRAY_GPG_PASSPHRASE must be defined to publish" && false)
 
 	@git diff-index --quiet HEAD || (echo "git has uncommitted changes. Refusing to publish." && false)
-	./inc-version.sh
+	./tag-and-deploy.sh
