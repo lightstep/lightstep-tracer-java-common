@@ -10,10 +10,10 @@ import com.lightstep.tracer.grpc.Span;
 import io.opentracing.Scope;
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
-import io.opentracing.propagation.Binary;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -349,7 +349,7 @@ public abstract class AbstractTracer implements Tracer {
         } else if (format == Format.Builtin.BINARY) {
             warn("LightStep-java does not yet support binary carriers. " +
                     "SpanContext: " + spanContext.toString());
-            Propagator.BINARY.inject(lightstepSpanContext, (Binary) carrier);
+            Propagator.BINARY.inject(lightstepSpanContext, (ByteBuffer) carrier);
         } else {
             info("Unsupported carrier type: " + carrier.getClass());
         }
@@ -362,7 +362,7 @@ public abstract class AbstractTracer implements Tracer {
             return Propagator.HTTP_HEADERS.extract((TextMap) carrier);
         } else if (format == Format.Builtin.BINARY) {
             warn("LightStep-java does not yet support binary carriers.");
-            return Propagator.BINARY.extract((Binary) carrier);
+            return Propagator.BINARY.extract((ByteBuffer) carrier);
         } else {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;

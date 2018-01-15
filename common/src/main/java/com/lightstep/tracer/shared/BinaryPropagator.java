@@ -1,13 +1,13 @@
 package com.lightstep.tracer.shared;
 
-import io.opentracing.propagation.Binary;
+import java.nio.ByteBuffer;
 
-class BinaryPropagator implements Propagator<Binary> {
-    public void inject(SpanContext spanContext, Binary carrier) {
+class BinaryPropagator implements Propagator<ByteBuffer> {
+    public void inject(SpanContext spanContext, ByteBuffer carrier) {
         // TODO: implement
     }
 
-    public SpanContext extract(Binary carrier) {
+    public SpanContext extract(ByteBuffer carrier) {
         // TODO: implement
         return null;
     }

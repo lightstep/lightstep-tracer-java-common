@@ -1,6 +1,7 @@
 package com.lightstep.tracer.shared;
 
-import io.opentracing.propagation.Binary;
+import java.nio.ByteBuffer;
+
 import io.opentracing.propagation.TextMap;
 
 interface Propagator<C> {
@@ -10,5 +11,5 @@ interface Propagator<C> {
 
     Propagator<TextMap> TEXT_MAP = new TextMapPropagator();
     Propagator<TextMap> HTTP_HEADERS = new HttpHeadersPropagator();
-    Propagator<Binary> BINARY = new BinaryPropagator();
+    Propagator<ByteBuffer> BINARY = new BinaryPropagator();
 }
