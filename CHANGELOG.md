@@ -1,8 +1,8 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.14.4)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.15.0)
 
-<a name="0.14.4"></a>
-## [0.14.4](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.14.4...0.14.3)
+<a name="0.15.0"></a>
+## [0.15.0](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.0...0.14.3)
 
 * Upgraded to io.opentracing 0.31.0
 
