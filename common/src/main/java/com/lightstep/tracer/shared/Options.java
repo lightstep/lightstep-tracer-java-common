@@ -1,7 +1,8 @@
 package com.lightstep.tracer.shared;
 
-import io.opentracing.ActiveSpanSource;
-import io.opentracing.util.ThreadLocalActiveSpanSource;
+
+import io.opentracing.ScopeManager;
+import io.opentracing.util.ThreadLocalScopeManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -108,7 +109,7 @@ public final class Options {
     // reset GRPC client at regular intervals (for load balancing)
     final boolean resetClient;
     final boolean useClockCorrection;
-    final ActiveSpanSource spanSource;
+    final ScopeManager scopeManager;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -125,7 +126,7 @@ public final class Options {
             boolean resetClient,
             Map<String, Object> tags,
             boolean useClockCorrection,
-            ActiveSpanSource spanSource,
+            ScopeManager scopeManager,
             long deadlineMillis
     ) {
         this.accessToken = accessToken;
@@ -137,7 +138,7 @@ public final class Options {
         this.resetClient = resetClient;
         this.tags = tags;
         this.useClockCorrection = useClockCorrection;
-        this.spanSource = spanSource;
+        this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
     }
 
@@ -158,7 +159,7 @@ public final class Options {
         private boolean resetClient = true;
         private boolean useClockCorrection = true;
         private Map<String, Object> tags = new HashMap<>();
-        private ActiveSpanSource spanSource;
+        private ScopeManager scopeManager;
         private long deadlineMillis = -1;
 
         public OptionsBuilder() {
@@ -175,7 +176,7 @@ public final class Options {
             this.disableReportingLoop = options.disableReportingLoop;
             this.resetClient = options.resetClient;
             this.tags = options.tags;
-            this.spanSource = options.spanSource;
+            this.scopeManager = options.scopeManager;
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
         }
@@ -330,7 +331,7 @@ public final class Options {
             defaultGuid();
             defaultMaxReportingIntervalMillis();
             defaultMaxBufferedSpans();
-            defaultSpanSource();
+            defaultScopeManager();
             defaultDeadlineMillis();
 
             return new Options(
@@ -343,14 +344,14 @@ public final class Options {
                     resetClient,
                     tags,
                     useClockCorrection,
-                    spanSource,
+                    scopeManager,
                     deadlineMillis
             );
         }
 
-        private void defaultSpanSource() {
-            if(spanSource == null) {
-                spanSource = new ThreadLocalActiveSpanSource();
+        private void defaultScopeManager() {
+            if(scopeManager == null) {
+                scopeManager = new ThreadLocalScopeManager();
             }
         }
 
