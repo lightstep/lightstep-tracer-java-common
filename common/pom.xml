@@ -5,7 +5,7 @@
     <parent>
         <artifactId>java</artifactId>
         <groupId>com.lightstep.tracer</groupId>
-        <version>0.14.3</version>
+        <version>0.15.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +16,7 @@
     <url>https://github.com/lightstep/lightstep-tracer-java-common</url>
 
     <properties>
-        <io.opentracing.version>0.30.0</io.opentracing.version>
+        <io.opentracing.version>0.31.0</io.opentracing.version>
         <com.google.protobuf.version>3.4.0</com.google.protobuf.version>
     </properties>
 

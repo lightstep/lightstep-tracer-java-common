@@ -2,11 +2,12 @@ package com.lightstep.tracer.shared;
 
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Span.Builder;
+import io.opentracing.util.ThreadLocalScopeManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -41,6 +42,8 @@ public class SpanBuilderTest {
         baggageItems = Collections.emptyMap();
         context = new SpanContext(TRACE_ID, SPAN_ID, baggageItems);
         undertest = new SpanBuilder(OPERATION_NAME, tracer);
+
+        when(tracer.scopeManager()).thenReturn(new ThreadLocalScopeManager());
     }
 
     /**
