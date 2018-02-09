@@ -14,11 +14,6 @@ import static io.opentracing.References.CHILD_OF;
 import static io.opentracing.References.FOLLOWS_FROM;
 
 public class SpanBuilder implements Tracer.SpanBuilder {
-    /**
-     * The tag key used to record the relationship between child and parent
-     * spans.
-     */
-    static final String PARENT_SPAN_GUID_KEY = "parent_span_guid";
 
     private final String operationName;
     private final Map<String, String> stringTags;
@@ -164,8 +159,6 @@ public class SpanBuilder implements Tracer.SpanBuilder {
 
         if (parent != null) {
             traceId = parent.getTraceId();
-            grpcSpan.addTags(KeyValue.newBuilder().setKey(PARENT_SPAN_GUID_KEY)
-                .setIntValue(parent.getSpanId()));
         }
         SpanContext newSpanContext;
         if (traceId != null && spanId != null) {

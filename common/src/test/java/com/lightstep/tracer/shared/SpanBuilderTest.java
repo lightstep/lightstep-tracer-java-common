@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.lightstep.tracer.shared.SpanBuilder.PARENT_SPAN_GUID_KEY;
 import static io.opentracing.References.FOLLOWS_FROM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -192,11 +191,6 @@ public class SpanBuilderTest {
         // verify that parent's trace id is set on context in returned span
         SpanContext spanContext = lsSpan.context();
         assertEquals(TRACE_ID, spanContext.getTraceId());
-
-        // verify that record has span id set
-        Builder spanRecord = lsSpan.getGrpcSpan();
-        List<KeyValue> attributes = spanRecord.getTagsList();
-        assertTrue(attributes.contains(KeyValue.newBuilder().setKey(PARENT_SPAN_GUID_KEY).setIntValue(SPAN_ID).build()));
 
         verifyResultingSpan(lsSpan);
         assertEquals(TRACE_ID, context.getTraceId());
