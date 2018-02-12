@@ -155,6 +155,7 @@ public class SpanBuilder implements Tracer.SpanBuilder {
 
         if(parent == null && !ignoringActiveSpan) {
             parent = activeSpanContext();
+            this.asChildOf(parent);
         }
 
         if (parent != null) {
