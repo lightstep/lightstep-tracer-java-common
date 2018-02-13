@@ -3,7 +3,8 @@
 
 <a name="0.15.1"></a>
 ## [0.15.1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.1...0.15.0)
-* Bug fixes to ensure `parent_span_guid` tag is no longer set.
+* Ensure `parent_span_guid` tag is no longer set.
+* Ensure `CHILD_OF` reference is set on `activeSpan`.
 
 <a name="0.15.0"></a>
 ## [0.15.0](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.0...0.14.3)
