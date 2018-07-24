@@ -18,6 +18,7 @@
     <properties>
         <io.opentracing.version>0.31.0</io.opentracing.version>
         <com.google.protobuf.version>3.5.1</com.google.protobuf.version>
+        <com.google.api.version>0.0.3</com.google.api.version>
     </properties>
 
     <build>
@@ -67,6 +68,12 @@
             <artifactId>protobuf-java</artifactId>
             <version>${com.google.protobuf.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.api.grpc</groupId>
+            <artifactId>googleapis-common-protos</artifactId>
+            <version>${com.google.api.version}</version>
+        </dependency>
+
 
         <!-- Test Dependencies -->
         <dependency>
