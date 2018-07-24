@@ -4,12 +4,17 @@
 package com.lightstep.tracer.grpc;
 
 /**
+ * <pre>
+ * Represent both tags and log fields.
+ * </pre>
+ *
  * Protobuf type {@code lightstep.collector.KeyValue}
  */
 public  final class KeyValue extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.KeyValue)
     KeyValueOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use KeyValue.newBuilder() to construct.
   private KeyValue(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -21,14 +26,19 @@ public  final class KeyValue extends
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private KeyValue(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -38,7 +48,8 @@ public  final class KeyValue extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -84,6 +95,7 @@ public  final class KeyValue extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -146,7 +158,7 @@ public  final class KeyValue extends
   public static final int KEY_FIELD_NUMBER = 1;
   private volatile java.lang.Object key_;
   /**
-   * <code>optional string key = 1;</code>
+   * <code>string key = 1;</code>
    */
   public java.lang.String getKey() {
     java.lang.Object ref = key_;
@@ -161,7 +173,7 @@ public  final class KeyValue extends
     }
   }
   /**
-   * <code>optional string key = 1;</code>
+   * <code>string key = 1;</code>
    */
   public com.google.protobuf.ByteString
       getKeyBytes() {
@@ -184,7 +196,7 @@ public  final class KeyValue extends
    * json_value.
    * </pre>
    *
-   * <code>optional string string_value = 2;</code>
+   * <code>string string_value = 2;</code>
    */
   public java.lang.String getStringValue() {
     java.lang.Object ref = "";
@@ -209,7 +221,7 @@ public  final class KeyValue extends
    * json_value.
    * </pre>
    *
-   * <code>optional string string_value = 2;</code>
+   * <code>string string_value = 2;</code>
    */
   public com.google.protobuf.ByteString
       getStringValueBytes() {
@@ -232,7 +244,7 @@ public  final class KeyValue extends
 
   public static final int INT_VALUE_FIELD_NUMBER = 3;
   /**
-   * <code>optional int64 int_value = 3;</code>
+   * <code>int64 int_value = 3;</code>
    */
   public long getIntValue() {
     if (valueCase_ == 3) {
@@ -243,7 +255,7 @@ public  final class KeyValue extends
 
   public static final int DOUBLE_VALUE_FIELD_NUMBER = 4;
   /**
-   * <code>optional double double_value = 4;</code>
+   * <code>double double_value = 4;</code>
    */
   public double getDoubleValue() {
     if (valueCase_ == 4) {
@@ -254,7 +266,7 @@ public  final class KeyValue extends
 
   public static final int BOOL_VALUE_FIELD_NUMBER = 5;
   /**
-   * <code>optional bool bool_value = 5;</code>
+   * <code>bool bool_value = 5;</code>
    */
   public boolean getBoolValue() {
     if (valueCase_ == 5) {
@@ -267,10 +279,10 @@ public  final class KeyValue extends
   /**
    * <pre>
    * Must be a well-formed JSON value. Truncated JSON should go in
-   * string_value.
+   * string_value. Should not be used for tags.
    * </pre>
    *
-   * <code>optional string json_value = 6;</code>
+   * <code>string json_value = 6;</code>
    */
   public java.lang.String getJsonValue() {
     java.lang.Object ref = "";
@@ -292,10 +304,10 @@ public  final class KeyValue extends
   /**
    * <pre>
    * Must be a well-formed JSON value. Truncated JSON should go in
-   * string_value.
+   * string_value. Should not be used for tags.
    * </pre>
    *
-   * <code>optional string json_value = 6;</code>
+   * <code>string json_value = 6;</code>
    */
   public com.google.protobuf.ByteString
       getJsonValueBytes() {
@@ -349,6 +361,7 @@ public  final class KeyValue extends
     if (valueCase_ == 6) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 6, value_);
     }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -380,11 +393,11 @@ public  final class KeyValue extends
     if (valueCase_ == 6) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, value_);
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -427,6 +440,7 @@ public  final class KeyValue extends
       case 0:
       default:
     }
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -436,7 +450,7 @@ public  final class KeyValue extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + KEY_FIELD_NUMBER;
     hash = (53 * hash) + getKey().hashCode();
     switch (valueCase_) {
@@ -471,6 +485,17 @@ public  final class KeyValue extends
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.KeyValue parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.KeyValue parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.KeyValue parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -549,6 +574,10 @@ public  final class KeyValue extends
     return builder;
   }
   /**
+   * <pre>
+   * Represent both tags and log fields.
+   * </pre>
+   *
    * Protobuf type {@code lightstep.collector.KeyValue}
    */
   public static final class Builder extends
@@ -636,7 +665,7 @@ public  final class KeyValue extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -649,12 +678,12 @@ public  final class KeyValue extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -701,6 +730,7 @@ public  final class KeyValue extends
           break;
         }
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -744,7 +774,7 @@ public  final class KeyValue extends
 
     private java.lang.Object key_ = "";
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     public java.lang.String getKey() {
       java.lang.Object ref = key_;
@@ -759,7 +789,7 @@ public  final class KeyValue extends
       }
     }
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     public com.google.protobuf.ByteString
         getKeyBytes() {
@@ -775,7 +805,7 @@ public  final class KeyValue extends
       }
     }
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     public Builder setKey(
         java.lang.String value) {
@@ -788,7 +818,7 @@ public  final class KeyValue extends
       return this;
     }
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     public Builder clearKey() {
       
@@ -797,7 +827,7 @@ public  final class KeyValue extends
       return this;
     }
     /**
-     * <code>optional string key = 1;</code>
+     * <code>string key = 1;</code>
      */
     public Builder setKeyBytes(
         com.google.protobuf.ByteString value) {
@@ -817,7 +847,7 @@ public  final class KeyValue extends
      * json_value.
      * </pre>
      *
-     * <code>optional string string_value = 2;</code>
+     * <code>string string_value = 2;</code>
      */
     public java.lang.String getStringValue() {
       java.lang.Object ref = "";
@@ -842,7 +872,7 @@ public  final class KeyValue extends
      * json_value.
      * </pre>
      *
-     * <code>optional string string_value = 2;</code>
+     * <code>string string_value = 2;</code>
      */
     public com.google.protobuf.ByteString
         getStringValueBytes() {
@@ -868,7 +898,7 @@ public  final class KeyValue extends
      * json_value.
      * </pre>
      *
-     * <code>optional string string_value = 2;</code>
+     * <code>string string_value = 2;</code>
      */
     public Builder setStringValue(
         java.lang.String value) {
@@ -886,7 +916,7 @@ public  final class KeyValue extends
      * json_value.
      * </pre>
      *
-     * <code>optional string string_value = 2;</code>
+     * <code>string string_value = 2;</code>
      */
     public Builder clearStringValue() {
       if (valueCase_ == 2) {
@@ -902,7 +932,7 @@ public  final class KeyValue extends
      * json_value.
      * </pre>
      *
-     * <code>optional string string_value = 2;</code>
+     * <code>string string_value = 2;</code>
      */
     public Builder setStringValueBytes(
         com.google.protobuf.ByteString value) {
@@ -917,7 +947,7 @@ public  final class KeyValue extends
     }
 
     /**
-     * <code>optional int64 int_value = 3;</code>
+     * <code>int64 int_value = 3;</code>
      */
     public long getIntValue() {
       if (valueCase_ == 3) {
@@ -926,7 +956,7 @@ public  final class KeyValue extends
       return 0L;
     }
     /**
-     * <code>optional int64 int_value = 3;</code>
+     * <code>int64 int_value = 3;</code>
      */
     public Builder setIntValue(long value) {
       valueCase_ = 3;
@@ -935,7 +965,7 @@ public  final class KeyValue extends
       return this;
     }
     /**
-     * <code>optional int64 int_value = 3;</code>
+     * <code>int64 int_value = 3;</code>
      */
     public Builder clearIntValue() {
       if (valueCase_ == 3) {
@@ -947,7 +977,7 @@ public  final class KeyValue extends
     }
 
     /**
-     * <code>optional double double_value = 4;</code>
+     * <code>double double_value = 4;</code>
      */
     public double getDoubleValue() {
       if (valueCase_ == 4) {
@@ -956,7 +986,7 @@ public  final class KeyValue extends
       return 0D;
     }
     /**
-     * <code>optional double double_value = 4;</code>
+     * <code>double double_value = 4;</code>
      */
     public Builder setDoubleValue(double value) {
       valueCase_ = 4;
@@ -965,7 +995,7 @@ public  final class KeyValue extends
       return this;
     }
     /**
-     * <code>optional double double_value = 4;</code>
+     * <code>double double_value = 4;</code>
      */
     public Builder clearDoubleValue() {
       if (valueCase_ == 4) {
@@ -977,7 +1007,7 @@ public  final class KeyValue extends
     }
 
     /**
-     * <code>optional bool bool_value = 5;</code>
+     * <code>bool bool_value = 5;</code>
      */
     public boolean getBoolValue() {
       if (valueCase_ == 5) {
@@ -986,7 +1016,7 @@ public  final class KeyValue extends
       return false;
     }
     /**
-     * <code>optional bool bool_value = 5;</code>
+     * <code>bool bool_value = 5;</code>
      */
     public Builder setBoolValue(boolean value) {
       valueCase_ = 5;
@@ -995,7 +1025,7 @@ public  final class KeyValue extends
       return this;
     }
     /**
-     * <code>optional bool bool_value = 5;</code>
+     * <code>bool bool_value = 5;</code>
      */
     public Builder clearBoolValue() {
       if (valueCase_ == 5) {
@@ -1009,10 +1039,10 @@ public  final class KeyValue extends
     /**
      * <pre>
      * Must be a well-formed JSON value. Truncated JSON should go in
-     * string_value.
+     * string_value. Should not be used for tags.
      * </pre>
      *
-     * <code>optional string json_value = 6;</code>
+     * <code>string json_value = 6;</code>
      */
     public java.lang.String getJsonValue() {
       java.lang.Object ref = "";
@@ -1034,10 +1064,10 @@ public  final class KeyValue extends
     /**
      * <pre>
      * Must be a well-formed JSON value. Truncated JSON should go in
-     * string_value.
+     * string_value. Should not be used for tags.
      * </pre>
      *
-     * <code>optional string json_value = 6;</code>
+     * <code>string json_value = 6;</code>
      */
     public com.google.protobuf.ByteString
         getJsonValueBytes() {
@@ -1060,10 +1090,10 @@ public  final class KeyValue extends
     /**
      * <pre>
      * Must be a well-formed JSON value. Truncated JSON should go in
-     * string_value.
+     * string_value. Should not be used for tags.
      * </pre>
      *
-     * <code>optional string json_value = 6;</code>
+     * <code>string json_value = 6;</code>
      */
     public Builder setJsonValue(
         java.lang.String value) {
@@ -1078,10 +1108,10 @@ public  final class KeyValue extends
     /**
      * <pre>
      * Must be a well-formed JSON value. Truncated JSON should go in
-     * string_value.
+     * string_value. Should not be used for tags.
      * </pre>
      *
-     * <code>optional string json_value = 6;</code>
+     * <code>string json_value = 6;</code>
      */
     public Builder clearJsonValue() {
       if (valueCase_ == 6) {
@@ -1094,10 +1124,10 @@ public  final class KeyValue extends
     /**
      * <pre>
      * Must be a well-formed JSON value. Truncated JSON should go in
-     * string_value.
+     * string_value. Should not be used for tags.
      * </pre>
      *
-     * <code>optional string json_value = 6;</code>
+     * <code>string json_value = 6;</code>
      */
     public Builder setJsonValueBytes(
         com.google.protobuf.ByteString value) {
@@ -1112,12 +1142,12 @@ public  final class KeyValue extends
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -1140,7 +1170,7 @@ public  final class KeyValue extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new KeyValue(input, extensionRegistry);
+      return new KeyValue(input, extensionRegistry);
     }
   };
 

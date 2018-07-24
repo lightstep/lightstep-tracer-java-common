@@ -32,28 +32,28 @@ public interface ReportResponseOrBuilder extends
       int index);
 
   /**
-   * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+   * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
    */
   boolean hasReceiveTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+   * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
    */
   com.google.protobuf.Timestamp getReceiveTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+   * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
    */
   com.google.protobuf.TimestampOrBuilder getReceiveTimestampOrBuilder();
 
   /**
-   * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
    */
   boolean hasTransmitTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
    */
   com.google.protobuf.Timestamp getTransmitTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
    */
   com.google.protobuf.TimestampOrBuilder getTransmitTimestampOrBuilder();
 
@@ -75,4 +75,42 @@ public interface ReportResponseOrBuilder extends
    */
   com.google.protobuf.ByteString
       getErrorsBytes(int index);
+
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  java.util.List<java.lang.String>
+      getWarningsList();
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  int getWarningsCount();
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  java.lang.String getWarnings(int index);
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  com.google.protobuf.ByteString
+      getWarningsBytes(int index);
+
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  java.util.List<java.lang.String>
+      getInfosList();
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  int getInfosCount();
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  java.lang.String getInfos(int index);
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  com.google.protobuf.ByteString
+      getInfosBytes(int index);
 }

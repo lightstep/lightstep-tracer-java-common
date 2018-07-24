@@ -89,57 +89,59 @@ public final class Collector {
   static {
     java.lang.String[] descriptorData = {
       "\n\017collector.proto\022\023lightstep.collector\032\037" +
-      "google/protobuf/timestamp.proto\"\240\001\n\013Span" +
-      "Context\022\020\n\010trace_id\030\001 \001(\004\022\017\n\007span_id\030\002 \001" +
-      "(\004\022>\n\007baggage\030\003 \003(\0132-.lightstep.collecto" +
-      "r.SpanContext.BaggageEntry\032.\n\014BaggageEnt" +
-      "ry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\010K" +
-      "eyValue\022\013\n\003key\030\001 \001(\t\022\026\n\014string_value\030\002 \001" +
-      "(\tH\000\022\023\n\tint_value\030\003 \001(\003H\000\022\026\n\014double_valu" +
-      "e\030\004 \001(\001H\000\022\024\n\nbool_value\030\005 \001(\010H\000\022\024\n\njson_" +
-      "value\030\006 \001(\tH\000B\007\n\005value\"f\n\003Log\022-\n\ttimesta",
-      "mp\030\001 \001(\0132\032.google.protobuf.Timestamp\0220\n\t" +
-      "keyvalues\030\002 \003(\0132\035.lightstep.collector.Ke" +
-      "yValue\"\266\001\n\tReference\022A\n\014relationship\030\001 \001" +
-      "(\0162+.lightstep.collector.Reference.Relat" +
-      "ionship\0226\n\014span_context\030\002 \001(\0132 .lightste" +
-      "p.collector.SpanContext\".\n\014Relationship\022" +
-      "\014\n\010CHILD_OF\020\000\022\020\n\014FOLLOWS_FROM\020\001\"\255\002\n\004Span" +
-      "\0226\n\014span_context\030\001 \001(\0132 .lightstep.colle" +
-      "ctor.SpanContext\022\026\n\016operation_name\030\002 \001(\t" +
-      "\0222\n\nreferences\030\003 \003(\0132\036.lightstep.collect",
-      "or.Reference\0223\n\017start_timestamp\030\004 \001(\0132\032." +
-      "google.protobuf.Timestamp\022\027\n\017duration_mi" +
-      "cros\030\005 \001(\004\022+\n\004tags\030\006 \003(\0132\035.lightstep.col" +
-      "lector.KeyValue\022&\n\004logs\030\007 \003(\0132\030.lightste" +
-      "p.collector.Log\"L\n\010Reporter\022\023\n\013reporter_" +
-      "id\030\001 \001(\004\022+\n\004tags\030\004 \003(\0132\035.lightstep.colle" +
-      "ctor.KeyValue\"S\n\rMetricsSample\022\014\n\004name\030\001" +
-      " \001(\t\022\023\n\tint_value\030\002 \001(\003H\000\022\026\n\014double_valu" +
-      "e\030\003 \001(\001H\000B\007\n\005value\"\357\001\n\017InternalMetrics\0223" +
-      "\n\017start_timestamp\030\001 \001(\0132\032.google.protobu",
-      "f.Timestamp\022\027\n\017duration_micros\030\002 \001(\004\022&\n\004" +
-      "logs\030\003 \003(\0132\030.lightstep.collector.Log\0222\n\006" +
-      "counts\030\004 \003(\0132\".lightstep.collector.Metri" +
-      "csSample\0222\n\006gauges\030\005 \003(\0132\".lightstep.col" +
-      "lector.MetricsSample\"\034\n\004Auth\022\024\n\014access_t" +
-      "oken\030\001 \001(\t\"\364\001\n\rReportRequest\022/\n\010reporter" +
-      "\030\001 \001(\0132\035.lightstep.collector.Reporter\022\'\n" +
-      "\004auth\030\002 \001(\0132\031.lightstep.collector.Auth\022(" +
-      "\n\005spans\030\003 \003(\0132\031.lightstep.collector.Span" +
-      "\022\037\n\027timestamp_offset_micros\030\005 \001(\r\022>\n\020int",
-      "ernal_metrics\030\006 \001(\0132$.lightstep.collecto" +
-      "r.InternalMetrics\"\032\n\007Command\022\017\n\007disable\030" +
-      "\001 \001(\010\"\277\001\n\016ReportResponse\022.\n\010commands\030\001 \003" +
-      "(\0132\034.lightstep.collector.Command\0225\n\021rece" +
-      "ive_timestamp\030\002 \001(\0132\032.google.protobuf.Ti" +
-      "mestamp\0226\n\022transmit_timestamp\030\003 \001(\0132\032.go" +
-      "ogle.protobuf.Timestamp\022\016\n\006errors\030\004 \003(\t2" +
-      "e\n\020CollectorService\022Q\n\006Report\022\".lightste" +
-      "p.collector.ReportRequest\032#.lightstep.co" +
-      "llector.ReportResponseB1\n\031com.lightstep.",
-      "tracer.grpcP\001Z\013collectorpb\242\002\004LSPBb\006proto" +
-      "3"
+      "google/protobuf/timestamp.proto\032\034google/" +
+      "api/annotations.proto\"\240\001\n\013SpanContext\022\020\n" +
+      "\010trace_id\030\001 \001(\004\022\017\n\007span_id\030\002 \001(\004\022>\n\007bagg" +
+      "age\030\003 \003(\0132-.lightstep.collector.SpanCont" +
+      "ext.BaggageEntry\032.\n\014BaggageEntry\022\013\n\003key\030" +
+      "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\221\001\n\010KeyValue\022\013\n" +
+      "\003key\030\001 \001(\t\022\026\n\014string_value\030\002 \001(\tH\000\022\023\n\tin" +
+      "t_value\030\003 \001(\003H\000\022\026\n\014double_value\030\004 \001(\001H\000\022" +
+      "\024\n\nbool_value\030\005 \001(\010H\000\022\024\n\njson_value\030\006 \001(" +
+      "\tH\000B\007\n\005value\"c\n\003Log\022-\n\ttimestamp\030\001 \001(\0132\032" +
+      ".google.protobuf.Timestamp\022-\n\006fields\030\002 \003" +
+      "(\0132\035.lightstep.collector.KeyValue\"\266\001\n\tRe" +
+      "ference\022A\n\014relationship\030\001 \001(\0162+.lightste" +
+      "p.collector.Reference.Relationship\0226\n\014sp" +
+      "an_context\030\002 \001(\0132 .lightstep.collector.S" +
+      "panContext\".\n\014Relationship\022\014\n\010CHILD_OF\020\000" +
+      "\022\020\n\014FOLLOWS_FROM\020\001\"\255\002\n\004Span\0226\n\014span_cont" +
+      "ext\030\001 \001(\0132 .lightstep.collector.SpanCont" +
+      "ext\022\026\n\016operation_name\030\002 \001(\t\0222\n\nreference" +
+      "s\030\003 \003(\0132\036.lightstep.collector.Reference\022" +
+      "3\n\017start_timestamp\030\004 \001(\0132\032.google.protob" +
+      "uf.Timestamp\022\027\n\017duration_micros\030\005 \001(\004\022+\n" +
+      "\004tags\030\006 \003(\0132\035.lightstep.collector.KeyVal" +
+      "ue\022&\n\004logs\030\007 \003(\0132\030.lightstep.collector.L" +
+      "og\"L\n\010Reporter\022\023\n\013reporter_id\030\001 \001(\004\022+\n\004t" +
+      "ags\030\004 \003(\0132\035.lightstep.collector.KeyValue" +
+      "\"S\n\rMetricsSample\022\014\n\004name\030\001 \001(\t\022\023\n\tint_v" +
+      "alue\030\002 \001(\003H\000\022\026\n\014double_value\030\003 \001(\001H\000B\007\n\005" +
+      "value\"\357\001\n\017InternalMetrics\0223\n\017start_times" +
+      "tamp\030\001 \001(\0132\032.google.protobuf.Timestamp\022\027" +
+      "\n\017duration_micros\030\002 \001(\004\022&\n\004logs\030\003 \003(\0132\030." +
+      "lightstep.collector.Log\0222\n\006counts\030\004 \003(\0132" +
+      "\".lightstep.collector.MetricsSample\0222\n\006g" +
+      "auges\030\005 \003(\0132\".lightstep.collector.Metric" +
+      "sSample\"\034\n\004Auth\022\024\n\014access_token\030\001 \001(\t\"\364\001" +
+      "\n\rReportRequest\022/\n\010reporter\030\001 \001(\0132\035.ligh" +
+      "tstep.collector.Reporter\022\'\n\004auth\030\002 \001(\0132\031" +
+      ".lightstep.collector.Auth\022(\n\005spans\030\003 \003(\013" +
+      "2\031.lightstep.collector.Span\022\037\n\027timestamp" +
+      "_offset_micros\030\005 \001(\003\022>\n\020internal_metrics" +
+      "\030\006 \001(\0132$.lightstep.collector.InternalMet" +
+      "rics\"\032\n\007Command\022\017\n\007disable\030\001 \001(\010\"\340\001\n\016Rep" +
+      "ortResponse\022.\n\010commands\030\001 \003(\0132\034.lightste" +
+      "p.collector.Command\0225\n\021receive_timestamp" +
+      "\030\002 \001(\0132\032.google.protobuf.Timestamp\0226\n\022tr" +
+      "ansmit_timestamp\030\003 \001(\0132\032.google.protobuf" +
+      ".Timestamp\022\016\n\006errors\030\004 \003(\t\022\020\n\010warnings\030\005" +
+      " \003(\t\022\r\n\005infos\030\006 \003(\t2\225\001\n\020CollectorService" +
+      "\022\200\001\n\006Report\022\".lightstep.collector.Report" +
+      "Request\032#.lightstep.collector.ReportResp" +
+      "onse\"-\202\323\344\223\002\'\"\017/api/v2/reports:\001*Z\021\022\017/api" +
+      "/v2/reportsB1\n\031com.lightstep.tracer.grpc" +
+      "P\001Z\013collectorpb\242\002\004LSPBb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -153,6 +155,7 @@ public final class Collector {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.TimestampProto.getDescriptor(),
+          com.google.api.AnnotationsProto.getDescriptor(),
         }, assigner);
     internal_static_lightstep_collector_SpanContext_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -177,7 +180,7 @@ public final class Collector {
     internal_static_lightstep_collector_Log_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_lightstep_collector_Log_descriptor,
-        new java.lang.String[] { "Timestamp", "Keyvalues", });
+        new java.lang.String[] { "Timestamp", "Fields", });
     internal_static_lightstep_collector_Reference_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_lightstep_collector_Reference_fieldAccessorTable = new
@@ -231,8 +234,14 @@ public final class Collector {
     internal_static_lightstep_collector_ReportResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_lightstep_collector_ReportResponse_descriptor,
-        new java.lang.String[] { "Commands", "ReceiveTimestamp", "TransmitTimestamp", "Errors", });
+        new java.lang.String[] { "Commands", "ReceiveTimestamp", "TransmitTimestamp", "Errors", "Warnings", "Infos", });
+    com.google.protobuf.ExtensionRegistry registry =
+        com.google.protobuf.ExtensionRegistry.newInstance();
+    registry.add(com.google.api.AnnotationsProto.http);
+    com.google.protobuf.Descriptors.FileDescriptor
+        .internalUpdateFileDescriptor(descriptor, registry);
     com.google.protobuf.TimestampProto.getDescriptor();
+    com.google.api.AnnotationsProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

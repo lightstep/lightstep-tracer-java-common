@@ -10,25 +10,31 @@ public  final class Log extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.Log)
     LogOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use Log.newBuilder() to construct.
   private Log(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
   private Log() {
-    keyvalues_ = java.util.Collections.emptyList();
+    fields_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private Log(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -38,7 +44,8 @@ public  final class Log extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -58,10 +65,10 @@ public  final class Log extends
           }
           case 18: {
             if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-              keyvalues_ = new java.util.ArrayList<com.lightstep.tracer.grpc.KeyValue>();
+              fields_ = new java.util.ArrayList<com.lightstep.tracer.grpc.KeyValue>();
               mutable_bitField0_ |= 0x00000002;
             }
-            keyvalues_.add(
+            fields_.add(
                 input.readMessage(com.lightstep.tracer.grpc.KeyValue.parser(), extensionRegistry));
             break;
           }
@@ -74,8 +81,9 @@ public  final class Log extends
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-        keyvalues_ = java.util.Collections.unmodifiableList(keyvalues_);
+        fields_ = java.util.Collections.unmodifiableList(fields_);
       }
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -95,57 +103,57 @@ public  final class Log extends
   public static final int TIMESTAMP_FIELD_NUMBER = 1;
   private com.google.protobuf.Timestamp timestamp_;
   /**
-   * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 1;</code>
    */
   public boolean hasTimestamp() {
     return timestamp_ != null;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 1;</code>
    */
   public com.google.protobuf.Timestamp getTimestamp() {
     return timestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : timestamp_;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 1;</code>
    */
   public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
     return getTimestamp();
   }
 
-  public static final int KEYVALUES_FIELD_NUMBER = 2;
-  private java.util.List<com.lightstep.tracer.grpc.KeyValue> keyvalues_;
+  public static final int FIELDS_FIELD_NUMBER = 2;
+  private java.util.List<com.lightstep.tracer.grpc.KeyValue> fields_;
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
-  public java.util.List<com.lightstep.tracer.grpc.KeyValue> getKeyvaluesList() {
-    return keyvalues_;
+  public java.util.List<com.lightstep.tracer.grpc.KeyValue> getFieldsList() {
+    return fields_;
   }
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
   public java.util.List<? extends com.lightstep.tracer.grpc.KeyValueOrBuilder> 
-      getKeyvaluesOrBuilderList() {
-    return keyvalues_;
+      getFieldsOrBuilderList() {
+    return fields_;
   }
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
-  public int getKeyvaluesCount() {
-    return keyvalues_.size();
+  public int getFieldsCount() {
+    return fields_.size();
   }
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
-  public com.lightstep.tracer.grpc.KeyValue getKeyvalues(int index) {
-    return keyvalues_.get(index);
+  public com.lightstep.tracer.grpc.KeyValue getFields(int index) {
+    return fields_.get(index);
   }
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
-  public com.lightstep.tracer.grpc.KeyValueOrBuilder getKeyvaluesOrBuilder(
+  public com.lightstep.tracer.grpc.KeyValueOrBuilder getFieldsOrBuilder(
       int index) {
-    return keyvalues_.get(index);
+    return fields_.get(index);
   }
 
   private byte memoizedIsInitialized = -1;
@@ -163,9 +171,10 @@ public  final class Log extends
     if (timestamp_ != null) {
       output.writeMessage(1, getTimestamp());
     }
-    for (int i = 0; i < keyvalues_.size(); i++) {
-      output.writeMessage(2, keyvalues_.get(i));
+    for (int i = 0; i < fields_.size(); i++) {
+      output.writeMessage(2, fields_.get(i));
     }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -177,15 +186,15 @@ public  final class Log extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getTimestamp());
     }
-    for (int i = 0; i < keyvalues_.size(); i++) {
+    for (int i = 0; i < fields_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, keyvalues_.get(i));
+        .computeMessageSize(2, fields_.get(i));
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -202,8 +211,9 @@ public  final class Log extends
       result = result && getTimestamp()
           .equals(other.getTimestamp());
     }
-    result = result && getKeyvaluesList()
-        .equals(other.getKeyvaluesList());
+    result = result && getFieldsList()
+        .equals(other.getFieldsList());
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -213,20 +223,31 @@ public  final class Log extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     if (hasTimestamp()) {
       hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + getTimestamp().hashCode();
     }
-    if (getKeyvaluesCount() > 0) {
-      hash = (37 * hash) + KEYVALUES_FIELD_NUMBER;
-      hash = (53 * hash) + getKeyvaluesList().hashCode();
+    if (getFieldsCount() > 0) {
+      hash = (37 * hash) + FIELDS_FIELD_NUMBER;
+      hash = (53 * hash) + getFieldsList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.Log parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.Log parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.Log parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -336,7 +357,7 @@ public  final class Log extends
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getKeyvaluesFieldBuilder();
+        getFieldsFieldBuilder();
       }
     }
     public Builder clear() {
@@ -347,11 +368,11 @@ public  final class Log extends
         timestamp_ = null;
         timestampBuilder_ = null;
       }
-      if (keyvaluesBuilder_ == null) {
-        keyvalues_ = java.util.Collections.emptyList();
+      if (fieldsBuilder_ == null) {
+        fields_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
       } else {
-        keyvaluesBuilder_.clear();
+        fieldsBuilder_.clear();
       }
       return this;
     }
@@ -382,14 +403,14 @@ public  final class Log extends
       } else {
         result.timestamp_ = timestampBuilder_.build();
       }
-      if (keyvaluesBuilder_ == null) {
+      if (fieldsBuilder_ == null) {
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          keyvalues_ = java.util.Collections.unmodifiableList(keyvalues_);
+          fields_ = java.util.Collections.unmodifiableList(fields_);
           bitField0_ = (bitField0_ & ~0x00000002);
         }
-        result.keyvalues_ = keyvalues_;
+        result.fields_ = fields_;
       } else {
-        result.keyvalues_ = keyvaluesBuilder_.build();
+        result.fields_ = fieldsBuilder_.build();
       }
       result.bitField0_ = to_bitField0_;
       onBuilt();
@@ -401,7 +422,7 @@ public  final class Log extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -414,12 +435,12 @@ public  final class Log extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -436,32 +457,33 @@ public  final class Log extends
       if (other.hasTimestamp()) {
         mergeTimestamp(other.getTimestamp());
       }
-      if (keyvaluesBuilder_ == null) {
-        if (!other.keyvalues_.isEmpty()) {
-          if (keyvalues_.isEmpty()) {
-            keyvalues_ = other.keyvalues_;
+      if (fieldsBuilder_ == null) {
+        if (!other.fields_.isEmpty()) {
+          if (fields_.isEmpty()) {
+            fields_ = other.fields_;
             bitField0_ = (bitField0_ & ~0x00000002);
           } else {
-            ensureKeyvaluesIsMutable();
-            keyvalues_.addAll(other.keyvalues_);
+            ensureFieldsIsMutable();
+            fields_.addAll(other.fields_);
           }
           onChanged();
         }
       } else {
-        if (!other.keyvalues_.isEmpty()) {
-          if (keyvaluesBuilder_.isEmpty()) {
-            keyvaluesBuilder_.dispose();
-            keyvaluesBuilder_ = null;
-            keyvalues_ = other.keyvalues_;
+        if (!other.fields_.isEmpty()) {
+          if (fieldsBuilder_.isEmpty()) {
+            fieldsBuilder_.dispose();
+            fieldsBuilder_ = null;
+            fields_ = other.fields_;
             bitField0_ = (bitField0_ & ~0x00000002);
-            keyvaluesBuilder_ = 
+            fieldsBuilder_ = 
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getKeyvaluesFieldBuilder() : null;
+                 getFieldsFieldBuilder() : null;
           } else {
-            keyvaluesBuilder_.addAllMessages(other.keyvalues_);
+            fieldsBuilder_.addAllMessages(other.fields_);
           }
         }
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -493,13 +515,13 @@ public  final class Log extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> timestampBuilder_;
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public boolean hasTimestamp() {
       return timestampBuilder_ != null || timestamp_ != null;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public com.google.protobuf.Timestamp getTimestamp() {
       if (timestampBuilder_ == null) {
@@ -509,7 +531,7 @@ public  final class Log extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public Builder setTimestamp(com.google.protobuf.Timestamp value) {
       if (timestampBuilder_ == null) {
@@ -525,7 +547,7 @@ public  final class Log extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public Builder setTimestamp(
         com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -539,7 +561,7 @@ public  final class Log extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public Builder mergeTimestamp(com.google.protobuf.Timestamp value) {
       if (timestampBuilder_ == null) {
@@ -557,7 +579,7 @@ public  final class Log extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public Builder clearTimestamp() {
       if (timestampBuilder_ == null) {
@@ -571,7 +593,7 @@ public  final class Log extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public com.google.protobuf.Timestamp.Builder getTimestampBuilder() {
       
@@ -579,7 +601,7 @@ public  final class Log extends
       return getTimestampFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     public com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder() {
       if (timestampBuilder_ != null) {
@@ -590,7 +612,7 @@ public  final class Log extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp timestamp = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
@@ -606,253 +628,253 @@ public  final class Log extends
       return timestampBuilder_;
     }
 
-    private java.util.List<com.lightstep.tracer.grpc.KeyValue> keyvalues_ =
+    private java.util.List<com.lightstep.tracer.grpc.KeyValue> fields_ =
       java.util.Collections.emptyList();
-    private void ensureKeyvaluesIsMutable() {
+    private void ensureFieldsIsMutable() {
       if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-        keyvalues_ = new java.util.ArrayList<com.lightstep.tracer.grpc.KeyValue>(keyvalues_);
+        fields_ = new java.util.ArrayList<com.lightstep.tracer.grpc.KeyValue>(fields_);
         bitField0_ |= 0x00000002;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        com.lightstep.tracer.grpc.KeyValue, com.lightstep.tracer.grpc.KeyValue.Builder, com.lightstep.tracer.grpc.KeyValueOrBuilder> keyvaluesBuilder_;
+        com.lightstep.tracer.grpc.KeyValue, com.lightstep.tracer.grpc.KeyValue.Builder, com.lightstep.tracer.grpc.KeyValueOrBuilder> fieldsBuilder_;
 
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public java.util.List<com.lightstep.tracer.grpc.KeyValue> getKeyvaluesList() {
-      if (keyvaluesBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(keyvalues_);
+    public java.util.List<com.lightstep.tracer.grpc.KeyValue> getFieldsList() {
+      if (fieldsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(fields_);
       } else {
-        return keyvaluesBuilder_.getMessageList();
+        return fieldsBuilder_.getMessageList();
       }
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public int getKeyvaluesCount() {
-      if (keyvaluesBuilder_ == null) {
-        return keyvalues_.size();
+    public int getFieldsCount() {
+      if (fieldsBuilder_ == null) {
+        return fields_.size();
       } else {
-        return keyvaluesBuilder_.getCount();
+        return fieldsBuilder_.getCount();
       }
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public com.lightstep.tracer.grpc.KeyValue getKeyvalues(int index) {
-      if (keyvaluesBuilder_ == null) {
-        return keyvalues_.get(index);
+    public com.lightstep.tracer.grpc.KeyValue getFields(int index) {
+      if (fieldsBuilder_ == null) {
+        return fields_.get(index);
       } else {
-        return keyvaluesBuilder_.getMessage(index);
+        return fieldsBuilder_.getMessage(index);
       }
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder setKeyvalues(
+    public Builder setFields(
         int index, com.lightstep.tracer.grpc.KeyValue value) {
-      if (keyvaluesBuilder_ == null) {
+      if (fieldsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureKeyvaluesIsMutable();
-        keyvalues_.set(index, value);
+        ensureFieldsIsMutable();
+        fields_.set(index, value);
         onChanged();
       } else {
-        keyvaluesBuilder_.setMessage(index, value);
+        fieldsBuilder_.setMessage(index, value);
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder setKeyvalues(
+    public Builder setFields(
         int index, com.lightstep.tracer.grpc.KeyValue.Builder builderForValue) {
-      if (keyvaluesBuilder_ == null) {
-        ensureKeyvaluesIsMutable();
-        keyvalues_.set(index, builderForValue.build());
+      if (fieldsBuilder_ == null) {
+        ensureFieldsIsMutable();
+        fields_.set(index, builderForValue.build());
         onChanged();
       } else {
-        keyvaluesBuilder_.setMessage(index, builderForValue.build());
+        fieldsBuilder_.setMessage(index, builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder addKeyvalues(com.lightstep.tracer.grpc.KeyValue value) {
-      if (keyvaluesBuilder_ == null) {
+    public Builder addFields(com.lightstep.tracer.grpc.KeyValue value) {
+      if (fieldsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureKeyvaluesIsMutable();
-        keyvalues_.add(value);
+        ensureFieldsIsMutable();
+        fields_.add(value);
         onChanged();
       } else {
-        keyvaluesBuilder_.addMessage(value);
+        fieldsBuilder_.addMessage(value);
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder addKeyvalues(
+    public Builder addFields(
         int index, com.lightstep.tracer.grpc.KeyValue value) {
-      if (keyvaluesBuilder_ == null) {
+      if (fieldsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        ensureKeyvaluesIsMutable();
-        keyvalues_.add(index, value);
+        ensureFieldsIsMutable();
+        fields_.add(index, value);
         onChanged();
       } else {
-        keyvaluesBuilder_.addMessage(index, value);
+        fieldsBuilder_.addMessage(index, value);
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder addKeyvalues(
+    public Builder addFields(
         com.lightstep.tracer.grpc.KeyValue.Builder builderForValue) {
-      if (keyvaluesBuilder_ == null) {
-        ensureKeyvaluesIsMutable();
-        keyvalues_.add(builderForValue.build());
+      if (fieldsBuilder_ == null) {
+        ensureFieldsIsMutable();
+        fields_.add(builderForValue.build());
         onChanged();
       } else {
-        keyvaluesBuilder_.addMessage(builderForValue.build());
+        fieldsBuilder_.addMessage(builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder addKeyvalues(
+    public Builder addFields(
         int index, com.lightstep.tracer.grpc.KeyValue.Builder builderForValue) {
-      if (keyvaluesBuilder_ == null) {
-        ensureKeyvaluesIsMutable();
-        keyvalues_.add(index, builderForValue.build());
+      if (fieldsBuilder_ == null) {
+        ensureFieldsIsMutable();
+        fields_.add(index, builderForValue.build());
         onChanged();
       } else {
-        keyvaluesBuilder_.addMessage(index, builderForValue.build());
+        fieldsBuilder_.addMessage(index, builderForValue.build());
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder addAllKeyvalues(
+    public Builder addAllFields(
         java.lang.Iterable<? extends com.lightstep.tracer.grpc.KeyValue> values) {
-      if (keyvaluesBuilder_ == null) {
-        ensureKeyvaluesIsMutable();
+      if (fieldsBuilder_ == null) {
+        ensureFieldsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, keyvalues_);
+            values, fields_);
         onChanged();
       } else {
-        keyvaluesBuilder_.addAllMessages(values);
+        fieldsBuilder_.addAllMessages(values);
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder clearKeyvalues() {
-      if (keyvaluesBuilder_ == null) {
-        keyvalues_ = java.util.Collections.emptyList();
+    public Builder clearFields() {
+      if (fieldsBuilder_ == null) {
+        fields_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
       } else {
-        keyvaluesBuilder_.clear();
+        fieldsBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public Builder removeKeyvalues(int index) {
-      if (keyvaluesBuilder_ == null) {
-        ensureKeyvaluesIsMutable();
-        keyvalues_.remove(index);
+    public Builder removeFields(int index) {
+      if (fieldsBuilder_ == null) {
+        ensureFieldsIsMutable();
+        fields_.remove(index);
         onChanged();
       } else {
-        keyvaluesBuilder_.remove(index);
+        fieldsBuilder_.remove(index);
       }
       return this;
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public com.lightstep.tracer.grpc.KeyValue.Builder getKeyvaluesBuilder(
+    public com.lightstep.tracer.grpc.KeyValue.Builder getFieldsBuilder(
         int index) {
-      return getKeyvaluesFieldBuilder().getBuilder(index);
+      return getFieldsFieldBuilder().getBuilder(index);
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public com.lightstep.tracer.grpc.KeyValueOrBuilder getKeyvaluesOrBuilder(
+    public com.lightstep.tracer.grpc.KeyValueOrBuilder getFieldsOrBuilder(
         int index) {
-      if (keyvaluesBuilder_ == null) {
-        return keyvalues_.get(index);  } else {
-        return keyvaluesBuilder_.getMessageOrBuilder(index);
+      if (fieldsBuilder_ == null) {
+        return fields_.get(index);  } else {
+        return fieldsBuilder_.getMessageOrBuilder(index);
       }
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
     public java.util.List<? extends com.lightstep.tracer.grpc.KeyValueOrBuilder> 
-         getKeyvaluesOrBuilderList() {
-      if (keyvaluesBuilder_ != null) {
-        return keyvaluesBuilder_.getMessageOrBuilderList();
+         getFieldsOrBuilderList() {
+      if (fieldsBuilder_ != null) {
+        return fieldsBuilder_.getMessageOrBuilderList();
       } else {
-        return java.util.Collections.unmodifiableList(keyvalues_);
+        return java.util.Collections.unmodifiableList(fields_);
       }
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public com.lightstep.tracer.grpc.KeyValue.Builder addKeyvaluesBuilder() {
-      return getKeyvaluesFieldBuilder().addBuilder(
+    public com.lightstep.tracer.grpc.KeyValue.Builder addFieldsBuilder() {
+      return getFieldsFieldBuilder().addBuilder(
           com.lightstep.tracer.grpc.KeyValue.getDefaultInstance());
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
-    public com.lightstep.tracer.grpc.KeyValue.Builder addKeyvaluesBuilder(
+    public com.lightstep.tracer.grpc.KeyValue.Builder addFieldsBuilder(
         int index) {
-      return getKeyvaluesFieldBuilder().addBuilder(
+      return getFieldsFieldBuilder().addBuilder(
           index, com.lightstep.tracer.grpc.KeyValue.getDefaultInstance());
     }
     /**
-     * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+     * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
      */
     public java.util.List<com.lightstep.tracer.grpc.KeyValue.Builder> 
-         getKeyvaluesBuilderList() {
-      return getKeyvaluesFieldBuilder().getBuilderList();
+         getFieldsBuilderList() {
+      return getFieldsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
         com.lightstep.tracer.grpc.KeyValue, com.lightstep.tracer.grpc.KeyValue.Builder, com.lightstep.tracer.grpc.KeyValueOrBuilder> 
-        getKeyvaluesFieldBuilder() {
-      if (keyvaluesBuilder_ == null) {
-        keyvaluesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+        getFieldsFieldBuilder() {
+      if (fieldsBuilder_ == null) {
+        fieldsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
             com.lightstep.tracer.grpc.KeyValue, com.lightstep.tracer.grpc.KeyValue.Builder, com.lightstep.tracer.grpc.KeyValueOrBuilder>(
-                keyvalues_,
+                fields_,
                 ((bitField0_ & 0x00000002) == 0x00000002),
                 getParentForChildren(),
                 isClean());
-        keyvalues_ = null;
+        fields_ = null;
       }
-      return keyvaluesBuilder_;
+      return fieldsBuilder_;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -875,7 +897,7 @@ public  final class Log extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Log(input, extensionRegistry);
+      return new Log(input, extensionRegistry);
     }
   };
 

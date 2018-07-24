@@ -8,39 +8,39 @@ public interface LogOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 1;</code>
    */
   boolean hasTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 1;</code>
    */
   com.google.protobuf.Timestamp getTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp timestamp = 1;</code>
    */
   com.google.protobuf.TimestampOrBuilder getTimestampOrBuilder();
 
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
   java.util.List<com.lightstep.tracer.grpc.KeyValue> 
-      getKeyvaluesList();
+      getFieldsList();
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
-  com.lightstep.tracer.grpc.KeyValue getKeyvalues(int index);
+  com.lightstep.tracer.grpc.KeyValue getFields(int index);
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
-  int getKeyvaluesCount();
+  int getFieldsCount();
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
   java.util.List<? extends com.lightstep.tracer.grpc.KeyValueOrBuilder> 
-      getKeyvaluesOrBuilderList();
+      getFieldsOrBuilderList();
   /**
-   * <code>repeated .lightstep.collector.KeyValue keyvalues = 2;</code>
+   * <code>repeated .lightstep.collector.KeyValue fields = 2;</code>
    */
-  com.lightstep.tracer.grpc.KeyValueOrBuilder getKeyvaluesOrBuilder(
+  com.lightstep.tracer.grpc.KeyValueOrBuilder getFieldsOrBuilder(
       int index);
 }

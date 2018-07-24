@@ -10,6 +10,7 @@ public  final class Span extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.Span)
     SpanOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use Span.newBuilder() to construct.
   private Span(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -25,14 +26,19 @@ public  final class Span extends
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private Span(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -42,7 +48,8 @@ public  final class Span extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -128,6 +135,7 @@ public  final class Span extends
       if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
         logs_ = java.util.Collections.unmodifiableList(logs_);
       }
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -147,19 +155,19 @@ public  final class Span extends
   public static final int SPAN_CONTEXT_FIELD_NUMBER = 1;
   private com.lightstep.tracer.grpc.SpanContext spanContext_;
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 1;</code>
    */
   public boolean hasSpanContext() {
     return spanContext_ != null;
   }
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 1;</code>
    */
   public com.lightstep.tracer.grpc.SpanContext getSpanContext() {
     return spanContext_ == null ? com.lightstep.tracer.grpc.SpanContext.getDefaultInstance() : spanContext_;
   }
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 1;</code>
    */
   public com.lightstep.tracer.grpc.SpanContextOrBuilder getSpanContextOrBuilder() {
     return getSpanContext();
@@ -168,7 +176,7 @@ public  final class Span extends
   public static final int OPERATION_NAME_FIELD_NUMBER = 2;
   private volatile java.lang.Object operationName_;
   /**
-   * <code>optional string operation_name = 2;</code>
+   * <code>string operation_name = 2;</code>
    */
   public java.lang.String getOperationName() {
     java.lang.Object ref = operationName_;
@@ -183,7 +191,7 @@ public  final class Span extends
     }
   }
   /**
-   * <code>optional string operation_name = 2;</code>
+   * <code>string operation_name = 2;</code>
    */
   public com.google.protobuf.ByteString
       getOperationNameBytes() {
@@ -237,19 +245,19 @@ public  final class Span extends
   public static final int START_TIMESTAMP_FIELD_NUMBER = 4;
   private com.google.protobuf.Timestamp startTimestamp_;
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
    */
   public boolean hasStartTimestamp() {
     return startTimestamp_ != null;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
    */
   public com.google.protobuf.Timestamp getStartTimestamp() {
     return startTimestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : startTimestamp_;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
    */
   public com.google.protobuf.TimestampOrBuilder getStartTimestampOrBuilder() {
     return getStartTimestamp();
@@ -258,7 +266,7 @@ public  final class Span extends
   public static final int DURATION_MICROS_FIELD_NUMBER = 5;
   private long durationMicros_;
   /**
-   * <code>optional uint64 duration_micros = 5;</code>
+   * <code>uint64 duration_micros = 5;</code>
    */
   public long getDurationMicros() {
     return durationMicros_;
@@ -367,6 +375,7 @@ public  final class Span extends
     for (int i = 0; i < logs_.size(); i++) {
       output.writeMessage(7, logs_.get(i));
     }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -401,11 +410,11 @@ public  final class Span extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(7, logs_.get(i));
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -437,6 +446,7 @@ public  final class Span extends
         .equals(other.getTagsList());
     result = result && getLogsList()
         .equals(other.getLogsList());
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -446,7 +456,7 @@ public  final class Span extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     if (hasSpanContext()) {
       hash = (37 * hash) + SPAN_CONTEXT_FIELD_NUMBER;
       hash = (53 * hash) + getSpanContext().hashCode();
@@ -477,6 +487,17 @@ public  final class Span extends
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.Span parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.Span parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.Span parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -700,7 +721,7 @@ public  final class Span extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -713,12 +734,12 @@ public  final class Span extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -823,6 +844,7 @@ public  final class Span extends
           }
         }
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -854,13 +876,13 @@ public  final class Span extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.SpanContext, com.lightstep.tracer.grpc.SpanContext.Builder, com.lightstep.tracer.grpc.SpanContextOrBuilder> spanContextBuilder_;
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public boolean hasSpanContext() {
       return spanContextBuilder_ != null || spanContext_ != null;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public com.lightstep.tracer.grpc.SpanContext getSpanContext() {
       if (spanContextBuilder_ == null) {
@@ -870,7 +892,7 @@ public  final class Span extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public Builder setSpanContext(com.lightstep.tracer.grpc.SpanContext value) {
       if (spanContextBuilder_ == null) {
@@ -886,7 +908,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public Builder setSpanContext(
         com.lightstep.tracer.grpc.SpanContext.Builder builderForValue) {
@@ -900,7 +922,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public Builder mergeSpanContext(com.lightstep.tracer.grpc.SpanContext value) {
       if (spanContextBuilder_ == null) {
@@ -918,7 +940,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public Builder clearSpanContext() {
       if (spanContextBuilder_ == null) {
@@ -932,7 +954,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public com.lightstep.tracer.grpc.SpanContext.Builder getSpanContextBuilder() {
       
@@ -940,7 +962,7 @@ public  final class Span extends
       return getSpanContextFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     public com.lightstep.tracer.grpc.SpanContextOrBuilder getSpanContextOrBuilder() {
       if (spanContextBuilder_ != null) {
@@ -951,7 +973,7 @@ public  final class Span extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.SpanContext, com.lightstep.tracer.grpc.SpanContext.Builder, com.lightstep.tracer.grpc.SpanContextOrBuilder> 
@@ -969,7 +991,7 @@ public  final class Span extends
 
     private java.lang.Object operationName_ = "";
     /**
-     * <code>optional string operation_name = 2;</code>
+     * <code>string operation_name = 2;</code>
      */
     public java.lang.String getOperationName() {
       java.lang.Object ref = operationName_;
@@ -984,7 +1006,7 @@ public  final class Span extends
       }
     }
     /**
-     * <code>optional string operation_name = 2;</code>
+     * <code>string operation_name = 2;</code>
      */
     public com.google.protobuf.ByteString
         getOperationNameBytes() {
@@ -1000,7 +1022,7 @@ public  final class Span extends
       }
     }
     /**
-     * <code>optional string operation_name = 2;</code>
+     * <code>string operation_name = 2;</code>
      */
     public Builder setOperationName(
         java.lang.String value) {
@@ -1013,7 +1035,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional string operation_name = 2;</code>
+     * <code>string operation_name = 2;</code>
      */
     public Builder clearOperationName() {
       
@@ -1022,7 +1044,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional string operation_name = 2;</code>
+     * <code>string operation_name = 2;</code>
      */
     public Builder setOperationNameBytes(
         com.google.protobuf.ByteString value) {
@@ -1280,13 +1302,13 @@ public  final class Span extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> startTimestampBuilder_;
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public boolean hasStartTimestamp() {
       return startTimestampBuilder_ != null || startTimestamp_ != null;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public com.google.protobuf.Timestamp getStartTimestamp() {
       if (startTimestampBuilder_ == null) {
@@ -1296,7 +1318,7 @@ public  final class Span extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public Builder setStartTimestamp(com.google.protobuf.Timestamp value) {
       if (startTimestampBuilder_ == null) {
@@ -1312,7 +1334,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public Builder setStartTimestamp(
         com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -1326,7 +1348,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public Builder mergeStartTimestamp(com.google.protobuf.Timestamp value) {
       if (startTimestampBuilder_ == null) {
@@ -1344,7 +1366,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public Builder clearStartTimestamp() {
       if (startTimestampBuilder_ == null) {
@@ -1358,7 +1380,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public com.google.protobuf.Timestamp.Builder getStartTimestampBuilder() {
       
@@ -1366,7 +1388,7 @@ public  final class Span extends
       return getStartTimestampFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     public com.google.protobuf.TimestampOrBuilder getStartTimestampOrBuilder() {
       if (startTimestampBuilder_ != null) {
@@ -1377,7 +1399,7 @@ public  final class Span extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
@@ -1395,13 +1417,13 @@ public  final class Span extends
 
     private long durationMicros_ ;
     /**
-     * <code>optional uint64 duration_micros = 5;</code>
+     * <code>uint64 duration_micros = 5;</code>
      */
     public long getDurationMicros() {
       return durationMicros_;
     }
     /**
-     * <code>optional uint64 duration_micros = 5;</code>
+     * <code>uint64 duration_micros = 5;</code>
      */
     public Builder setDurationMicros(long value) {
       
@@ -1410,7 +1432,7 @@ public  final class Span extends
       return this;
     }
     /**
-     * <code>optional uint64 duration_micros = 5;</code>
+     * <code>uint64 duration_micros = 5;</code>
      */
     public Builder clearDurationMicros() {
       
@@ -1900,12 +1922,12 @@ public  final class Span extends
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -1928,7 +1950,7 @@ public  final class Span extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Span(input, extensionRegistry);
+      return new Span(input, extensionRegistry);
     }
   };
 

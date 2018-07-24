@@ -8,7 +8,7 @@ public interface ReporterOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional uint64 reporter_id = 1;</code>
+   * <code>uint64 reporter_id = 1;</code>
    */
   long getReporterId();
 

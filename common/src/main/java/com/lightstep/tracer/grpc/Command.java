@@ -10,6 +10,7 @@ public  final class Command extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.Command)
     CommandOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use Command.newBuilder() to construct.
   private Command(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -21,14 +22,19 @@ public  final class Command extends
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private Command(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -38,7 +44,8 @@ public  final class Command extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -56,6 +63,7 @@ public  final class Command extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -74,7 +82,7 @@ public  final class Command extends
   public static final int DISABLE_FIELD_NUMBER = 1;
   private boolean disable_;
   /**
-   * <code>optional bool disable = 1;</code>
+   * <code>bool disable = 1;</code>
    */
   public boolean getDisable() {
     return disable_;
@@ -95,6 +103,7 @@ public  final class Command extends
     if (disable_ != false) {
       output.writeBool(1, disable_);
     }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -106,11 +115,11 @@ public  final class Command extends
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(1, disable_);
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -124,6 +133,7 @@ public  final class Command extends
     boolean result = true;
     result = result && (getDisable()
         == other.getDisable());
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -133,7 +143,7 @@ public  final class Command extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + DISABLE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getDisable());
@@ -142,6 +152,17 @@ public  final class Command extends
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.Command parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.Command parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.Command parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -289,7 +310,7 @@ public  final class Command extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -302,12 +323,12 @@ public  final class Command extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -324,6 +345,7 @@ public  final class Command extends
       if (other.getDisable() != false) {
         setDisable(other.getDisable());
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -352,13 +374,13 @@ public  final class Command extends
 
     private boolean disable_ ;
     /**
-     * <code>optional bool disable = 1;</code>
+     * <code>bool disable = 1;</code>
      */
     public boolean getDisable() {
       return disable_;
     }
     /**
-     * <code>optional bool disable = 1;</code>
+     * <code>bool disable = 1;</code>
      */
     public Builder setDisable(boolean value) {
       
@@ -367,7 +389,7 @@ public  final class Command extends
       return this;
     }
     /**
-     * <code>optional bool disable = 1;</code>
+     * <code>bool disable = 1;</code>
      */
     public Builder clearDisable() {
       
@@ -377,12 +399,12 @@ public  final class Command extends
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -405,7 +427,7 @@ public  final class Command extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Command(input, extensionRegistry);
+      return new Command(input, extensionRegistry);
     }
   };
 

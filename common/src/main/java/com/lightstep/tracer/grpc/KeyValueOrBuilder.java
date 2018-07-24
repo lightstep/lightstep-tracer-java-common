@@ -8,11 +8,11 @@ public interface KeyValueOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string key = 1;</code>
+   * <code>string key = 1;</code>
    */
   java.lang.String getKey();
   /**
-   * <code>optional string key = 1;</code>
+   * <code>string key = 1;</code>
    */
   com.google.protobuf.ByteString
       getKeyBytes();
@@ -23,7 +23,7 @@ public interface KeyValueOrBuilder extends
    * json_value.
    * </pre>
    *
-   * <code>optional string string_value = 2;</code>
+   * <code>string string_value = 2;</code>
    */
   java.lang.String getStringValue();
   /**
@@ -32,42 +32,42 @@ public interface KeyValueOrBuilder extends
    * json_value.
    * </pre>
    *
-   * <code>optional string string_value = 2;</code>
+   * <code>string string_value = 2;</code>
    */
   com.google.protobuf.ByteString
       getStringValueBytes();
 
   /**
-   * <code>optional int64 int_value = 3;</code>
+   * <code>int64 int_value = 3;</code>
    */
   long getIntValue();
 
   /**
-   * <code>optional double double_value = 4;</code>
+   * <code>double double_value = 4;</code>
    */
   double getDoubleValue();
 
   /**
-   * <code>optional bool bool_value = 5;</code>
+   * <code>bool bool_value = 5;</code>
    */
   boolean getBoolValue();
 
   /**
    * <pre>
    * Must be a well-formed JSON value. Truncated JSON should go in
-   * string_value.
+   * string_value. Should not be used for tags.
    * </pre>
    *
-   * <code>optional string json_value = 6;</code>
+   * <code>string json_value = 6;</code>
    */
   java.lang.String getJsonValue();
   /**
    * <pre>
    * Must be a well-formed JSON value. Truncated JSON should go in
-   * string_value.
+   * string_value. Should not be used for tags.
    * </pre>
    *
-   * <code>optional string json_value = 6;</code>
+   * <code>string json_value = 6;</code>
    */
   com.google.protobuf.ByteString
       getJsonValueBytes();

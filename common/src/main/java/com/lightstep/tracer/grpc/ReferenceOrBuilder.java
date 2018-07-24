@@ -8,24 +8,24 @@ public interface ReferenceOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+   * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
    */
   int getRelationshipValue();
   /**
-   * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+   * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
    */
   com.lightstep.tracer.grpc.Reference.Relationship getRelationship();
 
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 2;</code>
    */
   boolean hasSpanContext();
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 2;</code>
    */
   com.lightstep.tracer.grpc.SpanContext getSpanContext();
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 2;</code>
    */
   com.lightstep.tracer.grpc.SpanContextOrBuilder getSpanContextOrBuilder();
 }

@@ -8,24 +8,24 @@ public interface SpanOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 1;</code>
    */
   boolean hasSpanContext();
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 1;</code>
    */
   com.lightstep.tracer.grpc.SpanContext getSpanContext();
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 1;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 1;</code>
    */
   com.lightstep.tracer.grpc.SpanContextOrBuilder getSpanContextOrBuilder();
 
   /**
-   * <code>optional string operation_name = 2;</code>
+   * <code>string operation_name = 2;</code>
    */
   java.lang.String getOperationName();
   /**
-   * <code>optional string operation_name = 2;</code>
+   * <code>string operation_name = 2;</code>
    */
   com.google.protobuf.ByteString
       getOperationNameBytes();
@@ -55,20 +55,20 @@ public interface SpanOrBuilder extends
       int index);
 
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
    */
   boolean hasStartTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
    */
   com.google.protobuf.Timestamp getStartTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 4;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 4;</code>
    */
   com.google.protobuf.TimestampOrBuilder getStartTimestampOrBuilder();
 
   /**
-   * <code>optional uint64 duration_micros = 5;</code>
+   * <code>uint64 duration_micros = 5;</code>
    */
   long getDurationMicros();
 

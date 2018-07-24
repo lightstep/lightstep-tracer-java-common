@@ -10,6 +10,7 @@ public  final class SpanContext extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.SpanContext)
     SpanContextOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use SpanContext.newBuilder() to construct.
   private SpanContext(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -22,14 +23,19 @@ public  final class SpanContext extends
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private SpanContext(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -39,7 +45,8 @@ public  final class SpanContext extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -75,6 +82,7 @@ public  final class SpanContext extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -105,7 +113,7 @@ public  final class SpanContext extends
   public static final int TRACE_ID_FIELD_NUMBER = 1;
   private long traceId_;
   /**
-   * <code>optional uint64 trace_id = 1;</code>
+   * <code>uint64 trace_id = 1;</code>
    */
   public long getTraceId() {
     return traceId_;
@@ -114,7 +122,7 @@ public  final class SpanContext extends
   public static final int SPAN_ID_FIELD_NUMBER = 2;
   private long spanId_;
   /**
-   * <code>optional uint64 span_id = 2;</code>
+   * <code>uint64 span_id = 2;</code>
    */
   public long getSpanId() {
     return spanId_;
@@ -220,6 +228,7 @@ public  final class SpanContext extends
         internalGetBaggage(),
         BaggageDefaultEntryHolder.defaultEntry,
         3);
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -245,11 +254,11 @@ public  final class SpanContext extends
       size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, baggage__);
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -267,6 +276,7 @@ public  final class SpanContext extends
         == other.getSpanId());
     result = result && internalGetBaggage().equals(
         other.internalGetBaggage());
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -276,7 +286,7 @@ public  final class SpanContext extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + TRACE_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getTraceId());
@@ -292,6 +302,17 @@ public  final class SpanContext extends
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.SpanContext parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.SpanContext parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.SpanContext parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -470,7 +491,7 @@ public  final class SpanContext extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -483,12 +504,12 @@ public  final class SpanContext extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -510,6 +531,7 @@ public  final class SpanContext extends
       }
       internalGetMutableBaggage().mergeFrom(
           other.internalGetBaggage());
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -539,13 +561,13 @@ public  final class SpanContext extends
 
     private long traceId_ ;
     /**
-     * <code>optional uint64 trace_id = 1;</code>
+     * <code>uint64 trace_id = 1;</code>
      */
     public long getTraceId() {
       return traceId_;
     }
     /**
-     * <code>optional uint64 trace_id = 1;</code>
+     * <code>uint64 trace_id = 1;</code>
      */
     public Builder setTraceId(long value) {
       
@@ -554,7 +576,7 @@ public  final class SpanContext extends
       return this;
     }
     /**
-     * <code>optional uint64 trace_id = 1;</code>
+     * <code>uint64 trace_id = 1;</code>
      */
     public Builder clearTraceId() {
       
@@ -565,13 +587,13 @@ public  final class SpanContext extends
 
     private long spanId_ ;
     /**
-     * <code>optional uint64 span_id = 2;</code>
+     * <code>uint64 span_id = 2;</code>
      */
     public long getSpanId() {
       return spanId_;
     }
     /**
-     * <code>optional uint64 span_id = 2;</code>
+     * <code>uint64 span_id = 2;</code>
      */
     public Builder setSpanId(long value) {
       
@@ -580,7 +602,7 @@ public  final class SpanContext extends
       return this;
     }
     /**
-     * <code>optional uint64 span_id = 2;</code>
+     * <code>uint64 span_id = 2;</code>
      */
     public Builder clearSpanId() {
       
@@ -666,7 +688,8 @@ public  final class SpanContext extends
     }
 
     public Builder clearBaggage() {
-      getMutableBaggage().clear();
+      internalGetMutableBaggage().getMutableMap()
+          .clear();
       return this;
     }
     /**
@@ -676,7 +699,8 @@ public  final class SpanContext extends
     public Builder removeBaggage(
         java.lang.String key) {
       if (key == null) { throw new java.lang.NullPointerException(); }
-      getMutableBaggage().remove(key);
+      internalGetMutableBaggage().getMutableMap()
+          .remove(key);
       return this;
     }
     /**
@@ -695,7 +719,8 @@ public  final class SpanContext extends
         java.lang.String value) {
       if (key == null) { throw new java.lang.NullPointerException(); }
       if (value == null) { throw new java.lang.NullPointerException(); }
-      getMutableBaggage().put(key, value);
+      internalGetMutableBaggage().getMutableMap()
+          .put(key, value);
       return this;
     }
     /**
@@ -704,17 +729,18 @@ public  final class SpanContext extends
 
     public Builder putAllBaggage(
         java.util.Map<java.lang.String, java.lang.String> values) {
-      getMutableBaggage().putAll(values);
+      internalGetMutableBaggage().getMutableMap()
+          .putAll(values);
       return this;
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -737,7 +763,7 @@ public  final class SpanContext extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new SpanContext(input, extensionRegistry);
+      return new SpanContext(input, extensionRegistry);
     }
   };
 

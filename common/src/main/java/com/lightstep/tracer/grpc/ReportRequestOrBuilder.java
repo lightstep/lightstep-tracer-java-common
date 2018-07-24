@@ -8,28 +8,28 @@ public interface ReportRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+   * <code>.lightstep.collector.Reporter reporter = 1;</code>
    */
   boolean hasReporter();
   /**
-   * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+   * <code>.lightstep.collector.Reporter reporter = 1;</code>
    */
   com.lightstep.tracer.grpc.Reporter getReporter();
   /**
-   * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+   * <code>.lightstep.collector.Reporter reporter = 1;</code>
    */
   com.lightstep.tracer.grpc.ReporterOrBuilder getReporterOrBuilder();
 
   /**
-   * <code>optional .lightstep.collector.Auth auth = 2;</code>
+   * <code>.lightstep.collector.Auth auth = 2;</code>
    */
   boolean hasAuth();
   /**
-   * <code>optional .lightstep.collector.Auth auth = 2;</code>
+   * <code>.lightstep.collector.Auth auth = 2;</code>
    */
   com.lightstep.tracer.grpc.Auth getAuth();
   /**
-   * <code>optional .lightstep.collector.Auth auth = 2;</code>
+   * <code>.lightstep.collector.Auth auth = 2;</code>
    */
   com.lightstep.tracer.grpc.AuthOrBuilder getAuthOrBuilder();
 
@@ -58,20 +58,20 @@ public interface ReportRequestOrBuilder extends
       int index);
 
   /**
-   * <code>optional uint32 timestamp_offset_micros = 5;</code>
+   * <code>int64 timestamp_offset_micros = 5;</code>
    */
-  int getTimestampOffsetMicros();
+  long getTimestampOffsetMicros();
 
   /**
-   * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+   * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
    */
   boolean hasInternalMetrics();
   /**
-   * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+   * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
    */
   com.lightstep.tracer.grpc.InternalMetrics getInternalMetrics();
   /**
-   * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+   * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
    */
   com.lightstep.tracer.grpc.InternalMetricsOrBuilder getInternalMetricsOrBuilder();
 }

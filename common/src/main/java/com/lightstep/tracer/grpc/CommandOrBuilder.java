@@ -8,7 +8,7 @@ public interface CommandOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional bool disable = 1;</code>
+   * <code>bool disable = 1;</code>
    */
   boolean getDisable();
 }

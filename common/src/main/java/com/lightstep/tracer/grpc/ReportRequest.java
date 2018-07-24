@@ -10,26 +10,32 @@ public  final class ReportRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.ReportRequest)
     ReportRequestOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use ReportRequest.newBuilder() to construct.
   private ReportRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
   private ReportRequest() {
     spans_ = java.util.Collections.emptyList();
-    timestampOffsetMicros_ = 0;
+    timestampOffsetMicros_ = 0L;
   }
 
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private ReportRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -39,7 +45,8 @@ public  final class ReportRequest extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -81,7 +88,7 @@ public  final class ReportRequest extends
           }
           case 40: {
 
-            timestampOffsetMicros_ = input.readUInt32();
+            timestampOffsetMicros_ = input.readInt64();
             break;
           }
           case 50: {
@@ -108,6 +115,7 @@ public  final class ReportRequest extends
       if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
         spans_ = java.util.Collections.unmodifiableList(spans_);
       }
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -127,19 +135,19 @@ public  final class ReportRequest extends
   public static final int REPORTER_FIELD_NUMBER = 1;
   private com.lightstep.tracer.grpc.Reporter reporter_;
   /**
-   * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+   * <code>.lightstep.collector.Reporter reporter = 1;</code>
    */
   public boolean hasReporter() {
     return reporter_ != null;
   }
   /**
-   * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+   * <code>.lightstep.collector.Reporter reporter = 1;</code>
    */
   public com.lightstep.tracer.grpc.Reporter getReporter() {
     return reporter_ == null ? com.lightstep.tracer.grpc.Reporter.getDefaultInstance() : reporter_;
   }
   /**
-   * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+   * <code>.lightstep.collector.Reporter reporter = 1;</code>
    */
   public com.lightstep.tracer.grpc.ReporterOrBuilder getReporterOrBuilder() {
     return getReporter();
@@ -148,19 +156,19 @@ public  final class ReportRequest extends
   public static final int AUTH_FIELD_NUMBER = 2;
   private com.lightstep.tracer.grpc.Auth auth_;
   /**
-   * <code>optional .lightstep.collector.Auth auth = 2;</code>
+   * <code>.lightstep.collector.Auth auth = 2;</code>
    */
   public boolean hasAuth() {
     return auth_ != null;
   }
   /**
-   * <code>optional .lightstep.collector.Auth auth = 2;</code>
+   * <code>.lightstep.collector.Auth auth = 2;</code>
    */
   public com.lightstep.tracer.grpc.Auth getAuth() {
     return auth_ == null ? com.lightstep.tracer.grpc.Auth.getDefaultInstance() : auth_;
   }
   /**
-   * <code>optional .lightstep.collector.Auth auth = 2;</code>
+   * <code>.lightstep.collector.Auth auth = 2;</code>
    */
   public com.lightstep.tracer.grpc.AuthOrBuilder getAuthOrBuilder() {
     return getAuth();
@@ -202,30 +210,30 @@ public  final class ReportRequest extends
   }
 
   public static final int TIMESTAMP_OFFSET_MICROS_FIELD_NUMBER = 5;
-  private int timestampOffsetMicros_;
+  private long timestampOffsetMicros_;
   /**
-   * <code>optional uint32 timestamp_offset_micros = 5;</code>
+   * <code>int64 timestamp_offset_micros = 5;</code>
    */
-  public int getTimestampOffsetMicros() {
+  public long getTimestampOffsetMicros() {
     return timestampOffsetMicros_;
   }
 
   public static final int INTERNAL_METRICS_FIELD_NUMBER = 6;
   private com.lightstep.tracer.grpc.InternalMetrics internalMetrics_;
   /**
-   * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+   * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
    */
   public boolean hasInternalMetrics() {
     return internalMetrics_ != null;
   }
   /**
-   * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+   * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
    */
   public com.lightstep.tracer.grpc.InternalMetrics getInternalMetrics() {
     return internalMetrics_ == null ? com.lightstep.tracer.grpc.InternalMetrics.getDefaultInstance() : internalMetrics_;
   }
   /**
-   * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+   * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
    */
   public com.lightstep.tracer.grpc.InternalMetricsOrBuilder getInternalMetricsOrBuilder() {
     return getInternalMetrics();
@@ -252,12 +260,13 @@ public  final class ReportRequest extends
     for (int i = 0; i < spans_.size(); i++) {
       output.writeMessage(3, spans_.get(i));
     }
-    if (timestampOffsetMicros_ != 0) {
-      output.writeUInt32(5, timestampOffsetMicros_);
+    if (timestampOffsetMicros_ != 0L) {
+      output.writeInt64(5, timestampOffsetMicros_);
     }
     if (internalMetrics_ != null) {
       output.writeMessage(6, getInternalMetrics());
     }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -277,19 +286,19 @@ public  final class ReportRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, spans_.get(i));
     }
-    if (timestampOffsetMicros_ != 0) {
+    if (timestampOffsetMicros_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeUInt32Size(5, timestampOffsetMicros_);
+        .computeInt64Size(5, timestampOffsetMicros_);
     }
     if (internalMetrics_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(6, getInternalMetrics());
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -320,6 +329,7 @@ public  final class ReportRequest extends
       result = result && getInternalMetrics()
           .equals(other.getInternalMetrics());
     }
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -329,7 +339,7 @@ public  final class ReportRequest extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     if (hasReporter()) {
       hash = (37 * hash) + REPORTER_FIELD_NUMBER;
       hash = (53 * hash) + getReporter().hashCode();
@@ -343,7 +353,8 @@ public  final class ReportRequest extends
       hash = (53 * hash) + getSpansList().hashCode();
     }
     hash = (37 * hash) + TIMESTAMP_OFFSET_MICROS_FIELD_NUMBER;
-    hash = (53 * hash) + getTimestampOffsetMicros();
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getTimestampOffsetMicros());
     if (hasInternalMetrics()) {
       hash = (37 * hash) + INTERNAL_METRICS_FIELD_NUMBER;
       hash = (53 * hash) + getInternalMetrics().hashCode();
@@ -353,6 +364,17 @@ public  final class ReportRequest extends
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.ReportRequest parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.ReportRequest parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.ReportRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -485,7 +507,7 @@ public  final class ReportRequest extends
       } else {
         spansBuilder_.clear();
       }
-      timestampOffsetMicros_ = 0;
+      timestampOffsetMicros_ = 0L;
 
       if (internalMetricsBuilder_ == null) {
         internalMetrics_ = null;
@@ -552,7 +574,7 @@ public  final class ReportRequest extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -565,12 +587,12 @@ public  final class ReportRequest extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -616,12 +638,13 @@ public  final class ReportRequest extends
           }
         }
       }
-      if (other.getTimestampOffsetMicros() != 0) {
+      if (other.getTimestampOffsetMicros() != 0L) {
         setTimestampOffsetMicros(other.getTimestampOffsetMicros());
       }
       if (other.hasInternalMetrics()) {
         mergeInternalMetrics(other.getInternalMetrics());
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -653,13 +676,13 @@ public  final class ReportRequest extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.Reporter, com.lightstep.tracer.grpc.Reporter.Builder, com.lightstep.tracer.grpc.ReporterOrBuilder> reporterBuilder_;
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public boolean hasReporter() {
       return reporterBuilder_ != null || reporter_ != null;
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public com.lightstep.tracer.grpc.Reporter getReporter() {
       if (reporterBuilder_ == null) {
@@ -669,7 +692,7 @@ public  final class ReportRequest extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public Builder setReporter(com.lightstep.tracer.grpc.Reporter value) {
       if (reporterBuilder_ == null) {
@@ -685,7 +708,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public Builder setReporter(
         com.lightstep.tracer.grpc.Reporter.Builder builderForValue) {
@@ -699,7 +722,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public Builder mergeReporter(com.lightstep.tracer.grpc.Reporter value) {
       if (reporterBuilder_ == null) {
@@ -717,7 +740,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public Builder clearReporter() {
       if (reporterBuilder_ == null) {
@@ -731,7 +754,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public com.lightstep.tracer.grpc.Reporter.Builder getReporterBuilder() {
       
@@ -739,7 +762,7 @@ public  final class ReportRequest extends
       return getReporterFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     public com.lightstep.tracer.grpc.ReporterOrBuilder getReporterOrBuilder() {
       if (reporterBuilder_ != null) {
@@ -750,7 +773,7 @@ public  final class ReportRequest extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.Reporter reporter = 1;</code>
+     * <code>.lightstep.collector.Reporter reporter = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.Reporter, com.lightstep.tracer.grpc.Reporter.Builder, com.lightstep.tracer.grpc.ReporterOrBuilder> 
@@ -770,13 +793,13 @@ public  final class ReportRequest extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.Auth, com.lightstep.tracer.grpc.Auth.Builder, com.lightstep.tracer.grpc.AuthOrBuilder> authBuilder_;
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public boolean hasAuth() {
       return authBuilder_ != null || auth_ != null;
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public com.lightstep.tracer.grpc.Auth getAuth() {
       if (authBuilder_ == null) {
@@ -786,7 +809,7 @@ public  final class ReportRequest extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public Builder setAuth(com.lightstep.tracer.grpc.Auth value) {
       if (authBuilder_ == null) {
@@ -802,7 +825,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public Builder setAuth(
         com.lightstep.tracer.grpc.Auth.Builder builderForValue) {
@@ -816,7 +839,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public Builder mergeAuth(com.lightstep.tracer.grpc.Auth value) {
       if (authBuilder_ == null) {
@@ -834,7 +857,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public Builder clearAuth() {
       if (authBuilder_ == null) {
@@ -848,7 +871,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public com.lightstep.tracer.grpc.Auth.Builder getAuthBuilder() {
       
@@ -856,7 +879,7 @@ public  final class ReportRequest extends
       return getAuthFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     public com.lightstep.tracer.grpc.AuthOrBuilder getAuthOrBuilder() {
       if (authBuilder_ != null) {
@@ -867,7 +890,7 @@ public  final class ReportRequest extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.Auth auth = 2;</code>
+     * <code>.lightstep.collector.Auth auth = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.Auth, com.lightstep.tracer.grpc.Auth.Builder, com.lightstep.tracer.grpc.AuthOrBuilder> 
@@ -1123,28 +1146,28 @@ public  final class ReportRequest extends
       return spansBuilder_;
     }
 
-    private int timestampOffsetMicros_ ;
+    private long timestampOffsetMicros_ ;
     /**
-     * <code>optional uint32 timestamp_offset_micros = 5;</code>
+     * <code>int64 timestamp_offset_micros = 5;</code>
      */
-    public int getTimestampOffsetMicros() {
+    public long getTimestampOffsetMicros() {
       return timestampOffsetMicros_;
     }
     /**
-     * <code>optional uint32 timestamp_offset_micros = 5;</code>
+     * <code>int64 timestamp_offset_micros = 5;</code>
      */
-    public Builder setTimestampOffsetMicros(int value) {
+    public Builder setTimestampOffsetMicros(long value) {
       
       timestampOffsetMicros_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional uint32 timestamp_offset_micros = 5;</code>
+     * <code>int64 timestamp_offset_micros = 5;</code>
      */
     public Builder clearTimestampOffsetMicros() {
       
-      timestampOffsetMicros_ = 0;
+      timestampOffsetMicros_ = 0L;
       onChanged();
       return this;
     }
@@ -1153,13 +1176,13 @@ public  final class ReportRequest extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.InternalMetrics, com.lightstep.tracer.grpc.InternalMetrics.Builder, com.lightstep.tracer.grpc.InternalMetricsOrBuilder> internalMetricsBuilder_;
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public boolean hasInternalMetrics() {
       return internalMetricsBuilder_ != null || internalMetrics_ != null;
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public com.lightstep.tracer.grpc.InternalMetrics getInternalMetrics() {
       if (internalMetricsBuilder_ == null) {
@@ -1169,7 +1192,7 @@ public  final class ReportRequest extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public Builder setInternalMetrics(com.lightstep.tracer.grpc.InternalMetrics value) {
       if (internalMetricsBuilder_ == null) {
@@ -1185,7 +1208,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public Builder setInternalMetrics(
         com.lightstep.tracer.grpc.InternalMetrics.Builder builderForValue) {
@@ -1199,7 +1222,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public Builder mergeInternalMetrics(com.lightstep.tracer.grpc.InternalMetrics value) {
       if (internalMetricsBuilder_ == null) {
@@ -1217,7 +1240,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public Builder clearInternalMetrics() {
       if (internalMetricsBuilder_ == null) {
@@ -1231,7 +1254,7 @@ public  final class ReportRequest extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public com.lightstep.tracer.grpc.InternalMetrics.Builder getInternalMetricsBuilder() {
       
@@ -1239,7 +1262,7 @@ public  final class ReportRequest extends
       return getInternalMetricsFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     public com.lightstep.tracer.grpc.InternalMetricsOrBuilder getInternalMetricsOrBuilder() {
       if (internalMetricsBuilder_ != null) {
@@ -1250,7 +1273,7 @@ public  final class ReportRequest extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.InternalMetrics internal_metrics = 6;</code>
+     * <code>.lightstep.collector.InternalMetrics internal_metrics = 6;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.InternalMetrics, com.lightstep.tracer.grpc.InternalMetrics.Builder, com.lightstep.tracer.grpc.InternalMetricsOrBuilder> 
@@ -1267,12 +1290,12 @@ public  final class ReportRequest extends
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -1295,7 +1318,7 @@ public  final class ReportRequest extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ReportRequest(input, extensionRegistry);
+      return new ReportRequest(input, extensionRegistry);
     }
   };
 
