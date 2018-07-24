@@ -464,7 +464,7 @@ public abstract class AbstractTracer implements Tracer {
                 .setReporter(reporter)
                 .setAuth(auth)
                 .addAllSpans(spans)
-                .setTimestampOffsetMicros(Util.safeLongToInt(clockState.offsetMicros()))
+                .setTimestampOffsetMicros(clockState.offsetMicros())
                 .setInternalMetrics(clientMetrics.toInternalMetricsAndReset())
                 .build();
 
