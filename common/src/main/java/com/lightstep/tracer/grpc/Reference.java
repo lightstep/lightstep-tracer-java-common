@@ -10,6 +10,7 @@ public  final class Reference extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.Reference)
     ReferenceOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use Reference.newBuilder() to construct.
   private Reference(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -21,14 +22,19 @@ public  final class Reference extends
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private Reference(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -38,7 +44,8 @@ public  final class Reference extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -70,6 +77,7 @@ public  final class Reference extends
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -186,13 +194,13 @@ public  final class Reference extends
   public static final int RELATIONSHIP_FIELD_NUMBER = 1;
   private int relationship_;
   /**
-   * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+   * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
    */
   public int getRelationshipValue() {
     return relationship_;
   }
   /**
-   * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+   * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
    */
   public com.lightstep.tracer.grpc.Reference.Relationship getRelationship() {
     com.lightstep.tracer.grpc.Reference.Relationship result = com.lightstep.tracer.grpc.Reference.Relationship.valueOf(relationship_);
@@ -202,19 +210,19 @@ public  final class Reference extends
   public static final int SPAN_CONTEXT_FIELD_NUMBER = 2;
   private com.lightstep.tracer.grpc.SpanContext spanContext_;
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 2;</code>
    */
   public boolean hasSpanContext() {
     return spanContext_ != null;
   }
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 2;</code>
    */
   public com.lightstep.tracer.grpc.SpanContext getSpanContext() {
     return spanContext_ == null ? com.lightstep.tracer.grpc.SpanContext.getDefaultInstance() : spanContext_;
   }
   /**
-   * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+   * <code>.lightstep.collector.SpanContext span_context = 2;</code>
    */
   public com.lightstep.tracer.grpc.SpanContextOrBuilder getSpanContextOrBuilder() {
     return getSpanContext();
@@ -238,6 +246,7 @@ public  final class Reference extends
     if (spanContext_ != null) {
       output.writeMessage(2, getSpanContext());
     }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -253,11 +262,11 @@ public  final class Reference extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getSpanContext());
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -275,6 +284,7 @@ public  final class Reference extends
       result = result && getSpanContext()
           .equals(other.getSpanContext());
     }
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -284,7 +294,7 @@ public  final class Reference extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + RELATIONSHIP_FIELD_NUMBER;
     hash = (53 * hash) + relationship_;
     if (hasSpanContext()) {
@@ -296,6 +306,17 @@ public  final class Reference extends
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.Reference parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.Reference parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.Reference parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -454,7 +475,7 @@ public  final class Reference extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -467,12 +488,12 @@ public  final class Reference extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -492,6 +513,7 @@ public  final class Reference extends
       if (other.hasSpanContext()) {
         mergeSpanContext(other.getSpanContext());
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -520,13 +542,13 @@ public  final class Reference extends
 
     private int relationship_ = 0;
     /**
-     * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+     * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
      */
     public int getRelationshipValue() {
       return relationship_;
     }
     /**
-     * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+     * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
      */
     public Builder setRelationshipValue(int value) {
       relationship_ = value;
@@ -534,14 +556,14 @@ public  final class Reference extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+     * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
      */
     public com.lightstep.tracer.grpc.Reference.Relationship getRelationship() {
       com.lightstep.tracer.grpc.Reference.Relationship result = com.lightstep.tracer.grpc.Reference.Relationship.valueOf(relationship_);
       return result == null ? com.lightstep.tracer.grpc.Reference.Relationship.UNRECOGNIZED : result;
     }
     /**
-     * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+     * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
      */
     public Builder setRelationship(com.lightstep.tracer.grpc.Reference.Relationship value) {
       if (value == null) {
@@ -553,7 +575,7 @@ public  final class Reference extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.Reference.Relationship relationship = 1;</code>
+     * <code>.lightstep.collector.Reference.Relationship relationship = 1;</code>
      */
     public Builder clearRelationship() {
       
@@ -566,13 +588,13 @@ public  final class Reference extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.SpanContext, com.lightstep.tracer.grpc.SpanContext.Builder, com.lightstep.tracer.grpc.SpanContextOrBuilder> spanContextBuilder_;
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public boolean hasSpanContext() {
       return spanContextBuilder_ != null || spanContext_ != null;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public com.lightstep.tracer.grpc.SpanContext getSpanContext() {
       if (spanContextBuilder_ == null) {
@@ -582,7 +604,7 @@ public  final class Reference extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public Builder setSpanContext(com.lightstep.tracer.grpc.SpanContext value) {
       if (spanContextBuilder_ == null) {
@@ -598,7 +620,7 @@ public  final class Reference extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public Builder setSpanContext(
         com.lightstep.tracer.grpc.SpanContext.Builder builderForValue) {
@@ -612,7 +634,7 @@ public  final class Reference extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public Builder mergeSpanContext(com.lightstep.tracer.grpc.SpanContext value) {
       if (spanContextBuilder_ == null) {
@@ -630,7 +652,7 @@ public  final class Reference extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public Builder clearSpanContext() {
       if (spanContextBuilder_ == null) {
@@ -644,7 +666,7 @@ public  final class Reference extends
       return this;
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public com.lightstep.tracer.grpc.SpanContext.Builder getSpanContextBuilder() {
       
@@ -652,7 +674,7 @@ public  final class Reference extends
       return getSpanContextFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     public com.lightstep.tracer.grpc.SpanContextOrBuilder getSpanContextOrBuilder() {
       if (spanContextBuilder_ != null) {
@@ -663,7 +685,7 @@ public  final class Reference extends
       }
     }
     /**
-     * <code>optional .lightstep.collector.SpanContext span_context = 2;</code>
+     * <code>.lightstep.collector.SpanContext span_context = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.lightstep.tracer.grpc.SpanContext, com.lightstep.tracer.grpc.SpanContext.Builder, com.lightstep.tracer.grpc.SpanContextOrBuilder> 
@@ -680,12 +702,12 @@ public  final class Reference extends
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -708,7 +730,7 @@ public  final class Reference extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Reference(input, extensionRegistry);
+      return new Reference(input, extensionRegistry);
     }
   };
 

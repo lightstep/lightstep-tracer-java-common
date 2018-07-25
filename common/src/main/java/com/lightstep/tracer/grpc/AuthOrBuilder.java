@@ -8,11 +8,11 @@ public interface AuthOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string access_token = 1;</code>
+   * <code>string access_token = 1;</code>
    */
   java.lang.String getAccessToken();
   /**
-   * <code>optional string access_token = 1;</code>
+   * <code>string access_token = 1;</code>
    */
   com.google.protobuf.ByteString
       getAccessTokenBytes();

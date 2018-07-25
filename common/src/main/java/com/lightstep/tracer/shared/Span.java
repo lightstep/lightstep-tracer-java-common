@@ -139,7 +139,7 @@ public class Span implements io.opentracing.Span {
             } else {
                 outKV.setJsonValue(Span.stringToJSONValue(inValue.toString()));
             }
-            log.addKeyvalues(outKV.build());
+            log.addFields(outKV.build());
         }
 
         synchronized (mutex) {

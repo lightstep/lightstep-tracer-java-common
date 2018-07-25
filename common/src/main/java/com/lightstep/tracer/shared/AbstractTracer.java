@@ -464,7 +464,7 @@ public abstract class AbstractTracer implements Tracer {
                 .setReporter(reporter)
                 .setAuth(auth)
                 .addAllSpans(spans)
-                .setTimestampOffsetMicros(Util.safeLongToInt(clockState.offsetMicros()))
+                .setTimestampOffsetMicros(clockState.offsetMicros())
                 .setInternalMetrics(clientMetrics.toInternalMetricsAndReset())
                 .build();
 
@@ -491,9 +491,12 @@ public abstract class AbstractTracer implements Tracer {
         if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {
             long deltaMicros = (System.nanoTime() - originRelativeNanos) / 1000;
             long destinationMicros = originMicros + deltaMicros;
-            clockState.addSample(originMicros,
-                Util.protoTimeToEpochMicros(response.getReceiveTimestamp()),
-                Util.protoTimeToEpochMicros(response.getTransmitTimestamp()), destinationMicros);
+            clockState.addSample(
+                    originMicros,
+                    Util.protoTimeToEpochMicros(response.getReceiveTimestamp()),
+                    Util.protoTimeToEpochMicros(response.getTransmitTimestamp()),
+                    destinationMicros
+            );
         } else {
             warn("Collector response did not include timing info");
         }

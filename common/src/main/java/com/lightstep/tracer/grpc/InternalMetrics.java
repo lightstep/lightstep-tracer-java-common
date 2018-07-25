@@ -10,6 +10,7 @@ public  final class InternalMetrics extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.InternalMetrics)
     InternalMetricsOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use InternalMetrics.newBuilder() to construct.
   private InternalMetrics(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -24,14 +25,19 @@ public  final class InternalMetrics extends
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private InternalMetrics(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -41,7 +47,8 @@ public  final class InternalMetrics extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -108,6 +115,7 @@ public  final class InternalMetrics extends
       if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
         gauges_ = java.util.Collections.unmodifiableList(gauges_);
       }
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -127,19 +135,19 @@ public  final class InternalMetrics extends
   public static final int START_TIMESTAMP_FIELD_NUMBER = 1;
   private com.google.protobuf.Timestamp startTimestamp_;
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
    */
   public boolean hasStartTimestamp() {
     return startTimestamp_ != null;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
    */
   public com.google.protobuf.Timestamp getStartTimestamp() {
     return startTimestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : startTimestamp_;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
    */
   public com.google.protobuf.TimestampOrBuilder getStartTimestampOrBuilder() {
     return getStartTimestamp();
@@ -148,7 +156,7 @@ public  final class InternalMetrics extends
   public static final int DURATION_MICROS_FIELD_NUMBER = 2;
   private long durationMicros_;
   /**
-   * <code>optional uint64 duration_micros = 2;</code>
+   * <code>uint64 duration_micros = 2;</code>
    */
   public long getDurationMicros() {
     return durationMicros_;
@@ -286,6 +294,7 @@ public  final class InternalMetrics extends
     for (int i = 0; i < gauges_.size(); i++) {
       output.writeMessage(5, gauges_.get(i));
     }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -313,11 +322,11 @@ public  final class InternalMetrics extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(5, gauges_.get(i));
     }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -342,6 +351,7 @@ public  final class InternalMetrics extends
         .equals(other.getCountsList());
     result = result && getGaugesList()
         .equals(other.getGaugesList());
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -351,7 +361,7 @@ public  final class InternalMetrics extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     if (hasStartTimestamp()) {
       hash = (37 * hash) + START_TIMESTAMP_FIELD_NUMBER;
       hash = (53 * hash) + getStartTimestamp().hashCode();
@@ -376,6 +386,17 @@ public  final class InternalMetrics extends
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.InternalMetrics parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.InternalMetrics parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.InternalMetrics parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -585,7 +606,7 @@ public  final class InternalMetrics extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -598,12 +619,12 @@ public  final class InternalMetrics extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -701,6 +722,7 @@ public  final class InternalMetrics extends
           }
         }
       }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -732,13 +754,13 @@ public  final class InternalMetrics extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> startTimestampBuilder_;
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public boolean hasStartTimestamp() {
       return startTimestampBuilder_ != null || startTimestamp_ != null;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public com.google.protobuf.Timestamp getStartTimestamp() {
       if (startTimestampBuilder_ == null) {
@@ -748,7 +770,7 @@ public  final class InternalMetrics extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public Builder setStartTimestamp(com.google.protobuf.Timestamp value) {
       if (startTimestampBuilder_ == null) {
@@ -764,7 +786,7 @@ public  final class InternalMetrics extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public Builder setStartTimestamp(
         com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -778,7 +800,7 @@ public  final class InternalMetrics extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public Builder mergeStartTimestamp(com.google.protobuf.Timestamp value) {
       if (startTimestampBuilder_ == null) {
@@ -796,7 +818,7 @@ public  final class InternalMetrics extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public Builder clearStartTimestamp() {
       if (startTimestampBuilder_ == null) {
@@ -810,7 +832,7 @@ public  final class InternalMetrics extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public com.google.protobuf.Timestamp.Builder getStartTimestampBuilder() {
       
@@ -818,7 +840,7 @@ public  final class InternalMetrics extends
       return getStartTimestampFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     public com.google.protobuf.TimestampOrBuilder getStartTimestampOrBuilder() {
       if (startTimestampBuilder_ != null) {
@@ -829,7 +851,7 @@ public  final class InternalMetrics extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+     * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
@@ -847,13 +869,13 @@ public  final class InternalMetrics extends
 
     private long durationMicros_ ;
     /**
-     * <code>optional uint64 duration_micros = 2;</code>
+     * <code>uint64 duration_micros = 2;</code>
      */
     public long getDurationMicros() {
       return durationMicros_;
     }
     /**
-     * <code>optional uint64 duration_micros = 2;</code>
+     * <code>uint64 duration_micros = 2;</code>
      */
     public Builder setDurationMicros(long value) {
       
@@ -862,7 +884,7 @@ public  final class InternalMetrics extends
       return this;
     }
     /**
-     * <code>optional uint64 duration_micros = 2;</code>
+     * <code>uint64 duration_micros = 2;</code>
      */
     public Builder clearDurationMicros() {
       
@@ -1592,12 +1614,12 @@ public  final class InternalMetrics extends
     }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -1620,7 +1642,7 @@ public  final class InternalMetrics extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new InternalMetrics(input, extensionRegistry);
+      return new InternalMetrics(input, extensionRegistry);
     }
   };
 

@@ -8,12 +8,12 @@ public interface SpanContextOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional uint64 trace_id = 1;</code>
+   * <code>uint64 trace_id = 1;</code>
    */
   long getTraceId();
 
   /**
-   * <code>optional uint64 span_id = 2;</code>
+   * <code>uint64 span_id = 2;</code>
    */
   long getSpanId();
 

@@ -175,7 +175,7 @@ public class SpanTest {
 
     private Map<String, String> getLogFieldMap(Log rec) {
         Map<String, String> rval = new HashMap<>();
-        for (KeyValue kv : rec.getKeyvaluesList()) {
+        for (KeyValue kv : rec.getFieldsList()) {
             rval.put(kv.getKey(), kv.getStringValue());
         }
         return rval;

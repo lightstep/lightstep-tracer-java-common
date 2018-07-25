@@ -8,20 +8,20 @@ public interface InternalMetricsOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
    */
   boolean hasStartTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
    */
   com.google.protobuf.Timestamp getStartTimestamp();
   /**
-   * <code>optional .google.protobuf.Timestamp start_timestamp = 1;</code>
+   * <code>.google.protobuf.Timestamp start_timestamp = 1;</code>
    */
   com.google.protobuf.TimestampOrBuilder getStartTimestampOrBuilder();
 
   /**
-   * <code>optional uint64 duration_micros = 2;</code>
+   * <code>uint64 duration_micros = 2;</code>
    */
   long getDurationMicros();
 

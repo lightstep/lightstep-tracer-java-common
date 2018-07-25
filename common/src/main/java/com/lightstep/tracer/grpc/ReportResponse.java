@@ -10,6 +10,7 @@ public  final class ReportResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:lightstep.collector.ReportResponse)
     ReportResponseOrBuilder {
+private static final long serialVersionUID = 0L;
   // Use ReportResponse.newBuilder() to construct.
   private ReportResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -17,19 +18,26 @@ public  final class ReportResponse extends
   private ReportResponse() {
     commands_ = java.util.Collections.emptyList();
     errors_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    warnings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    infos_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
   @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
-    return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    return this.unknownFields;
   }
   private ReportResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
     int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
       boolean done = false;
       while (!done) {
@@ -39,7 +47,8 @@ public  final class ReportResponse extends
             done = true;
             break;
           default: {
-            if (!input.skipField(tag)) {
+            if (!parseUnknownFieldProto3(
+                input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
             break;
@@ -88,6 +97,24 @@ public  final class ReportResponse extends
             errors_.add(s);
             break;
           }
+          case 42: {
+            java.lang.String s = input.readStringRequireUtf8();
+            if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+              warnings_ = new com.google.protobuf.LazyStringArrayList();
+              mutable_bitField0_ |= 0x00000010;
+            }
+            warnings_.add(s);
+            break;
+          }
+          case 50: {
+            java.lang.String s = input.readStringRequireUtf8();
+            if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+              infos_ = new com.google.protobuf.LazyStringArrayList();
+              mutable_bitField0_ |= 0x00000020;
+            }
+            infos_.add(s);
+            break;
+          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -102,6 +129,13 @@ public  final class ReportResponse extends
       if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
         errors_ = errors_.getUnmodifiableView();
       }
+      if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+        warnings_ = warnings_.getUnmodifiableView();
+      }
+      if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+        infos_ = infos_.getUnmodifiableView();
+      }
+      this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
@@ -156,19 +190,19 @@ public  final class ReportResponse extends
   public static final int RECEIVE_TIMESTAMP_FIELD_NUMBER = 2;
   private com.google.protobuf.Timestamp receiveTimestamp_;
   /**
-   * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+   * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
    */
   public boolean hasReceiveTimestamp() {
     return receiveTimestamp_ != null;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+   * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
    */
   public com.google.protobuf.Timestamp getReceiveTimestamp() {
     return receiveTimestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : receiveTimestamp_;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+   * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
    */
   public com.google.protobuf.TimestampOrBuilder getReceiveTimestampOrBuilder() {
     return getReceiveTimestamp();
@@ -177,19 +211,19 @@ public  final class ReportResponse extends
   public static final int TRANSMIT_TIMESTAMP_FIELD_NUMBER = 3;
   private com.google.protobuf.Timestamp transmitTimestamp_;
   /**
-   * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
    */
   public boolean hasTransmitTimestamp() {
     return transmitTimestamp_ != null;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
    */
   public com.google.protobuf.Timestamp getTransmitTimestamp() {
     return transmitTimestamp_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : transmitTimestamp_;
   }
   /**
-   * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+   * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
    */
   public com.google.protobuf.TimestampOrBuilder getTransmitTimestampOrBuilder() {
     return getTransmitTimestamp();
@@ -224,6 +258,64 @@ public  final class ReportResponse extends
     return errors_.getByteString(index);
   }
 
+  public static final int WARNINGS_FIELD_NUMBER = 5;
+  private com.google.protobuf.LazyStringList warnings_;
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  public com.google.protobuf.ProtocolStringList
+      getWarningsList() {
+    return warnings_;
+  }
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  public int getWarningsCount() {
+    return warnings_.size();
+  }
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  public java.lang.String getWarnings(int index) {
+    return warnings_.get(index);
+  }
+  /**
+   * <code>repeated string warnings = 5;</code>
+   */
+  public com.google.protobuf.ByteString
+      getWarningsBytes(int index) {
+    return warnings_.getByteString(index);
+  }
+
+  public static final int INFOS_FIELD_NUMBER = 6;
+  private com.google.protobuf.LazyStringList infos_;
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  public com.google.protobuf.ProtocolStringList
+      getInfosList() {
+    return infos_;
+  }
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  public int getInfosCount() {
+    return infos_.size();
+  }
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  public java.lang.String getInfos(int index) {
+    return infos_.get(index);
+  }
+  /**
+   * <code>repeated string infos = 6;</code>
+   */
+  public com.google.protobuf.ByteString
+      getInfosBytes(int index) {
+    return infos_.getByteString(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -248,6 +340,13 @@ public  final class ReportResponse extends
     for (int i = 0; i < errors_.size(); i++) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, errors_.getRaw(i));
     }
+    for (int i = 0; i < warnings_.size(); i++) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, warnings_.getRaw(i));
+    }
+    for (int i = 0; i < infos_.size(); i++) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, infos_.getRaw(i));
+    }
+    unknownFields.writeTo(output);
   }
 
   public int getSerializedSize() {
@@ -275,11 +374,27 @@ public  final class ReportResponse extends
       size += dataSize;
       size += 1 * getErrorsList().size();
     }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < warnings_.size(); i++) {
+        dataSize += computeStringSizeNoTag(warnings_.getRaw(i));
+      }
+      size += dataSize;
+      size += 1 * getWarningsList().size();
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < infos_.size(); i++) {
+        dataSize += computeStringSizeNoTag(infos_.getRaw(i));
+      }
+      size += dataSize;
+      size += 1 * getInfosList().size();
+    }
+    size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
   }
 
-  private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
@@ -305,6 +420,11 @@ public  final class ReportResponse extends
     }
     result = result && getErrorsList()
         .equals(other.getErrorsList());
+    result = result && getWarningsList()
+        .equals(other.getWarningsList());
+    result = result && getInfosList()
+        .equals(other.getInfosList());
+    result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
 
@@ -314,7 +434,7 @@ public  final class ReportResponse extends
       return memoizedHashCode;
     }
     int hash = 41;
-    hash = (19 * hash) + getDescriptorForType().hashCode();
+    hash = (19 * hash) + getDescriptor().hashCode();
     if (getCommandsCount() > 0) {
       hash = (37 * hash) + COMMANDS_FIELD_NUMBER;
       hash = (53 * hash) + getCommandsList().hashCode();
@@ -331,11 +451,30 @@ public  final class ReportResponse extends
       hash = (37 * hash) + ERRORS_FIELD_NUMBER;
       hash = (53 * hash) + getErrorsList().hashCode();
     }
+    if (getWarningsCount() > 0) {
+      hash = (37 * hash) + WARNINGS_FIELD_NUMBER;
+      hash = (53 * hash) + getWarningsList().hashCode();
+    }
+    if (getInfosCount() > 0) {
+      hash = (37 * hash) + INFOS_FIELD_NUMBER;
+      hash = (53 * hash) + getInfosList().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
+  public static com.lightstep.tracer.grpc.ReportResponse parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static com.lightstep.tracer.grpc.ReportResponse parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static com.lightstep.tracer.grpc.ReportResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -470,6 +609,10 @@ public  final class ReportResponse extends
       }
       errors_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       bitField0_ = (bitField0_ & ~0x00000008);
+      warnings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000010);
+      infos_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000020);
       return this;
     }
 
@@ -518,6 +661,16 @@ public  final class ReportResponse extends
         bitField0_ = (bitField0_ & ~0x00000008);
       }
       result.errors_ = errors_;
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        warnings_ = warnings_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000010);
+      }
+      result.warnings_ = warnings_;
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        infos_ = infos_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000020);
+      }
+      result.infos_ = infos_;
       result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
@@ -528,7 +681,7 @@ public  final class ReportResponse extends
     }
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
     public Builder clearField(
@@ -541,12 +694,12 @@ public  final class ReportResponse extends
     }
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, Object value) {
+        int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
-        Object value) {
+        java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -602,6 +755,27 @@ public  final class ReportResponse extends
         }
         onChanged();
       }
+      if (!other.warnings_.isEmpty()) {
+        if (warnings_.isEmpty()) {
+          warnings_ = other.warnings_;
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          ensureWarningsIsMutable();
+          warnings_.addAll(other.warnings_);
+        }
+        onChanged();
+      }
+      if (!other.infos_.isEmpty()) {
+        if (infos_.isEmpty()) {
+          infos_ = other.infos_;
+          bitField0_ = (bitField0_ & ~0x00000020);
+        } else {
+          ensureInfosIsMutable();
+          infos_.addAll(other.infos_);
+        }
+        onChanged();
+      }
+      this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
@@ -873,13 +1047,13 @@ public  final class ReportResponse extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> receiveTimestampBuilder_;
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public boolean hasReceiveTimestamp() {
       return receiveTimestampBuilder_ != null || receiveTimestamp_ != null;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public com.google.protobuf.Timestamp getReceiveTimestamp() {
       if (receiveTimestampBuilder_ == null) {
@@ -889,7 +1063,7 @@ public  final class ReportResponse extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public Builder setReceiveTimestamp(com.google.protobuf.Timestamp value) {
       if (receiveTimestampBuilder_ == null) {
@@ -905,7 +1079,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public Builder setReceiveTimestamp(
         com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -919,7 +1093,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public Builder mergeReceiveTimestamp(com.google.protobuf.Timestamp value) {
       if (receiveTimestampBuilder_ == null) {
@@ -937,7 +1111,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public Builder clearReceiveTimestamp() {
       if (receiveTimestampBuilder_ == null) {
@@ -951,7 +1125,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public com.google.protobuf.Timestamp.Builder getReceiveTimestampBuilder() {
       
@@ -959,7 +1133,7 @@ public  final class ReportResponse extends
       return getReceiveTimestampFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     public com.google.protobuf.TimestampOrBuilder getReceiveTimestampOrBuilder() {
       if (receiveTimestampBuilder_ != null) {
@@ -970,7 +1144,7 @@ public  final class ReportResponse extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp receive_timestamp = 2;</code>
+     * <code>.google.protobuf.Timestamp receive_timestamp = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
@@ -990,13 +1164,13 @@ public  final class ReportResponse extends
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> transmitTimestampBuilder_;
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public boolean hasTransmitTimestamp() {
       return transmitTimestampBuilder_ != null || transmitTimestamp_ != null;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public com.google.protobuf.Timestamp getTransmitTimestamp() {
       if (transmitTimestampBuilder_ == null) {
@@ -1006,7 +1180,7 @@ public  final class ReportResponse extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public Builder setTransmitTimestamp(com.google.protobuf.Timestamp value) {
       if (transmitTimestampBuilder_ == null) {
@@ -1022,7 +1196,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public Builder setTransmitTimestamp(
         com.google.protobuf.Timestamp.Builder builderForValue) {
@@ -1036,7 +1210,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public Builder mergeTransmitTimestamp(com.google.protobuf.Timestamp value) {
       if (transmitTimestampBuilder_ == null) {
@@ -1054,7 +1228,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public Builder clearTransmitTimestamp() {
       if (transmitTimestampBuilder_ == null) {
@@ -1068,7 +1242,7 @@ public  final class ReportResponse extends
       return this;
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public com.google.protobuf.Timestamp.Builder getTransmitTimestampBuilder() {
       
@@ -1076,7 +1250,7 @@ public  final class ReportResponse extends
       return getTransmitTimestampFieldBuilder().getBuilder();
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     public com.google.protobuf.TimestampOrBuilder getTransmitTimestampOrBuilder() {
       if (transmitTimestampBuilder_ != null) {
@@ -1087,7 +1261,7 @@ public  final class ReportResponse extends
       }
     }
     /**
-     * <code>optional .google.protobuf.Timestamp transmit_timestamp = 3;</code>
+     * <code>.google.protobuf.Timestamp transmit_timestamp = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
@@ -1196,14 +1370,202 @@ public  final class ReportResponse extends
       onChanged();
       return this;
     }
+
+    private com.google.protobuf.LazyStringList warnings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    private void ensureWarningsIsMutable() {
+      if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+        warnings_ = new com.google.protobuf.LazyStringArrayList(warnings_);
+        bitField0_ |= 0x00000010;
+       }
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getWarningsList() {
+      return warnings_.getUnmodifiableView();
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public int getWarningsCount() {
+      return warnings_.size();
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public java.lang.String getWarnings(int index) {
+      return warnings_.get(index);
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getWarningsBytes(int index) {
+      return warnings_.getByteString(index);
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public Builder setWarnings(
+        int index, java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWarningsIsMutable();
+      warnings_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public Builder addWarnings(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureWarningsIsMutable();
+      warnings_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public Builder addAllWarnings(
+        java.lang.Iterable<java.lang.String> values) {
+      ensureWarningsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, warnings_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public Builder clearWarnings() {
+      warnings_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000010);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string warnings = 5;</code>
+     */
+    public Builder addWarningsBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureWarningsIsMutable();
+      warnings_.add(value);
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.LazyStringList infos_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    private void ensureInfosIsMutable() {
+      if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+        infos_ = new com.google.protobuf.LazyStringArrayList(infos_);
+        bitField0_ |= 0x00000020;
+       }
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getInfosList() {
+      return infos_.getUnmodifiableView();
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public int getInfosCount() {
+      return infos_.size();
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public java.lang.String getInfos(int index) {
+      return infos_.get(index);
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getInfosBytes(int index) {
+      return infos_.getByteString(index);
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public Builder setInfos(
+        int index, java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureInfosIsMutable();
+      infos_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public Builder addInfos(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureInfosIsMutable();
+      infos_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public Builder addAllInfos(
+        java.lang.Iterable<java.lang.String> values) {
+      ensureInfosIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, infos_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public Builder clearInfos() {
+      infos_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000020);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated string infos = 6;</code>
+     */
+    public Builder addInfosBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureInfosIsMutable();
+      infos_.add(value);
+      onChanged();
+      return this;
+    }
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.setUnknownFieldsProto3(unknownFields);
     }
 
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
-      return this;
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
@@ -1226,7 +1588,7 @@ public  final class ReportResponse extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ReportResponse(input, extensionRegistry);
+      return new ReportResponse(input, extensionRegistry);
     }
   };
 
