@@ -1,5 +1,21 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.15.1)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.15.3)
+
+<a name="0.15.3"></a>
+## [0.15.3](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.3...0.15.2)
+
+* Updated the compiled protos. Changed type of clock correction offset from int to long.
+  - Included new dependency required by proto upgrade com.google.api.grpc:googleapis-common-protos:0.0.3
+  - Fixed bug where large clock corrections caused crashes.
+    
+<a name="0.15.2"></a>
+## [0.15.2](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.2...0.15.1)
+* Upgrade dependencies to latest  
+  - com.google.protobuf:protobuf-java from 3.4.0 to 3.5.1
+  - org.mockito:mockito-core from 2.8.47 to 2.18.3
+  - io.grpc from 1.4.0 to 1.11.0
+  - io.netty from 2.0.5.Final to 2.0.8.Final
+  - okhttp3 from 3.9.0 to 3.10.0
 
 <a name="0.15.1"></a>
 ## [0.15.1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.1...0.15.0)
