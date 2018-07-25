@@ -2,7 +2,7 @@
 ## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.15.3)
 
 <a name="0.15.3"></a>
-## [0.15.2](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.3...0.15.2)
+## [0.15.3](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.3...0.15.2)
 
 * Updated the compiled protos. Changed type of clock correction offset from int to long.
   - Included new dependency required by proto upgrade com.google.api.grpc:googleapis-common-protos:0.0.3
