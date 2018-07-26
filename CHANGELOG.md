@@ -1,15 +1,15 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/master...0.15.3)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.3...master)
 
 <a name="0.15.3"></a>
-## [0.15.3](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.3...0.15.2)
+## [0.15.3](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.2...0.15.3)
 
 * Updated the compiled protos. Changed type of clock correction offset from int to long.
   - Included new dependency required by proto upgrade com.google.api.grpc:googleapis-common-protos:0.0.3
   - Fixed bug where large clock corrections caused crashes.
     
 <a name="0.15.2"></a>
-## [0.15.2](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.2...0.15.1)
+## [0.15.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.2...0.15.1)
 * Upgrade dependencies to latest  
   - com.google.protobuf:protobuf-java from 3.4.0 to 3.5.1
   - org.mockito:mockito-core from 2.8.47 to 2.18.3
@@ -18,12 +18,12 @@
   - okhttp3 from 3.9.0 to 3.10.0
 
 <a name="0.15.1"></a>
-## [0.15.1](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.1...0.15.0)
+## [0.15.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.1...0.15.0)
 * Ensure `parent_span_guid` tag is no longer set.
 * Ensure `CHILD_OF` reference is set on `activeSpan`.
 
 <a name="0.15.0"></a>
-## [0.15.0](https://github.com/lightstep/lightstep-com.lightstep.tracer-java-common/compare/0.15.0...0.14.3)
+## [0.15.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.0...0.14.3)
 
 * Upgraded to io.opentracing 0.31.0
 
