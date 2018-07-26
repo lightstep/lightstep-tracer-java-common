@@ -1,5 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.3...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.4...master)
+
+<a name="0.15.4"></a>
+## [0.15.4](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.3...0.15.4)
+
+* Removed javax annotation dependency.
 
 <a name="0.15.3"></a>
 ## [0.15.3](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.2...0.15.3)
