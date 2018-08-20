@@ -1,5 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.4...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.5...master)
+
+<a name="0.15.5"></a>
+## [0.15.5](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.4...0.15.5)
+
+* Exposed deadlineMillis in OptionsBuilder.
 
 <a name="0.15.4"></a>
 ## [0.15.4](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.3...0.15.4)
