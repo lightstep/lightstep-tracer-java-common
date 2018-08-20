@@ -313,6 +313,14 @@ public final class Options {
             return this;
         }
 
+        /**
+         * Overrides the default deadlineMillis with the provided value.
+         */
+        public OptionsBuilder withDeadlineMillis(long deadlineMillis) {
+            this.deadlineMillis = deadlineMillis;
+            return this;
+        }
+
 	@SuppressWarnings("SameParameterValue")
     public OptionsBuilder withClockSkewCorrection(boolean clockCorrection) {
 	    this.useClockCorrection = clockCorrection;
