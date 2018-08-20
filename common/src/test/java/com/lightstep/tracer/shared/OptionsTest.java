@@ -29,6 +29,7 @@ public class OptionsTest {
     private static final String TAG_KEY = "my-tag-key";
     private static final String TAG_VALUE = "my-tag-value";
     private static final long GUID_VALUE = 123;
+    private static final long DEADLINE_MILLIS = 150;
 
     /**
      * Basic test of OptionsBuilder that ensures if I set everything explicitly, that these values
@@ -157,6 +158,7 @@ public class OptionsTest {
                 .withMaxBufferedSpans(MAX_BUFFERED_SPANS)
                 .withTag(TAG_KEY, TAG_VALUE)
                 .withTag(GUID_KEY, GUID_VALUE)
+                .withDeadlineMillis(DEADLINE_MILLIS)
                 .build();
     }
 
@@ -175,5 +177,6 @@ public class OptionsTest {
         assertEquals(MAX_BUFFERED_SPANS, options.maxBufferedSpans);
         assertEquals(TAG_VALUE, options.tags.get(TAG_KEY));
         assertEquals(GUID_VALUE, options.getGuid());
+        assertEquals(DEADLINE_MILLIS, options.deadlineMillis);
     }
 }
