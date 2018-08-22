@@ -1,11 +1,9 @@
 package com.lightstep.tracer.shared;
 
-import java.math.BigInteger;
+import io.opentracing.propagation.TextMap;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import io.opentracing.propagation.TextMap;
 
 class TextMapPropagator implements Propagator<TextMap> {
     private static final Locale english = new Locale("en", "US");

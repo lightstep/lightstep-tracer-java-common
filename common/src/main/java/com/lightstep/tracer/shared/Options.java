@@ -2,10 +2,13 @@ package com.lightstep.tracer.shared;
 
 
 import io.opentracing.ScopeManager;
+import io.opentracing.SpanContext;
+import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -67,6 +70,15 @@ public final class Options {
 
     static final String GUID_KEY = "lightstep.guid";
 
+    // BUILTIN PROPAGATORS
+    static final Map<Format<?>, Propagator<?>> BUILTIN_PROPAGATORS = Collections.unmodifiableMap(
+            new HashMap<Format<?>, Propagator<?>>() {{
+                put(Format.Builtin.TEXT_MAP, Propagator.TEXT_MAP);
+                put(Format.Builtin.HTTP_HEADERS, Propagator.HTTP_HEADERS);
+                put(Format.Builtin.BINARY, Propagator.BINARY);
+            }}
+    );
+
     // LOG LEVELS
 
     /**
@@ -110,6 +122,7 @@ public final class Options {
     final boolean resetClient;
     final boolean useClockCorrection;
     final ScopeManager scopeManager;
+    final Map<Format<?>, Propagator<?>> propagators;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -127,7 +140,8 @@ public final class Options {
             Map<String, Object> tags,
             boolean useClockCorrection,
             ScopeManager scopeManager,
-            long deadlineMillis
+            long deadlineMillis,
+            Map<Format<?>, Propagator<?>> propagators
     ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
@@ -140,6 +154,7 @@ public final class Options {
         this.useClockCorrection = useClockCorrection;
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
+        this.propagators = propagators;
     }
 
     long getGuid() {
@@ -161,6 +176,7 @@ public final class Options {
         private Map<String, Object> tags = new HashMap<>();
         private ScopeManager scopeManager;
         private long deadlineMillis = -1;
+        private Map<Format<?>, Propagator<?>> propagators = new HashMap<>();
 
         public OptionsBuilder() {
         }
@@ -179,7 +195,39 @@ public final class Options {
             this.scopeManager = options.scopeManager;
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
+            this.propagators = options.propagators;
         }
+
+        /**
+         * Adds a user defined {@link Propagator} to be used during
+         * {@link io.opentracing.Tracer#inject} and {@link io.opentracing.Tracer#extract} for
+         * the given type. This can be used to provide custom handling for a specified
+         * {@link Format} (such as {@link Format.Builtin#TEXT_MAP}).
+         *
+         * {@link Propagator#inject} and {@link Propagator#extract} are expected
+         * to fail silently in case of error during injection and extraction, respectively.
+         *
+         * Observe that a new {@link Format} should *not* be created if the data is being
+         * propagated through http headers or a text map. Instead, use the respective
+         * builtin {@link Format} and specify a custom {@link Propagator} here. In case of
+         * doubt, contact LightStep for advice.
+         *
+         * @param format Instance of {@link Format} for which custom Propagator will be used.
+         * @param propagator Instance of {@link Propagator} to be used
+         * @param <T> Type of the carrier.
+         */
+        public <T> OptionsBuilder withPropagator(Format<T> format, Propagator<T> propagator) {
+            if (format == null) {
+                throw new IllegalArgumentException("format cannot be null");
+            }
+            if (propagator == null) {
+                throw new IllegalArgumentException("propagator cannot be null");
+            }
+
+            this.propagators.put(format, propagator);
+            return this;
+        }
+
 
         /**
          * Sets the unique identifier for this application.
@@ -339,6 +387,7 @@ public final class Options {
             defaultGuid();
             defaultMaxReportingIntervalMillis();
             defaultMaxBufferedSpans();
+            defaultPropagators();
             defaultScopeManager();
             defaultDeadlineMillis();
 
@@ -353,7 +402,8 @@ public final class Options {
                     tags,
                     useClockCorrection,
                     scopeManager,
-                    deadlineMillis
+                    deadlineMillis,
+                    propagators
             );
         }
 
@@ -401,6 +451,15 @@ public final class Options {
         private void defaultDeadlineMillis() {
             if (deadlineMillis < 0) {
                 deadlineMillis = DEFAULT_DEADLINE_MILLIS;
+            }
+        }
+
+        private void defaultPropagators() {
+            for (Map.Entry<Format<?>, Propagator<?>> entry: BUILTIN_PROPAGATORS.entrySet()) {
+                Format<?> format = entry.getKey();
+                if (!propagators.containsKey(format)) {
+                    propagators.put(format, entry.getValue());
+                }
             }
         }
 

@@ -115,6 +115,8 @@ public abstract class AbstractTracer implements Tracer {
 
     private final ScopeManager scopeManager;
 
+    private final Map<Format<?>, Propagator<?>> propagators;
+
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
@@ -160,6 +162,8 @@ public abstract class AbstractTracer implements Tracer {
         if (validCollectorClient && !options.disableReportingLoop) {
             reportingLoop = new ReportingLoop(options.maxReportingIntervalMillis);
         }
+
+        propagators = options.propagators;
     }
 
     /**
@@ -342,31 +346,24 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
-        if (format == Format.Builtin.TEXT_MAP) {
-            Propagator.TEXT_MAP.inject(lightstepSpanContext, (TextMap) carrier);
-        } else if (format == Format.Builtin.HTTP_HEADERS) {
-            Propagator.HTTP_HEADERS.inject(lightstepSpanContext, (TextMap) carrier);
-        } else if (format == Format.Builtin.BINARY) {
-            warn("LightStep-java does not yet support binary carriers. " +
-                    "SpanContext: " + spanContext.toString());
-            Propagator.BINARY.inject(lightstepSpanContext, (ByteBuffer) carrier);
-        } else {
+
+        if (!propagators.containsKey(format)) {
             info("Unsupported carrier type: " + carrier.getClass());
+            return;
         }
+
+        Propagator<C> propagator = (Propagator<C>) propagators.get(format);
+        propagator.inject(lightstepSpanContext, carrier);
     }
 
     public <C> io.opentracing.SpanContext extract(Format<C> format, C carrier) {
-        if (format == Format.Builtin.TEXT_MAP) {
-            return Propagator.TEXT_MAP.extract((TextMap) carrier);
-        } else if (format == Format.Builtin.HTTP_HEADERS) {
-            return Propagator.HTTP_HEADERS.extract((TextMap) carrier);
-        } else if (format == Format.Builtin.BINARY) {
-            warn("LightStep-java does not yet support binary carriers.");
-            return Propagator.BINARY.extract((ByteBuffer) carrier);
-        } else {
+        if (!propagators.containsKey(format)) {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;
         }
+
+        Propagator<C> propagator = (Propagator<C>) propagators.get(format);
+        return propagator.extract(carrier);
     }
 
     /**

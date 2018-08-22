@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import io.opentracing.propagation.TextMap;
 
-interface Propagator<C> {
+public interface Propagator<C> {
     void inject(SpanContext spanContext, C carrier);
 
     SpanContext extract(C carrier);
