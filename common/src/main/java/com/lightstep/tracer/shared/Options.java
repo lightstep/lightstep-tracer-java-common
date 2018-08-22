@@ -2,6 +2,8 @@ package com.lightstep.tracer.shared;
 
 
 import io.opentracing.ScopeManager;
+import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
 import io.opentracing.util.ThreadLocalScopeManager;
 
 import java.net.MalformedURLException;
@@ -110,6 +112,7 @@ public final class Options {
     final boolean resetClient;
     final boolean useClockCorrection;
     final ScopeManager scopeManager;
+    final Map<Format<?>, Propagator<?>> propagatorMap;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -127,7 +130,8 @@ public final class Options {
             Map<String, Object> tags,
             boolean useClockCorrection,
             ScopeManager scopeManager,
-            long deadlineMillis
+            long deadlineMillis,
+            Map<Format<?>, Propagator<?>> propagatorMap
     ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
@@ -140,6 +144,7 @@ public final class Options {
         this.useClockCorrection = useClockCorrection;
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
+        this.propagatorMap = propagatorMap;
     }
 
     long getGuid() {
@@ -161,6 +166,7 @@ public final class Options {
         private Map<String, Object> tags = new HashMap<>();
         private ScopeManager scopeManager;
         private long deadlineMillis = -1;
+        private Map<Format<?>, Propagator<?>> propagatorMap = new HashMap<>();
 
         public OptionsBuilder() {
         }
@@ -179,6 +185,12 @@ public final class Options {
             this.scopeManager = options.scopeManager;
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
+            this.propagatorMap = options.propagatorMap;
+        }
+
+        public <T extends TextMap> OptionsBuilder withPropagation(Format<T> format, Propagator<T> propagator) {
+            this.propagatorMap.put(format, propagator);
+            return this;
         }
 
         /**
@@ -353,7 +365,8 @@ public final class Options {
                     tags,
                     useClockCorrection,
                     scopeManager,
-                    deadlineMillis
+                    deadlineMillis,
+                    propagatorMap
             );
         }
 

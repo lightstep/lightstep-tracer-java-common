@@ -115,6 +115,8 @@ public abstract class AbstractTracer implements Tracer {
 
     private final ScopeManager scopeManager;
 
+    private final Map<Format<?>, Propagator<?>> propagatorMap;
+
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
@@ -160,6 +162,8 @@ public abstract class AbstractTracer implements Tracer {
         if (validCollectorClient && !options.disableReportingLoop) {
             reportingLoop = new ReportingLoop(options.maxReportingIntervalMillis);
         }
+
+        propagatorMap = options.propagatorMap;
     }
 
     /**
@@ -351,7 +355,18 @@ public abstract class AbstractTracer implements Tracer {
                     "SpanContext: " + spanContext.toString());
             Propagator.BINARY.inject(lightstepSpanContext, (ByteBuffer) carrier);
         } else {
-            info("Unsupported carrier type: " + carrier.getClass());
+            if (propagatorMap.containsKey(format)) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
+                    propagator.inject(lightstepSpanContext, carrier);
+                } catch (RuntimeException e) {
+                    error("Error while using custom propagator for injection. " +
+                                  "Format: " + format.toString(), e);
+                }
+            } else {
+                info("Unsupported carrier type: " + carrier.getClass());
+            }
         }
     }
 
@@ -364,9 +379,20 @@ public abstract class AbstractTracer implements Tracer {
             warn("LightStep-java does not yet support binary carriers.");
             return Propagator.BINARY.extract((ByteBuffer) carrier);
         } else {
-            info("Unsupported carrier type: " + carrier.getClass());
-            return null;
+            if (propagatorMap.containsKey(format)) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
+                    return propagator.extract(carrier);
+                } catch (RuntimeException e) {
+                    error("Error while using custom propagator for extraction. " +
+                                  "Format: " + format.toString(), e);
+                }
+            } else {
+                info("Unsupported carrier type: " + carrier.getClass());
+            }
         }
+        return null;
     }
 
     /**
