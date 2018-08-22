@@ -361,8 +361,9 @@ public abstract class AbstractTracer implements Tracer {
                     Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
                     propagator.inject(lightstepSpanContext, carrier);
                 } catch (RuntimeException e) {
-                    error("Error while using custom propagator for injection. " +
-                                  "Format: " + format.toString(), e);
+                    warn("Error while using custom propagator for injection. " +
+                                  "Carrier type: " + carrier.getClass());
+                    error(e.getMessage(), e);
                 }
             } else {
                 info("Unsupported carrier type: " + carrier.getClass());
@@ -385,8 +386,9 @@ public abstract class AbstractTracer implements Tracer {
                     Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
                     return propagator.extract(carrier);
                 } catch (RuntimeException e) {
-                    error("Error while using custom propagator for extraction. " +
-                                  "Format: " + format.toString(), e);
+                    warn("Error while using custom propagator for extraction. " +
+                                  "Carrier type: " + carrier.getClass());
+                    error(e.getMessage(), e);
                 }
             } else {
                 info("Unsupported carrier type: " + carrier.getClass());
