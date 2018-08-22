@@ -2,6 +2,7 @@ package com.lightstep.tracer.shared;
 
 
 import io.opentracing.ScopeManager;
+import io.opentracing.SpanContext;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.util.ThreadLocalScopeManager;
@@ -188,7 +189,18 @@ public final class Options {
             this.propagatorMap = options.propagatorMap;
         }
 
-        public <T extends TextMap> OptionsBuilder withPropagation(Format<T> format, Propagator<T> propagator) {
+        /**
+         * Adds user defined {@link Propagator} to be used during
+         * {@link io.opentracing.Tracer#inject} and {@link io.opentracing.Tracer#extract} for
+         * the given type. If multiple propagators are used for the same Format,
+         * the propagator used with last invocation of this method will be used for
+         * that format.
+         * @param format Instance of {@link Format} for which custom Propagator will be used.
+         * @param propagator Instance of {@link Propagator} to be used
+         * @param <T> Type extending {@link TextMap}
+         */
+        public <T extends TextMap> OptionsBuilder withPropagation(
+                Format<T> format, Propagator<T> propagator) {
             this.propagatorMap.put(format, propagator);
             return this;
         }
