@@ -182,7 +182,7 @@ public class OptionsTest {
         assertEquals(TAG_VALUE, options.tags.get(TAG_KEY));
         assertEquals(GUID_VALUE, options.getGuid());
         assertEquals(DEADLINE_MILLIS, options.deadlineMillis);
-        assertFalse(options.propagatorMap.keySet().isEmpty());
-        assertEquals(CUSTOM_PROPAGATOR, options.propagatorMap.get(Builtin.TEXT_MAP));
+        assertFalse(options.customPropagators.keySet().isEmpty());
+        assertEquals(CUSTOM_PROPAGATOR, options.customPropagators.get(Builtin.TEXT_MAP));
     }
 }

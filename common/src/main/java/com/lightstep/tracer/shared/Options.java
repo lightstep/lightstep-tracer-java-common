@@ -112,7 +112,7 @@ public final class Options {
     final boolean resetClient;
     final boolean useClockCorrection;
     final ScopeManager scopeManager;
-    final Map<Format<?>, Propagator<?>> propagatorMap;
+    final Map<Format<?>, Propagator<?>> customPropagators;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -131,7 +131,7 @@ public final class Options {
             boolean useClockCorrection,
             ScopeManager scopeManager,
             long deadlineMillis,
-            Map<Format<?>, Propagator<?>> propagatorMap
+            Map<Format<?>, Propagator<?>> customPropagators
     ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
@@ -144,7 +144,7 @@ public final class Options {
         this.useClockCorrection = useClockCorrection;
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
-        this.propagatorMap = propagatorMap;
+        this.customPropagators = customPropagators;
     }
 
     long getGuid() {
@@ -166,7 +166,7 @@ public final class Options {
         private Map<String, Object> tags = new HashMap<>();
         private ScopeManager scopeManager;
         private long deadlineMillis = -1;
-        private Map<Format<?>, Propagator<?>> propagatorMap = new HashMap<>();
+        private Map<Format<?>, Propagator<?>> customPropagators = new HashMap<>();
 
         public OptionsBuilder() {
         }
@@ -185,7 +185,7 @@ public final class Options {
             this.scopeManager = options.scopeManager;
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
-            this.propagatorMap = options.propagatorMap;
+            this.customPropagators = options.customPropagators;
         }
 
         /**
@@ -201,10 +201,10 @@ public final class Options {
         public <T> OptionsBuilder withPropagation(
                 Format<T> format, Propagator<T> propagator) {
 
-            if (this.propagatorMap == null) {
-                this.propagatorMap = new HashMap<Format<?>, Propagator<?>>();
+            if (this.customPropagators == null) {
+                this.customPropagators = new HashMap<Format<?>, Propagator<?>>();
             }
-            this.propagatorMap.put(format, propagator);
+            this.customPropagators.put(format, propagator);
             return this;
         }
 
@@ -381,7 +381,7 @@ public final class Options {
                     useClockCorrection,
                     scopeManager,
                     deadlineMillis,
-                    propagatorMap
+                    customPropagators
             );
         }
 

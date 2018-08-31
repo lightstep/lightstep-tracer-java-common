@@ -115,7 +115,7 @@ public abstract class AbstractTracer implements Tracer {
 
     private final ScopeManager scopeManager;
 
-    private final Map<Format<?>, Propagator<?>> propagatorMap;
+    private final Map<Format<?>, Propagator<?>> customPropagators;
 
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
@@ -163,7 +163,7 @@ public abstract class AbstractTracer implements Tracer {
             reportingLoop = new ReportingLoop(options.maxReportingIntervalMillis);
         }
 
-        propagatorMap = options.propagatorMap;
+        customPropagators = options.customPropagators;
     }
 
     /**
@@ -347,10 +347,10 @@ public abstract class AbstractTracer implements Tracer {
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
 
-        if (propagatorMap != null && propagatorMap.containsKey(format)) {
+        if (customPropagators != null && customPropagators.containsKey(format)) {
             try {
                 @SuppressWarnings("unchecked")
-                Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
+                Propagator<C> propagator = (Propagator<C>) customPropagators.get(format);
                 propagator.inject(lightstepSpanContext, carrier);
             } catch (RuntimeException e) {
                 warn("Error while using custom propagator for injection. " +
@@ -375,10 +375,10 @@ public abstract class AbstractTracer implements Tracer {
 
     public <C> io.opentracing.SpanContext extract(Format<C> format, C carrier) {
         /* The custom propagators have higher precedence than the builtin ones. */
-        if (propagatorMap != null && propagatorMap.containsKey(format)) {
+        if (customPropagators != null && customPropagators.containsKey(format)) {
             try {
                 @SuppressWarnings("unchecked")
-                Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
+                Propagator<C> propagator = (Propagator<C>) customPropagators.get(format);
                 return propagator.extract(carrier);
             } catch (RuntimeException e) {
                 warn("Error while using custom propagator for extraction. " +
