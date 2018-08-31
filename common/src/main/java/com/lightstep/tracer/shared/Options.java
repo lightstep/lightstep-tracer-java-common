@@ -4,7 +4,6 @@ package com.lightstep.tracer.shared;
 import io.opentracing.ScopeManager;
 import io.opentracing.SpanContext;
 import io.opentracing.propagation.Format;
-import io.opentracing.propagation.TextMap;
 import io.opentracing.util.ThreadLocalScopeManager;
 
 import java.net.MalformedURLException;
@@ -197,9 +196,9 @@ public final class Options {
          *
          * @param format Instance of {@link Format} for which custom Propagator will be used.
          * @param propagator Instance of {@link Propagator} to be used
-         * @param <T> Type extending {@link TextMap}
+         * @param <T> Type of the carrier.
          */
-        public <T extends TextMap> OptionsBuilder withPropagation(
+        public <T> OptionsBuilder withPropagation(
                 Format<T> format, Propagator<T> propagator) {
 
             if (this.propagatorMap == null) {
