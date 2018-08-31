@@ -190,17 +190,21 @@ public final class Options {
         }
 
         /**
-         * Adds user defined {@link Propagator} to be used during
+         * Adds a user defined {@link Propagator} to be used during
          * {@link io.opentracing.Tracer#inject} and {@link io.opentracing.Tracer#extract} for
-         * the given type. If multiple propagators are used for the same Format,
-         * the propagator used with last invocation of this method will be used for
-         * that format.
+         * the given type. This can be used to add support for a new {@link Format}
+         * or to provide custom handling for a builtin one (such as {@link Format.Builtin#TEXT_MAP}).
+         *
          * @param format Instance of {@link Format} for which custom Propagator will be used.
          * @param propagator Instance of {@link Propagator} to be used
          * @param <T> Type extending {@link TextMap}
          */
         public <T extends TextMap> OptionsBuilder withPropagation(
                 Format<T> format, Propagator<T> propagator) {
+
+            if (this.propagatorMap == null) {
+                this.propagatorMap = new HashMap<Format<?>, Propagator<?>>();
+            }
             this.propagatorMap.put(format, propagator);
             return this;
         }

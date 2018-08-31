@@ -346,6 +346,20 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
+
+        if (propagatorMap != null && propagatorMap.containsKey(format)) {
+            try {
+                @SuppressWarnings("unchecked")
+                Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
+                propagator.inject(lightstepSpanContext, carrier);
+            } catch (RuntimeException e) {
+                warn("Error while using custom propagator for injection. " +
+                              "Carrier type: " + carrier.getClass());
+                error(e.getMessage(), e);
+            }
+            return;
+        }
+
         if (format == Format.Builtin.TEXT_MAP) {
             Propagator.TEXT_MAP.inject(lightstepSpanContext, (TextMap) carrier);
         } else if (format == Format.Builtin.HTTP_HEADERS) {
@@ -355,23 +369,25 @@ public abstract class AbstractTracer implements Tracer {
                     "SpanContext: " + spanContext.toString());
             Propagator.BINARY.inject(lightstepSpanContext, (ByteBuffer) carrier);
         } else {
-            if (propagatorMap.containsKey(format)) {
-                try {
-                    @SuppressWarnings("unchecked")
-                    Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
-                    propagator.inject(lightstepSpanContext, carrier);
-                } catch (RuntimeException e) {
-                    warn("Error while using custom propagator for injection. " +
-                                  "Carrier type: " + carrier.getClass());
-                    error(e.getMessage(), e);
-                }
-            } else {
-                info("Unsupported carrier type: " + carrier.getClass());
-            }
+            info("Unsupported carrier type: " + carrier.getClass());
         }
     }
 
     public <C> io.opentracing.SpanContext extract(Format<C> format, C carrier) {
+        /* The custom propagators have higher precedence than the builtin ones. */
+        if (propagatorMap != null && propagatorMap.containsKey(format)) {
+            try {
+                @SuppressWarnings("unchecked")
+                Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
+                return propagator.extract(carrier);
+            } catch (RuntimeException e) {
+                warn("Error while using custom propagator for extraction. " +
+                              "Carrier type: " + carrier.getClass());
+                error(e.getMessage(), e);
+            }
+            return null;
+        }
+
         if (format == Format.Builtin.TEXT_MAP) {
             return Propagator.TEXT_MAP.extract((TextMap) carrier);
         } else if (format == Format.Builtin.HTTP_HEADERS) {
@@ -380,21 +396,9 @@ public abstract class AbstractTracer implements Tracer {
             warn("LightStep-java does not yet support binary carriers.");
             return Propagator.BINARY.extract((ByteBuffer) carrier);
         } else {
-            if (propagatorMap.containsKey(format)) {
-                try {
-                    @SuppressWarnings("unchecked")
-                    Propagator<C> propagator = (Propagator<C>) propagatorMap.get(format);
-                    return propagator.extract(carrier);
-                } catch (RuntimeException e) {
-                    warn("Error while using custom propagator for extraction. " +
-                                  "Carrier type: " + carrier.getClass());
-                    error(e.getMessage(), e);
-                }
-            } else {
-                info("Unsupported carrier type: " + carrier.getClass());
-            }
+            info("Unsupported carrier type: " + carrier.getClass());
+            return null;
         }
-        return null;
     }
 
     /**
