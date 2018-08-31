@@ -20,10 +20,8 @@ public class B3Propagator implements Propagator<TextMap> {
         carrier.put(SPAN_ID_NAME, Util.toHexString(spanId));
         carrier.put(SAMPLED_NAME, "true");
 
-        // Default to use TextMap propagation in case we could not find TraceId
-        if (0L == traceId) {
-            textMapPropagator.inject(spanContext, carrier);
-        }
+        // Append the builtin TEXT_MAP headers too, to be in a safest spot.
+        textMapPropagator.inject(spanContext, carrier);
     }
 
     @Override
