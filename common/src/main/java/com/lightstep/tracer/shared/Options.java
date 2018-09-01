@@ -194,6 +194,9 @@ public final class Options {
          * the given type. This can be used to add support for a new {@link Format}
          * or to provide custom handling for a builtin one (such as {@link Format.Builtin#TEXT_MAP}).
          *
+         * {@link Propagator#inject} and {@link Propagator#extract} are expected
+         * to fail silently in case of error during injection and extraction, respectively.
+         *
          * @param format Instance of {@link Format} for which custom Propagator will be used.
          * @param propagator Instance of {@link Propagator} to be used
          * @param <T> Type of the carrier.

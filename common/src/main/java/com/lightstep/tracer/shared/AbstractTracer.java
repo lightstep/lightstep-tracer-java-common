@@ -348,15 +348,8 @@ public abstract class AbstractTracer implements Tracer {
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
 
         if (customPropagators != null && customPropagators.containsKey(format)) {
-            try {
-                @SuppressWarnings("unchecked")
-                Propagator<C> propagator = (Propagator<C>) customPropagators.get(format);
-                propagator.inject(lightstepSpanContext, carrier);
-            } catch (RuntimeException e) {
-                warn("Error while using custom propagator for injection. " +
-                              "Carrier type: " + carrier.getClass());
-                error(e.getMessage(), e);
-            }
+            Propagator<C> propagator = (Propagator<C>) customPropagators.get(format);
+            propagator.inject(lightstepSpanContext, carrier);
             return;
         }
 
@@ -376,16 +369,8 @@ public abstract class AbstractTracer implements Tracer {
     public <C> io.opentracing.SpanContext extract(Format<C> format, C carrier) {
         /* The custom propagators have higher precedence than the builtin ones. */
         if (customPropagators != null && customPropagators.containsKey(format)) {
-            try {
-                @SuppressWarnings("unchecked")
-                Propagator<C> propagator = (Propagator<C>) customPropagators.get(format);
-                return propagator.extract(carrier);
-            } catch (RuntimeException e) {
-                warn("Error while using custom propagator for extraction. " +
-                              "Carrier type: " + carrier.getClass());
-                error(e.getMessage(), e);
-            }
-            return null;
+            Propagator<C> propagator = (Propagator<C>) customPropagators.get(format);
+            return propagator.extract(carrier);
         }
 
         if (format == Format.Builtin.TEXT_MAP) {
