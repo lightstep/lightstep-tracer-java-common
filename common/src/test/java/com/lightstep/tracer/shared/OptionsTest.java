@@ -1,5 +1,6 @@
 package com.lightstep.tracer.shared;
 
+import static com.lightstep.tracer.shared.Options.BUILTIN_PROPAGATORS;
 import static com.lightstep.tracer.shared.Options.COLLECTOR_PATH;
 import static com.lightstep.tracer.shared.Options.COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.Options.DEFAULT_PLAINTEXT_PORT;
@@ -80,6 +81,18 @@ public class OptionsTest {
                 .withCollectorPort(-1);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testOptionsBuilder_nullPropagator() {
+        new Options.OptionsBuilder()
+                .withPropagator(Builtin.TEXT_MAP, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testOptionsBuilder_nullPropagatorFormat() {
+        new Options.OptionsBuilder()
+                .withPropagator(null, CUSTOM_PROPAGATOR);
+    }
+
     @Test
     public void testOptionsBuilder_httpsNoPortProvided() throws Exception {
         Options options = new Options.OptionsBuilder()
@@ -131,6 +144,14 @@ public class OptionsTest {
     }
 
     @Test
+    public void testOptionsBuilder_noFormatsProvided() throws Exception {
+        Options options = new Options.OptionsBuilder().build();
+        assertFalse(options.propagators.isEmpty());
+        assertEquals(BUILTIN_PROPAGATORS, options.propagators);
+        assertNotSame(BUILTIN_PROPAGATORS, options.propagators);
+    }
+
+    @Test
     public void testSetDefaultReportingIntervalMillis_alreadySet() throws Exception {
         Options oldOptions = createFullyPopulatedOptions();
         Options newOptions = oldOptions.setDefaultReportingIntervalMillis(111);
@@ -162,7 +183,7 @@ public class OptionsTest {
                 .withTag(TAG_KEY, TAG_VALUE)
                 .withTag(GUID_KEY, GUID_VALUE)
                 .withDeadlineMillis(DEADLINE_MILLIS)
-                .withPropagation(Builtin.TEXT_MAP, CUSTOM_PROPAGATOR)
+                .withPropagator(Builtin.TEXT_MAP, CUSTOM_PROPAGATOR)
                 .build();
     }
 
@@ -182,7 +203,7 @@ public class OptionsTest {
         assertEquals(TAG_VALUE, options.tags.get(TAG_KEY));
         assertEquals(GUID_VALUE, options.getGuid());
         assertEquals(DEADLINE_MILLIS, options.deadlineMillis);
-        assertFalse(options.customPropagators.keySet().isEmpty());
-        assertEquals(CUSTOM_PROPAGATOR, options.customPropagators.get(Builtin.TEXT_MAP));
+        assertFalse(options.propagators.keySet().isEmpty());
+        assertEquals(CUSTOM_PROPAGATOR, options.propagators.get(Builtin.TEXT_MAP));
     }
 }
