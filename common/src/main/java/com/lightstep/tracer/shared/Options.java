@@ -201,11 +201,16 @@ public final class Options {
         /**
          * Adds a user defined {@link Propagator} to be used during
          * {@link io.opentracing.Tracer#inject} and {@link io.opentracing.Tracer#extract} for
-         * the given type. This can be used to add support for a new {@link Format}
-         * or to provide custom handling for a builtin one (such as {@link Format.Builtin#TEXT_MAP}).
+         * the given type. This can be used to provide custom handling for a specified
+         * {@link Format} (such as {@link Format.Builtin#TEXT_MAP}).
          *
          * {@link Propagator#inject} and {@link Propagator#extract} are expected
          * to fail silently in case of error during injection and extraction, respectively.
+         *
+         * Observe that a new {@link Format} should *not* be created if the data is being
+         * propagated through http headers or a text map. Instead, use the respective
+         * builtin {@link Format} and specify a custom {@link Propagator} here. In case of
+         * doubt, contact LightStep for advice.
          *
          * @param format Instance of {@link Format} for which custom Propagator will be used.
          * @param propagator Instance of {@link Propagator} to be used
