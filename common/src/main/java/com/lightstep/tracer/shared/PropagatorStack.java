@@ -25,7 +25,7 @@ public final class PropagatorStack<C> implements Propagator<C> {
     /**
      * Creates a new PropagatorStack associated witht he specified
      * {@link io.opentracing.propagation.Format}. It is an error
-     * to specify a format that is contained in
+     * to specify a format that is not contained in
      * {link io.opentracing.propagation.Format#Builtin}.
      *
      * @param format Instance of {@link io.opentracing.propagation.Format}
