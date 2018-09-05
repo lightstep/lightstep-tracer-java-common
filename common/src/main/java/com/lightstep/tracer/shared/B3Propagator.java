@@ -9,8 +9,6 @@ public class B3Propagator implements Propagator<TextMap> {
     private static final String SPAN_ID_NAME = "X-B3-SpanId";
     private static final String SAMPLED_NAME = "X-B3-Sampled";
 
-    private final TextMapPropagator textMapPropagator = new TextMapPropagator();
-
     @Override
     public void inject(SpanContext spanContext, TextMap carrier) {
         long traceId = spanContext.getTraceId();
@@ -19,9 +17,6 @@ public class B3Propagator implements Propagator<TextMap> {
         carrier.put(TRACE_ID_NAME, Util.toHexString(traceId));
         carrier.put(SPAN_ID_NAME, Util.toHexString(spanId));
         carrier.put(SAMPLED_NAME, "true");
-
-        // Append the builtin TEXT_MAP headers too, to be in a safest spot.
-        textMapPropagator.inject(spanContext, carrier);
     }
 
     @Override
@@ -39,10 +34,9 @@ public class B3Propagator implements Propagator<TextMap> {
 
         if (null != traceId && null != spanId) {
             return new SpanContext(traceId, spanId);
-        } else {
-            // Default to use TextMap propagation
-            return textMapPropagator.extract(carrier);
         }
+
+        return null;
     }
 }
 
