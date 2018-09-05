@@ -21,18 +21,20 @@ public class PropagatorStackTest {
         new PropagatorStack(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCtor_notRecognizedFormat() {
-        Format format = new Format() {};
-        new PropagatorStack(format);
-    }
-
     @Test
     public void testCtor_empty()
     {
         PropagatorStack propagatorStack = new PropagatorStack(Builtin.TEXT_MAP);
         assertTrue(propagatorStack.propagators.isEmpty());
         assertEquals(propagatorStack.format(), Builtin.TEXT_MAP);
+    }
+
+    @Test
+    public void testCtor_customFormat() {
+        Format format = new Format() {};
+        PropagatorStack propagatorStack= new PropagatorStack(format);
+        assertTrue(propagatorStack.propagators.isEmpty());
+        assertEquals(propagatorStack.format(), format);
     }
 
     @Test(expected = IllegalArgumentException.class)

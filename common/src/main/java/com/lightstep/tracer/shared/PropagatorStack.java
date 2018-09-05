@@ -23,10 +23,12 @@ public final class PropagatorStack<C> implements Propagator<C> {
     List<Propagator<C>> propagators;
 
     /**
-     * Creates a new PropagatorStack associated witht he specified
-     * {@link io.opentracing.propagation.Format}. It is an error
-     * to specify a format that is not contained in
-     * {link io.opentracing.propagation.Format#Builtin}.
+     * Creates a new PropagatorStack associated with the specified
+     * {@link io.opentracing.propagation.Format}.
+     *
+     * Observe that a new {@link Format} should *not* be created if the data is being
+     * propagated through http headers or a text map. Instead, use the respective
+     * builtin {@link Format}. In case of doubt, contact LightStep for advice.
      *
      * @param format Instance of {@link io.opentracing.propagation.Format}
      *               associated with this PropagatorStack.
@@ -35,18 +37,9 @@ public final class PropagatorStack<C> implements Propagator<C> {
         if (format == null) {
             throw new IllegalArgumentException("format cannot be null");
         }
-        if (!isValidFormat(format)) {
-            throw new IllegalArgumentException("format not recognized");
-        }
 
         this.format = format;
         propagators = new LinkedList<Propagator<C>>();
-    }
-
-    static boolean isValidFormat(Format format) {
-        return format == Format.Builtin.TEXT_MAP
-            || format == Format.Builtin.HTTP_HEADERS
-            || format == Format.Builtin.BINARY;
     }
 
     public Format<C> format() {
