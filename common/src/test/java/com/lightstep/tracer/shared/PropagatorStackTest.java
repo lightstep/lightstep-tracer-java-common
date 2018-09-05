@@ -13,6 +13,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class PropagatorStackTest {
     @Test(expected = IllegalArgumentException.class)
@@ -27,27 +28,11 @@ public class PropagatorStackTest {
     }
 
     @Test
-    public void testCtor_TextMap() {
+    public void testCtor_empty()
+    {
         PropagatorStack propagatorStack = new PropagatorStack(Builtin.TEXT_MAP);
+        assertTrue(propagatorStack.propagators.isEmpty());
         assertEquals(propagatorStack.format(), Builtin.TEXT_MAP);
-        assertEquals(propagatorStack.propagators.size(), 1);
-        assertEquals(propagatorStack.propagators.get(0), Propagator.TEXT_MAP);
-    }
-
-    @Test
-    public void testCtor_HttpHeaders() {
-        PropagatorStack propagatorStack = new PropagatorStack(Builtin.HTTP_HEADERS);
-        assertEquals(propagatorStack.format(), Builtin.HTTP_HEADERS);
-        assertEquals(propagatorStack.propagators.size(), 1);
-        assertEquals(propagatorStack.propagators.get(0), Propagator.HTTP_HEADERS);
-    }
-
-    @Test
-    public void testCtor_Binary() {
-        PropagatorStack propagatorStack = new PropagatorStack(Builtin.BINARY);
-        assertEquals(propagatorStack.format(), Builtin.BINARY);
-        assertEquals(propagatorStack.propagators.size(), 1);
-        assertEquals(propagatorStack.propagators.get(0), Propagator.BINARY);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -60,6 +45,8 @@ public class PropagatorStackTest {
     public void testPushPropagator() {
         Propagator b3Propagator = new B3Propagator();
         PropagatorStack propagatorStack = new PropagatorStack(Builtin.HTTP_HEADERS);
+
+        assertEquals(propagatorStack.pushPropagator(Propagator.HTTP_HEADERS), propagatorStack);
         assertEquals(propagatorStack.pushPropagator(b3Propagator), propagatorStack);
         assertEquals(propagatorStack.propagators.size(), 2);
         assertEquals(propagatorStack.propagators.get(0), Propagator.HTTP_HEADERS);
@@ -74,6 +61,7 @@ public class PropagatorStackTest {
         PropagatorStack propagatorStack = new PropagatorStack(Builtin.HTTP_HEADERS);
         Propagator b3Propagator = new B3Propagator();
         Propagator stubPropagator = new StubPropagator();
+        propagatorStack.pushPropagator(Propagator.HTTP_HEADERS);
         propagatorStack.pushPropagator(b3Propagator);
         propagatorStack.pushPropagator(stubPropagator);
 
@@ -102,6 +90,7 @@ public class PropagatorStackTest {
         PropagatorStack propagatorStack = new PropagatorStack(Builtin.HTTP_HEADERS);
         Propagator b3Propagator = new B3Propagator();
         Propagator stubPropagator = new StubPropagator();
+        propagatorStack.pushPropagator(Propagator.HTTP_HEADERS);
         propagatorStack.pushPropagator(b3Propagator);
         propagatorStack.pushPropagator(stubPropagator);
 
@@ -124,13 +113,15 @@ public class PropagatorStackTest {
 
     @Test
     public void testExtract_noneFound() {
-        PropagatorStack propagatorStack = new PropagatorStack(Builtin.HTTP_HEADERS);
-
-        Map<String, String> carrier = new HashMap<>();
         SpanContext context = new SpanContext();
+        Map<String, String> carrier = new HashMap<>();
         Propagator stubPropagator = new StubPropagator();
         stubPropagator.inject(context, new TextMapInjectAdapter(carrier));
 
+        PropagatorStack propagatorStack = new PropagatorStack(Builtin.HTTP_HEADERS);
+        assertNull(propagatorStack.extract(new TextMapExtractAdapter(carrier)));
+
+        propagatorStack.pushPropagator(Propagator.HTTP_HEADERS); // no compatible still.
         assertNull(propagatorStack.extract(new TextMapExtractAdapter(carrier)));
     }
 

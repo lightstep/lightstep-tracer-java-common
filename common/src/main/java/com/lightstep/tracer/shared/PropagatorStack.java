@@ -28,9 +28,6 @@ public final class PropagatorStack<C> implements Propagator<C> {
      * to specify a format that is contained in
      * {link io.opentracing.propagation.Format#Builtin}.
      *
-     * The builtin {@link Propagator} for the specified format will be
-     * pushed as the first instance in the stack.
-     *
      * @param format Instance of {@link io.opentracing.propagation.Format}
      *               associated with this PropagatorStack.
      */
@@ -38,27 +35,22 @@ public final class PropagatorStack<C> implements Propagator<C> {
         if (format == null) {
             throw new IllegalArgumentException("format cannot be null");
         }
+        if (!isValidFormat(format)) {
+            throw new IllegalArgumentException("format not recognized");
+        }
 
         this.format = format;
         propagators = new LinkedList<Propagator<C>>();
+    }
 
-        addBuiltinPropagator();
+    static boolean isValidFormat(Format format) {
+        return format == Format.Builtin.TEXT_MAP
+            || format == Format.Builtin.HTTP_HEADERS
+            || format == Format.Builtin.BINARY;
     }
 
     public Format<C> format() {
         return format;
-    }
-
-    void addBuiltinPropagator() {
-        if (format == Format.Builtin.TEXT_MAP) {
-            propagators.add((Propagator<C>) Propagator.TEXT_MAP);
-        } else if (format == Format.Builtin.HTTP_HEADERS) {
-            propagators.add((Propagator<C>) Propagator.HTTP_HEADERS);
-        } else if (format == Format.Builtin.BINARY) {
-            propagators.add((Propagator<C>) Propagator.BINARY);
-        } else {
-            throw new IllegalArgumentException("Not recognized format.");
-        }
     }
 
     /**
