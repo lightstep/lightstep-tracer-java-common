@@ -152,6 +152,7 @@ public class SpanBuilder implements Tracer.SpanBuilder {
         grpcSpan.setStartTimestamp(Util.epochTimeMicrosToProtoTime(startTimestampMicros));
 
         Long traceId = this.traceId;
+        Map<String, String> baggage = null;
 
         if(parent == null && !ignoringActiveSpan) {
             parent = activeSpanContext();
@@ -160,15 +161,9 @@ public class SpanBuilder implements Tracer.SpanBuilder {
 
         if (parent != null) {
             traceId = parent.getTraceId();
+            baggage = new HashMap<String, String>(parent.getBaggage());
         }
-        SpanContext newSpanContext;
-        if (traceId != null && spanId != null) {
-            newSpanContext = new SpanContext(traceId, spanId);
-        } else if (traceId != null) {
-            newSpanContext = new SpanContext(traceId);
-        } else {
-            newSpanContext = new SpanContext();
-        }
+        SpanContext newSpanContext = new SpanContext(traceId, spanId, baggage);
 
         // Set the SpanContext of the span
         grpcSpan.setSpanContext(newSpanContext.getInnerSpanCtx());
