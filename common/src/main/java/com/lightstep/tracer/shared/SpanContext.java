@@ -56,6 +56,10 @@ public class SpanContext implements io.opentracing.SpanContext {
         return this.baggage.get(key);
     }
 
+    Map<String, String> getBaggage() {
+        return baggage;
+    }
+
     SpanContext withBaggageItem(String key, String value) {
         // This is really a "set" not a "with" but keeping as is to preserve behavior.
         this.baggage.put(key, value);

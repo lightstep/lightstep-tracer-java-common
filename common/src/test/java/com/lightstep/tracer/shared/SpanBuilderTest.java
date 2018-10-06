@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -71,6 +73,24 @@ public class SpanBuilderTest {
     public void testStart_asFollowsFromSpanContext() throws Exception {
         undertest.addReference(FOLLOWS_FROM, context);
         verifySettingsFromParent();
+    }
+
+    /**
+     * Confirms the inherited baggage of the Span when the builder is given a parent SpanContext.
+     */
+    @Test
+    public void testStart_ParentBaggage() {
+        SpanContext parentContext = new SpanContext(TRACE_ID, SPAN_ID, new HashMap<String, String>() {{
+            put("foo", "bar");
+        }});
+
+        undertest.asChildOf(parentContext);
+        Span result = (Span)undertest.start();
+        assertEquals("bar", result.context().getBaggageItem("foo"));
+
+        result.setBaggageItem("another", "item");
+        assertEquals("item", result.context().getBaggageItem("another"));
+        assertNull(parentContext.getBaggageItem("another"));
     }
 
     @Test
