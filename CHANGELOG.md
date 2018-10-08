@@ -1,5 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.5...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.7...master)
+
+<a name="0.15.7"></a>
+## [0.15.5](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.6...0.15.7)
+
+* Fixed a bug regarding children Span not inheriting their parent's SpanContext baggage.
 
 <a name="0.15.5"></a>
 ## [0.15.5](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.4...0.15.5)
