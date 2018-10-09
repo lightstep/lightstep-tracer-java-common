@@ -289,8 +289,13 @@ public final class Options {
          * Sets scope manager attribute. If not set, will default to the ThreadLocalScopeManager
          *
          * @param scopeManager The scopeManager for the LightStep tracer.
+         * @throws IllegalArgumentException If the scopeManager is null.
          */
         public OptionsBuilder withScopeManager(ScopeManager scopeManager) {
+            if (scopeManager == null) {
+                throw new IllegalArgumentException("scopeManager cannot be null");
+            }
+
             this.scopeManager = scopeManager;
             return this;
         }
