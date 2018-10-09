@@ -1,6 +1,7 @@
 package com.lightstep.tracer.shared;
 
 
+import io.opentracing.Scope;
 import io.opentracing.ScopeManager;
 import io.opentracing.SpanContext;
 import io.opentracing.propagation.Format;
@@ -281,6 +282,16 @@ public final class Options {
                 throw new IllegalArgumentException("Invalid collector port: " + collectorPort);
             }
             this.collectorPort = collectorPort;
+            return this;
+        }
+
+        /**
+         * Sets scope manager attribute. If not set, will default to the ThreadLocalScopeManager
+         *
+         * @param scopeManager The scopeManager for the LightStep tracer.
+         */
+        public OptionsBuilder withScopeManager(ScopeManager scopeManager) {
+            this.scopeManager = scopeManager;
             return this;
         }
 
