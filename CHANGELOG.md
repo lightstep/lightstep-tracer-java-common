@@ -12,6 +12,9 @@
 
 * Fixed a bug regarding children Span not inheriting their parent's SpanContext baggage.
 
+<a name="0.15.6"></a>
+## [0.15.6](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.5...0.15.6)
+
 <a name="0.15.5"></a>
 ## [0.15.5](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.4...0.15.5)
 
