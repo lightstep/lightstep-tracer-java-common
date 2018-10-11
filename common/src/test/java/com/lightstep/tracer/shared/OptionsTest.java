@@ -132,9 +132,6 @@ public class OptionsTest {
         Options options = new Options.OptionsBuilder().build();
         Object componentName = options.tags.get(COMPONENT_NAME_KEY);
         assertNotNull(componentName);
-
-        Object legacyComponentName = options.tags.get(LEGACY_COMPONENT_NAME_KEY);
-        assertEquals(componentName, legacyComponentName);
     }
 
     @Test

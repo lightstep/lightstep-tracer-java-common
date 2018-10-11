@@ -442,7 +442,7 @@ public final class Options {
                     if (st.hasMoreTokens()) {
                         String name = st.nextToken();
                         withComponentName(name);
-                        tags.put(LEGACY_COMPONENT_NAME_KEY, name);
+                        tags.put(COMPONENT_NAME_KEY, name);
                     }
                 }
             }
