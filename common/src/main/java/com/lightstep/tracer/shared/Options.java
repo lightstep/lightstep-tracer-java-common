@@ -1,9 +1,7 @@
 package com.lightstep.tracer.shared;
 
 
-import io.opentracing.Scope;
 import io.opentracing.ScopeManager;
-import io.opentracing.SpanContext;
 import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
 
