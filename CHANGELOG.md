@@ -1,6 +1,10 @@
 <a name="Pending Release"></a>
 ## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...master)
 
+<a name="0.16.0"></a>
+## [0.16.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...0.16.0)
+* Removes LEGACY_COMPONENT_NAME_KEY for default component name.
+
 <a name="0.15.8"></a>
 ## [0.15.8](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.7...0.15.8)
 
@@ -31,10 +35,10 @@
 * Updated the compiled protos. Changed type of clock correction offset from int to long.
   - Included new dependency required by proto upgrade com.google.api.grpc:googleapis-common-protos:0.0.3
   - Fixed bug where large clock corrections caused crashes.
-    
+
 <a name="0.15.2"></a>
 ## [0.15.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.2...0.15.1)
-* Upgrade dependencies to latest  
+* Upgrade dependencies to latest
   - com.google.protobuf:protobuf-java from 3.4.0 to 3.5.1
   - org.mockito:mockito-core from 2.8.47 to 2.18.3
   - io.grpc from 1.4.0 to 1.11.0
@@ -105,7 +109,7 @@ dependencies {
 <a name="0.13.0"></a>
 ## [0.13.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.12.7...0.13.0)
 * Fixed issues with Bintray Maven sync
-* Minor Java IDE warning cleanup, it is not believed that these changes will impact users, but some 
+* Minor Java IDE warning cleanup, it is not believed that these changes will impact users, but some
 access levels did change, and some variables were removed
 * Upgrade from io.grpc 1.2.0 to 1.4.0
 * Upgrade io.netty from 1.1.33.Fork26 to 2.0.5.Final
@@ -179,7 +183,7 @@ Bugfix: Handle when SpanContext keys have mixed case like: Ot-com.lightstep.trac
 
 * *withDisableReportOnExit* method has been removed from Options. The standard behavior now is NOT to disable report on exit. Clients should instead call *AbstractTracer.flush()* on exit.
 * Options can no longer be constructed directly by clients. You must use the Options.OptionsBuilder which will ensure your settings are valid and will set defaults where needed.
- 
+
 ```java
 Options options = new Options.OptionsBuilder()
                              .withAccessToken("{your_access_token}")
