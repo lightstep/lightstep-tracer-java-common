@@ -5,6 +5,7 @@
 # make publish
 # which will call out to this script
 
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
 # Use maven-help-plugin to get the current project.version
 CURRENT_VERSION=`mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\['`
@@ -23,4 +24,4 @@ git add example/pom.xml
 git add pom.xml
 
 git commit -m "VERSION $NEW_VERSION"
-git push
+git push --set-upstream origin $CURRENT_BRANCH
