@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format.Builtin;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.util.ThreadLocalScopeManager;
@@ -114,7 +115,16 @@ public class OptionsTest {
         Options options = new Options.OptionsBuilder()
                 .build();
 
-        assertEquals(ThreadLocalScopeManager.class, options.scopeManager.getClass());
+        assertTrue(options.scopeManager instanceof ThreadLocalScopeManager);
+    }
+
+    @Test
+    public void testOptionsBuilder_withScopeManager() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .withScopeManager(io.opentracing.noop.NoopScopeManager.INSTANCE)
+                .build();
+
+        assertTrue(options.scopeManager instanceof io.opentracing.noop.NoopScopeManager);
     }
 
     @Test
