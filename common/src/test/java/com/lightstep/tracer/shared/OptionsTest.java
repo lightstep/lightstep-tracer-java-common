@@ -18,8 +18,10 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format.Builtin;
 import io.opentracing.propagation.TextMap;
+import io.opentracing.util.ThreadLocalScopeManager;
 import org.junit.Test;
 
 public class OptionsTest {
@@ -93,6 +95,12 @@ public class OptionsTest {
                 .withPropagator(null, CUSTOM_PROPAGATOR);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testOptionsBuilder_nullScopeManager() {
+        new Options.OptionsBuilder()
+                .withScopeManager(null);
+    }
+
     @Test
     public void testOptionsBuilder_httpsNoPortProvided() throws Exception {
         Options options = new Options.OptionsBuilder()
@@ -100,6 +108,23 @@ public class OptionsTest {
                 .build();
 
         assertEquals(DEFAULT_SECURE_PORT, options.collectorUrl.getPort());
+    }
+
+    @Test
+    public void testOptionsBuilder_defaultScopeManager() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .build();
+
+        assertTrue(options.scopeManager instanceof ThreadLocalScopeManager);
+    }
+
+    @Test
+    public void testOptionsBuilder_withScopeManager() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .withScopeManager(io.opentracing.noop.NoopScopeManager.INSTANCE)
+                .build();
+
+        assertTrue(options.scopeManager instanceof io.opentracing.noop.NoopScopeManager);
     }
 
     @Test
@@ -181,6 +206,7 @@ public class OptionsTest {
                 .withTag(GUID_KEY, GUID_VALUE)
                 .withDeadlineMillis(DEADLINE_MILLIS)
                 .withPropagator(Builtin.TEXT_MAP, CUSTOM_PROPAGATOR)
+                .withScopeManager(new ThreadLocalScopeManager())
                 .build();
     }
 
