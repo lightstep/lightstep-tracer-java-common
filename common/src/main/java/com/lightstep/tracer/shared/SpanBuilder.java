@@ -87,6 +87,23 @@ public class SpanBuilder implements Tracer.SpanBuilder {
         return this;
     }
 
+    public <T> Tracer.SpanBuilder withTag(io.opentracing.tag.Tag<T> tag, T value) {
+        if (tag == null || value == null) {
+            tracer.debug("tag (" + tag + ") or value (" + value + ") is null, ignoring");
+            return this;
+        }
+
+        if (value instanceof Number) {
+            numTags.put(tag.getKey(), (Number)value);
+        } else if (value instanceof Boolean) {
+            boolTags.put(tag.getKey(), (Boolean)value);
+        } else {
+            stringTags.put(tag.getKey(), value.toString());
+        }
+
+        return this;
+    }
+
     public Tracer.SpanBuilder withStartTimestamp(long microseconds) {
         startTimestampMicros = microseconds;
         return this;

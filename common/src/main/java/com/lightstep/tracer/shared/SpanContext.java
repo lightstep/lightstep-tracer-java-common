@@ -52,6 +52,16 @@ public class SpanContext implements io.opentracing.SpanContext {
         return this.traceId;
     }
 
+    @Override
+    public String toTraceId() {
+        return String.valueOf(this.traceId);
+    }
+
+    @Override
+    public String toSpanId() {
+        return String.valueOf(this.spanId);
+    }
+
     String getBaggageItem(String key) {
         return this.baggage.get(key);
     }
