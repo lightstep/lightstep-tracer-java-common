@@ -46,8 +46,18 @@ class Util {
         return System.currentTimeMillis() * 1000;
     }
 
-    static long fromHexString(String hexString) {
-        return new BigInteger(hexString, 16).longValue();
+    static Long fromHexString(String hexString) {
+        if (hexString == null || hexString.length() == 0) {
+            return null;
+        }
+
+        Long value = null;
+        try {
+            value = new BigInteger(hexString, 16).longValue();
+        } catch (NumberFormatException e) {
+        }
+
+        return value;
     }
 
     static String toHexString(long l) {
