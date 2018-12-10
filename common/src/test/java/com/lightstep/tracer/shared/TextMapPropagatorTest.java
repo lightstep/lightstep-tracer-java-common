@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class TextMapPropagatorTest {
 
@@ -52,5 +53,33 @@ public class TextMapPropagatorTest {
 
         assertEquals(spanContext.getTraceId(), result.getTraceId());
         assertEquals(spanContext.getSpanId(), result.getSpanId());
+    }
+
+    @Test
+    public void testExtractEmptyHeaders() {
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("ot-tracer-spanid", "");
+        headers.put("ot-tracer-traceId", "");
+
+        TextMapPropagator subject = new TextMapPropagator();
+
+        SpanContext spanContext = subject.extract(new TextMapExtractAdapter(headers));
+
+        assertNull(spanContext);
+    }
+
+    @Test
+    public void testExtractInvalidHeaders() {
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("ot-tracer-spanid", "#$%");
+        headers.put("ot-tracer-traceId", "#$%");
+
+        TextMapPropagator subject = new TextMapPropagator();
+
+        SpanContext spanContext = subject.extract(new TextMapExtractAdapter(headers));
+
+        assertNull(spanContext);
     }
 }
