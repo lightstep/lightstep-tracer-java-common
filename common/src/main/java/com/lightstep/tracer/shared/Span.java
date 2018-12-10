@@ -89,6 +89,15 @@ public class Span implements io.opentracing.Span {
     }
 
     @Override
+    public <T> Span setTag(io.opentracing.tag.Tag<T> tag, T value) {
+        if (tag == null || value == null) {
+            return this;
+        }
+        tag.set(this, value);
+        return this;
+    }
+
+    @Override
     public synchronized String getBaggageItem(String key) {
         return context.getBaggageItem(key);
     }

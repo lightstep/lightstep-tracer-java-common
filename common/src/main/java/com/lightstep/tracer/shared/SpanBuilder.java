@@ -1,11 +1,11 @@
 package com.lightstep.tracer.shared;
 
-import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Reference;
 import com.lightstep.tracer.grpc.Reference.Relationship;
 import io.opentracing.Scope;
 import io.opentracing.Tracer;
 
+import io.opentracing.tag.Tag;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,6 +84,20 @@ public class SpanBuilder implements Tracer.SpanBuilder {
 
     public Tracer.SpanBuilder withTag(String key, Number value) {
         numTags.put(key, value);
+        return this;
+    }
+
+    @Override
+    public <T> Tracer.SpanBuilder withTag(Tag<T> tag, T value) {
+        if (value instanceof String) {
+            return this.withTag(tag.getKey(), (String) value);
+        }
+        if (value instanceof Number) {
+            return this.withTag(tag.getKey(), (Number) value);
+        }
+        if (value instanceof Boolean) {
+            return this.withTag(tag.getKey(), (Boolean) value);
+        }
         return this;
     }
 

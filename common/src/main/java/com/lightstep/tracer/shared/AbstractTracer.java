@@ -336,6 +336,11 @@ public abstract class AbstractTracer implements Tracer {
         return scope == null ? null : scope.span();
     }
 
+    @Override
+    public Scope activateSpan(io.opentracing.Span span) {
+        return scopeManager().activate(span);
+    }
+
     public Tracer.SpanBuilder buildSpan(String operationName) {
         return new com.lightstep.tracer.shared.SpanBuilder(operationName, this);
     }

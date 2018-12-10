@@ -1,5 +1,6 @@
 package com.lightstep.tracer.shared;
 
+import io.opentracing.tag.Tag;
 import java.util.Collections;
 import java.util.Map;
 
@@ -36,6 +37,11 @@ class NoopSpan implements Span {
 
     @Override
     public Span setTag(String key, Number value) {
+        return this;
+    }
+
+    @Override
+    public <T> Span setTag(Tag<T> tag, T value) {
         return this;
     }
 
@@ -77,6 +83,16 @@ class NoopSpan implements Span {
         @Override
         public Iterable<Map.Entry<String, String>> baggageItems() {
             return Collections.emptySet();
+        }
+
+        @Override
+        public String toTraceId() {
+            return "";
+        }
+
+        @Override
+        public String toSpanId() {
+            return "";
         }
     }
 }

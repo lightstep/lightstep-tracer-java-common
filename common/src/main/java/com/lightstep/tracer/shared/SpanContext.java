@@ -7,6 +7,7 @@ public class SpanContext implements io.opentracing.SpanContext {
     private final long traceId;
     private final long spanId;
     private final Map<String, String> baggage;
+    private final String[] toIds = new String[]{"", ""};
 
     public SpanContext() {
         this(Util.generateRandomGUID(), Util.generateRandomGUID());
@@ -40,6 +41,8 @@ public class SpanContext implements io.opentracing.SpanContext {
         this.traceId = traceId;
         this.spanId = spanId;
         this.baggage = baggage;
+        toIds[0] = Util.toHexString(traceId);
+        toIds[1] = Util.toHexString(spanId);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -69,6 +72,16 @@ public class SpanContext implements io.opentracing.SpanContext {
     @Override
     public Iterable<Map.Entry<String, String>> baggageItems() {
         return this.baggage.entrySet();
+    }
+
+    @Override
+    public String toTraceId() {
+        return toIds[0];
+    }
+
+    @Override
+    public String toSpanId() {
+        return toIds[1];
     }
 
     @SuppressWarnings("WeakerAccess")

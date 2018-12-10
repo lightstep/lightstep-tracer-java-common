@@ -3,6 +3,9 @@ package com.lightstep.tracer.shared;
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Log;
 import com.lightstep.tracer.grpc.Span.Builder;
+import io.opentracing.tag.BooleanTag;
+import io.opentracing.tag.IntTag;
+import io.opentracing.tag.StringTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,7 +79,7 @@ public class SpanTest {
 
     @Test
     public void testSetTag_stringTypeNullKey() {
-        Span result = undertest.setTag(null, "v");
+        Span result = undertest.setTag((String) null, "v");
         assertSame(result, undertest);
         verify(abstractTracer).debug("key (null) or value (v) is null, ignoring");
         assertTrue("When key is null, should not be added to attributes", grpcSpan.getTagsList().isEmpty());
@@ -90,6 +93,13 @@ public class SpanTest {
         assertNotNull(grpcSpan.getTagsList());
         assertEquals(1, grpcSpan.getTagsCount());
         assertEquals(KeyValue.newBuilder().setKey("a-key").setStringValue("v").build(), grpcSpan.getTags(0));
+
+        result = undertest.setTag(new StringTag("b-key"), "v");
+        assertSame(result, undertest);
+        verifyZeroInteractions(abstractTracer);
+        assertNotNull(grpcSpan.getTagsList());
+        assertEquals(2, grpcSpan.getTagsCount());
+        assertEquals(KeyValue.newBuilder().setKey("b-key").setStringValue("v").build(), grpcSpan.getTags(1));
     }
 
     @Test
@@ -108,6 +118,14 @@ public class SpanTest {
         assertNotNull(grpcSpan.getTagsList());
         assertEquals(1, grpcSpan.getTagsCount());
         assertEquals(KeyValue.newBuilder().setKey("a-key").setBoolValue(true).build(), grpcSpan.getTags(0));
+
+        result = undertest.setTag(new BooleanTag("b-key"), true);
+        assertSame(result, undertest);
+        verifyZeroInteractions(abstractTracer);
+        assertNotNull(grpcSpan.getTagsList());
+        assertEquals(2, grpcSpan.getTagsCount());
+        assertEquals(KeyValue.newBuilder().setKey("b-key").setBoolValue(true).build(), grpcSpan.getTags(1));
+
     }
 
     @Test
@@ -120,7 +138,7 @@ public class SpanTest {
 
     @Test
     public void testSetTag_numberTypeNullKey() {
-        Span result = undertest.setTag(null, 1);
+        Span result = undertest.setTag((String) null, 1);
         assertSame(result, undertest);
         verify(abstractTracer).debug("key (null) or value (1) is null, ignoring");
         assertTrue("When key is null, should not be added to attributes", grpcSpan.getTagsList().isEmpty());
@@ -134,6 +152,13 @@ public class SpanTest {
         assertNotNull(grpcSpan.getTagsList());
         assertEquals(1, grpcSpan.getTagsCount());
         assertEquals(KeyValue.newBuilder().setKey("a-key").setIntValue(3).build(), grpcSpan.getTags(0));
+
+        result = undertest.setTag(new IntTag("b-key"), 3);
+        assertSame(result, undertest);
+        verifyZeroInteractions(abstractTracer);
+        assertNotNull(grpcSpan.getTagsList());
+        assertEquals(2, grpcSpan.getTagsCount());
+        assertEquals(KeyValue.newBuilder().setKey("b-key").setIntValue(3).build(), grpcSpan.getTags(1));
     }
 
     @Test
@@ -310,7 +335,6 @@ public class SpanTest {
     public void testGenerateTraceURL() {
         String expecteResult = "https://something.com/";
         when(abstractTracer.generateTraceURL(SPAN_ID)).thenReturn(expecteResult);
-
         String result = undertest.generateTraceURL();
 
         assertEquals(expecteResult, result);
@@ -326,5 +350,11 @@ public class SpanTest {
         assertEquals("\"\\nnewline\"", Span.stringToJSONValue("\nnewline"));
         assertEquals("\"\\rreturn\"", Span.stringToJSONValue("\rreturn"));
         assertEquals("\"\\ffeed\"", Span.stringToJSONValue("\ffeed"));
+    }
+
+    @Test
+    public void testIds() {
+        assertEquals("1", undertest.context().toTraceId());
+        assertEquals("2", undertest.context().toSpanId());
     }
 }
