@@ -1,13 +1,15 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.1...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.10...master)
 
-<a name="0.16.1"></a>
-## [0.16.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.0...0.16.1)
+<a name="0.15.10"></a>
+## [0.15.10](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.9...0.15.10)
 * Handle empty SpanContext headers upon extraction.
 
-<a name="0.16.0"></a>
-## [0.16.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...0.16.0)
+<a name="0.15.9"></a>
+## [0.15.9](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...0.15.9)
+
 * Removes LEGACY_COMPONENT_NAME_KEY for default component name.
+* Allow specifying the ScopeManager instance for our Tracer.
 
 <a name="0.15.8"></a>
 ## [0.15.8](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.7...0.15.8)
