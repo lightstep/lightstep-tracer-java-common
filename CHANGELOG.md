@@ -1,5 +1,9 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.1...master)
+
+<a name="0.16.1"></a>
+## [0.16.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.0...0.16.1)
+* Handle empty SpanContext headers upon extraction.
 
 <a name="0.16.0"></a>
 ## [0.16.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...0.16.0)
