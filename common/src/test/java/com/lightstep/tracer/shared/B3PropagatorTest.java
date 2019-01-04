@@ -51,32 +51,4 @@ public class B3PropagatorTest {
         assertEquals(spanContext.getTraceId(), result.getTraceId());
         assertEquals(spanContext.getSpanId(), result.getSpanId());
     }
-
-    @Test
-    public void testExtractEmptyHeaders() {
-        Map<String, String> headers = new HashMap<>();
-
-        headers.put("X-B3-SpanId", "");
-        headers.put("X-B3-TraceId", "");
-
-        B3Propagator subject = new B3Propagator();
-
-        SpanContext span = subject.extract(new TextMapExtractAdapter(headers));
-
-        assertNull(span);
-    }
-
-    @Test
-    public void testExtractInvalidHeaders() {
-        Map<String, String> headers = new HashMap<>();
-
-        headers.put("X-B3-SpanId", "#$%");
-        headers.put("X-B3-TraceId", "#$%");
-
-        B3Propagator subject = new B3Propagator();
-
-        SpanContext span = subject.extract(new TextMapExtractAdapter(headers));
-
-        assertNull(span);
-    }
 }

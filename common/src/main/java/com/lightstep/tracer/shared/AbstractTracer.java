@@ -337,8 +337,8 @@ public abstract class AbstractTracer implements Tracer {
     }
 
     @Override
-    public Scope activateSpan(io.opentracing.Span span) {
-        return scopeManager().activate(span);
+    public io.opentracing.Scope activateSpan(io.opentracing.Span span) {
+        return scopeManager.activate(span);
     }
 
     public Tracer.SpanBuilder buildSpan(String operationName) {

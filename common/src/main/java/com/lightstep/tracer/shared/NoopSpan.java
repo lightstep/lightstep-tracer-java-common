@@ -41,7 +41,7 @@ class NoopSpan implements Span {
     }
 
     @Override
-    public <T> Span setTag(Tag<T> tag, T value) {
+    public <T> Span setTag(io.opentracing.tag.Tag<T> tag, T value) {
         return this;
     }
 

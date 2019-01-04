@@ -91,8 +91,10 @@ public class Span implements io.opentracing.Span {
     @Override
     public <T> Span setTag(io.opentracing.tag.Tag<T> tag, T value) {
         if (tag == null || value == null) {
+            tracer.debug("tag (" + tag + ") or value (" + value + ") is null, ignoring");
             return this;
         }
+        // No lock needed, as Tag ought to invoke one of the other setTag() overloads.
         tag.set(this, value);
         return this;
     }

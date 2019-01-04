@@ -4,8 +4,9 @@ import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Log;
 import com.lightstep.tracer.grpc.Span.Builder;
 import io.opentracing.tag.BooleanTag;
-import io.opentracing.tag.IntTag;
 import io.opentracing.tag.StringTag;
+import io.opentracing.tag.Tag;
+import io.opentracing.tag.Tags;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -138,7 +139,7 @@ public class SpanTest {
 
     @Test
     public void testSetTag_numberTypeNullKey() {
-        Span result = undertest.setTag((String) null, 1);
+        Span result = undertest.setTag((String)null, 1);
         assertSame(result, undertest);
         verify(abstractTracer).debug("key (null) or value (1) is null, ignoring");
         assertTrue("When key is null, should not be added to attributes", grpcSpan.getTagsList().isEmpty());
@@ -152,13 +153,25 @@ public class SpanTest {
         assertNotNull(grpcSpan.getTagsList());
         assertEquals(1, grpcSpan.getTagsCount());
         assertEquals(KeyValue.newBuilder().setKey("a-key").setIntValue(3).build(), grpcSpan.getTags(0));
+    }
 
-        result = undertest.setTag(new IntTag("b-key"), 3);
+    @Test
+    public void testSetTag_TagNull() {
+        Span result = undertest.setTag((Tag)null, 1);
+        assertSame(result, undertest);
+        verify(abstractTracer).debug("tag (null) or value (1) is null, ignoring");
+        assertTrue("When the tag is null, should not be added to attributes", grpcSpan.getTagsList().isEmpty());
+    }
+
+    @Test
+    public void testSetTag_Tag() {
+        Span result = undertest.setTag(Tags.COMPONENT, "mytest");
         assertSame(result, undertest);
         verifyZeroInteractions(abstractTracer);
         assertNotNull(grpcSpan.getTagsList());
-        assertEquals(2, grpcSpan.getTagsCount());
-        assertEquals(KeyValue.newBuilder().setKey("b-key").setIntValue(3).build(), grpcSpan.getTags(1));
+        assertEquals(1, grpcSpan.getTagsCount());
+        assertEquals(KeyValue.newBuilder().setKey(Tags.COMPONENT.getKey()).setStringValue("mytest").build(),
+                grpcSpan.getTags(0));
     }
 
     @Test
@@ -181,6 +194,12 @@ public class SpanTest {
         assertSame(result, undertest);
         assertEquals("v", undertest.getBaggageItem("a-key"));
         assertNotSame(spanContext, undertest.context());
+    }
+
+    @Test
+    public void testTraceIdentifiers() {
+        assertEquals(String.valueOf(TRACE_ID), undertest.context().toTraceId());
+        assertEquals(String.valueOf(SPAN_ID), undertest.context().toSpanId());
     }
 
     @Test

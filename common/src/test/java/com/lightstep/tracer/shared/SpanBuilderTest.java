@@ -2,6 +2,8 @@ package com.lightstep.tracer.shared;
 
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Span.Builder;
+import io.opentracing.tag.Tag;
+import io.opentracing.tag.Tags;
 import io.opentracing.util.ThreadLocalScopeManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,6 +112,7 @@ public class SpanBuilderTest {
         undertest.withTag("key1", "value1");
         undertest.withTag("key2", true);
         undertest.withTag("key3", 1001);
+        undertest.withTag(Tags.COMPONENT, "mytest");
 
         // start the Span
         io.opentracing.Span otSpan = undertest.start();
@@ -123,6 +126,8 @@ public class SpanBuilderTest {
         assertTrue(attributes.contains(KeyValue.newBuilder().setKey("key1").setStringValue("value1").build()));
         assertTrue(attributes.contains(KeyValue.newBuilder().setKey("key2").setBoolValue(true).build()));
         assertTrue(attributes.contains(KeyValue.newBuilder().setKey("key3").setIntValue(1001).build()));
+        assertTrue(attributes.contains(KeyValue.newBuilder().setKey(Tags.COMPONENT.getKey()).setStringValue("mytest")
+                    .build()));
 
         verifyResultingSpan(lsSpan);
     }

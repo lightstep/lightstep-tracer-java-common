@@ -5,7 +5,6 @@ import com.lightstep.tracer.grpc.Reference.Relationship;
 import io.opentracing.Scope;
 import io.opentracing.Tracer;
 
-import io.opentracing.tag.Tag;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,17 +86,20 @@ public class SpanBuilder implements Tracer.SpanBuilder {
         return this;
     }
 
-    @Override
-    public <T> Tracer.SpanBuilder withTag(Tag<T> tag, T value) {
-        if (value instanceof String) {
-            return this.withTag(tag.getKey(), (String) value);
+    public <T> Tracer.SpanBuilder withTag(io.opentracing.tag.Tag<T> tag, T value) {
+        if (tag == null || value == null) {
+            tracer.debug("tag (" + tag + ") or value (" + value + ") is null, ignoring");
+            return this;
         }
+
         if (value instanceof Number) {
-            return this.withTag(tag.getKey(), (Number) value);
+            numTags.put(tag.getKey(), (Number)value);
+        } else if (value instanceof Boolean) {
+            boolTags.put(tag.getKey(), (Boolean)value);
+        } else {
+            stringTags.put(tag.getKey(), value.toString());
         }
-        if (value instanceof Boolean) {
-            return this.withTag(tag.getKey(), (Boolean) value);
-        }
+
         return this;
     }
 
