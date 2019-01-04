@@ -1,6 +1,7 @@
 package com.lightstep.tracer.shared;
 
 import io.opentracing.propagation.BinaryAdapters;
+import java.nio.ByteBuffer;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,11 +9,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Map;
 
 import io.opentracing.SpanContext;
+import io.opentracing.propagation.Binary;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 

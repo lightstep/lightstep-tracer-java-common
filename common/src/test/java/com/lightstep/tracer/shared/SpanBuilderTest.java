@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -130,6 +131,22 @@ public class SpanBuilderTest {
                     .build()));
 
         verifyResultingSpan(lsSpan);
+    }
+
+    @Test
+    public void testTagNull() {
+        undertest.withTag((Tag)null, "mytest");
+        // start the Span
+        io.opentracing.Span otSpan = undertest.start();
+        assertNotNull(otSpan);
+        assertTrue(otSpan instanceof Span);
+        Span lsSpan = (Span) otSpan;
+
+        Builder record = lsSpan.getGrpcSpan();
+
+        List<KeyValue> attributes = record.getTagsList();
+        assertEquals(0, attributes.size());
+        verify(tracer).debug("tag (null) or value (mytest) is null, ignoring");
     }
 
     /**

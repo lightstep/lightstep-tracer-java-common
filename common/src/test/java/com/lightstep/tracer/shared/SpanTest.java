@@ -80,7 +80,7 @@ public class SpanTest {
 
     @Test
     public void testSetTag_stringTypeNullKey() {
-        Span result = undertest.setTag((String) null, "v");
+        Span result = undertest.setTag((String)null, "v");
         assertSame(result, undertest);
         verify(abstractTracer).debug("key (null) or value (v) is null, ignoring");
         assertTrue("When key is null, should not be added to attributes", grpcSpan.getTagsList().isEmpty());

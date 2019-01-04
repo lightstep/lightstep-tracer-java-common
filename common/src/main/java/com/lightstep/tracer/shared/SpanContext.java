@@ -57,6 +57,16 @@ public class SpanContext implements io.opentracing.SpanContext {
         return this.traceId;
     }
 
+    @Override
+    public String toTraceId() {
+        return toIds[TRACE_INDEX];
+    }
+
+    @Override
+    public String toSpanId() {
+        return toIds[SPAN_INDEX];
+    }
+
     String getBaggageItem(String key) {
         return this.baggage.get(key);
     }
@@ -74,16 +84,6 @@ public class SpanContext implements io.opentracing.SpanContext {
     @Override
     public Iterable<Map.Entry<String, String>> baggageItems() {
         return this.baggage.entrySet();
-    }
-
-    @Override
-    public String toTraceId() {
-        return toIds[TRACE_INDEX];
-    }
-
-    @Override
-    public String toSpanId() {
-        return toIds[SPAN_INDEX];
     }
 
     @SuppressWarnings("WeakerAccess")
