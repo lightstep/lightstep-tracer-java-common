@@ -1,6 +1,5 @@
 package com.lightstep.tracer.shared;
 
-import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Reference;
 import com.lightstep.tracer.grpc.Reference.Relationship;
 import io.opentracing.Scope;
