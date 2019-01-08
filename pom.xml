@@ -57,4 +57,14 @@
         <module>common</module>
         <module>example</module>
     </modules>
+
+    <profiles>
+        <!-- Additional profile to include the fat conformance jar -->
+        <profile>
+            <id>conformance</id>
+            <modules>
+                <module>conformance</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
