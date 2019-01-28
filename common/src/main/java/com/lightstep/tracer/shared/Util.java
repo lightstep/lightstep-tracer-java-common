@@ -56,6 +56,9 @@ class Util {
     }
 
     static boolean IsNotMetaSpan(Span span) {
+        if (span == null) {
+            return true;
+        }
         KeyValue kvp = KeyValue.newBuilder().setKey("lightstep.meta_event").setBoolValue(true).build();
         return !span.getGrpcSpan().getTagsList().contains(kvp);
     }
