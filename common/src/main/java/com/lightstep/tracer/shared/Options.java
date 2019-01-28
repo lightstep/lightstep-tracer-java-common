@@ -111,6 +111,11 @@ public final class Options {
     @SuppressWarnings("WeakerAccess")
     public static final int VERBOSITY_NONE = 0;
 
+    /**
+     * Enable LightStep Meta Event Reporting
+     */
+    final boolean enableMetaEventLogging;
+
     final String accessToken;
     final URL collectorUrl;
     final Map<String, Object> tags;
@@ -155,6 +160,7 @@ public final class Options {
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
         this.propagators = propagators;
+        this.enableMetaEventLogging = false;
     }
 
     long getGuid() {
@@ -177,6 +183,7 @@ public final class Options {
         private ScopeManager scopeManager;
         private long deadlineMillis = -1;
         private Map<Format<?>, Propagator<?>> propagators = new HashMap<>();
+        private boolean enableMetaEventLogging = false;
 
         public OptionsBuilder() {
         }
@@ -196,6 +203,7 @@ public final class Options {
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
             this.propagators = options.propagators;
+            this.enableMetaEventLogging = options.enableMetaEventLogging;
         }
 
         /**
@@ -366,6 +374,16 @@ public final class Options {
          */
         public OptionsBuilder withDeadlineMillis(long deadlineMillis) {
             this.deadlineMillis = deadlineMillis;
+            return this;
+        }
+
+        /**
+         * Enables LightStep Meta Event Reporting
+         * @param enableMetaEvents
+         * @return
+         */
+        public OptionsBuilder withMetaEventLogging(boolean enableMetaEvents) {
+            this.enableMetaEventLogging = enableMetaEvents;
             return this;
         }
 

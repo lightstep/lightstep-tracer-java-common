@@ -117,6 +117,9 @@ public abstract class AbstractTracer implements Tracer {
 
     private final Map<Format<?>, Propagator<?>> propagators;
 
+    private boolean firstReportHasRun;
+    public boolean enableMetaReporting;
+
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
@@ -164,6 +167,8 @@ public abstract class AbstractTracer implements Tracer {
         }
 
         propagators = options.propagators;
+        firstReportHasRun = false;
+        enableMetaReporting = options.enableMetaEventLogging;
     }
 
     /**
@@ -189,6 +194,15 @@ public abstract class AbstractTracer implements Tracer {
     private void maybeStartReporting() {
         if (reportingThread != null) {
             return;
+        }
+        if (!firstReportHasRun) {
+            buildSpan("lightstep.tracer_create")
+                    .ignoreActiveSpan()
+                    .withTag("lightstep.meta_event", true)
+                    .withTag("lightstep.tracer_guid", reporter.getReporterId())
+                    .start()
+                    .finish();
+            firstReportHasRun = true;
         }
         reportingThread = new Thread(reportingLoop);
         reportingThread.setDaemon(true);
@@ -346,7 +360,16 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
-
+        if (enableMetaReporting) {
+            buildSpan("lightstep.inject_span")
+                    .ignoreActiveSpan()
+                    .withTag("lightstep.meta_event", true)
+                    .withTag("lightstep.span_id", lightstepSpanContext.getSpanId())
+                    .withTag("lightstep.trace_id", lightstepSpanContext.getTraceId())
+                    .withTag("lightstep.propagation_format", format.getClass().getName())
+                    .start()
+                    .finish();
+        }
         if (!propagators.containsKey(format)) {
             info("Unsupported carrier type: " + carrier.getClass());
             return;
@@ -361,7 +384,14 @@ public abstract class AbstractTracer implements Tracer {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;
         }
-
+        if (enableMetaReporting) {
+            buildSpan("lightstep.extract_span")
+                    .ignoreActiveSpan()
+                    .withTag("lightstep.meta_event", true)
+                    .withTag("lightstep.propagation_format", format.getClass().getName())
+                    .start()
+                    .finish();
+        }
         Propagator<C> propagator = (Propagator<C>) propagators.get(format);
         return propagator.extract(carrier);
     }
