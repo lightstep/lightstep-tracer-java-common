@@ -16,8 +16,8 @@ class TextMapPropagator implements Propagator<TextMap> {
     static final String FIELD_NAME_SAMPLED = PREFIX_TRACER_STATE + "sampled";
 
     public void inject(SpanContext spanContext, final TextMap carrier) {
-        carrier.put(FIELD_NAME_TRACE_ID, Util.toHexString(spanContext.getTraceId()));
-        carrier.put(FIELD_NAME_SPAN_ID, Util.toHexString(spanContext.getSpanId()));
+        carrier.put(FIELD_NAME_TRACE_ID, spanContext.toTraceId());
+        carrier.put(FIELD_NAME_SPAN_ID, spanContext.toSpanId());
         carrier.put(FIELD_NAME_SAMPLED, "true");
         for (Map.Entry<String, String> e : spanContext.baggageItems()) {
             carrier.put(PREFIX_BAGGAGE + e.getKey(), e.getValue());

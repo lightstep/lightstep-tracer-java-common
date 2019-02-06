@@ -3,6 +3,8 @@ package com.lightstep.tracer.shared;
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Log;
 import com.lightstep.tracer.grpc.Span.Builder;
+import io.opentracing.tag.BooleanTag;
+import io.opentracing.tag.StringTag;
 import io.opentracing.tag.Tag;
 import io.opentracing.tag.Tags;
 import org.junit.Before;
@@ -92,6 +94,13 @@ public class SpanTest {
         assertNotNull(grpcSpan.getTagsList());
         assertEquals(1, grpcSpan.getTagsCount());
         assertEquals(KeyValue.newBuilder().setKey("a-key").setStringValue("v").build(), grpcSpan.getTags(0));
+
+        result = undertest.setTag(new StringTag("b-key"), "v");
+        assertSame(result, undertest);
+        verifyZeroInteractions(abstractTracer);
+        assertNotNull(grpcSpan.getTagsList());
+        assertEquals(2, grpcSpan.getTagsCount());
+        assertEquals(KeyValue.newBuilder().setKey("b-key").setStringValue("v").build(), grpcSpan.getTags(1));
     }
 
     @Test
@@ -110,6 +119,14 @@ public class SpanTest {
         assertNotNull(grpcSpan.getTagsList());
         assertEquals(1, grpcSpan.getTagsCount());
         assertEquals(KeyValue.newBuilder().setKey("a-key").setBoolValue(true).build(), grpcSpan.getTags(0));
+
+        result = undertest.setTag(new BooleanTag("b-key"), true);
+        assertSame(result, undertest);
+        verifyZeroInteractions(abstractTracer);
+        assertNotNull(grpcSpan.getTagsList());
+        assertEquals(2, grpcSpan.getTagsCount());
+        assertEquals(KeyValue.newBuilder().setKey("b-key").setBoolValue(true).build(), grpcSpan.getTags(1));
+
     }
 
     @Test
@@ -337,7 +354,6 @@ public class SpanTest {
     public void testGenerateTraceURL() {
         String expecteResult = "https://something.com/";
         when(abstractTracer.generateTraceURL(SPAN_ID)).thenReturn(expecteResult);
-
         String result = undertest.generateTraceURL();
 
         assertEquals(expecteResult, result);
@@ -353,5 +369,11 @@ public class SpanTest {
         assertEquals("\"\\nnewline\"", Span.stringToJSONValue("\nnewline"));
         assertEquals("\"\\rreturn\"", Span.stringToJSONValue("\rreturn"));
         assertEquals("\"\\ffeed\"", Span.stringToJSONValue("\ffeed"));
+    }
+
+    @Test
+    public void testIds() {
+        assertEquals("1", undertest.context().toTraceId());
+        assertEquals("2", undertest.context().toSpanId());
     }
 }
