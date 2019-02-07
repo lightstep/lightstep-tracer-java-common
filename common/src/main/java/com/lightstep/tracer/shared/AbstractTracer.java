@@ -384,7 +384,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
       // disable() is only partially synchronized (on `mutex`),
       // thus we cannot synchronize during its invocation.
-      // See disable() for details.
+      // See disable() and doStopReporting() for details.
       disable();
     }
 
