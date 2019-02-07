@@ -11,4 +11,9 @@ public interface CommandOrBuilder extends
    * <code>bool disable = 1;</code>
    */
   boolean getDisable();
+
+  /**
+   * <code>bool dev_mode = 2;</code>
+   */
+  boolean getDevMode();
 }

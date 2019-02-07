@@ -515,6 +515,15 @@ public abstract class AbstractTracer implements Tracer {
             return ReportResult.Error(spans.size());
         }
 
+        if (!response.getCommandsList().isEmpty()) {
+            List<Command> cmds = response.getCommandsList();
+            for (Command cmd : cmds) {
+                if (cmd.getDevMode()) {
+                    this.enableMetaReporting = true;
+                }
+            }
+        }
+
         if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {
             long deltaMicros = (System.nanoTime() - originRelativeNanos) / 1000;
             long destinationMicros = originMicros + deltaMicros;
