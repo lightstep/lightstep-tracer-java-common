@@ -59,7 +59,7 @@ class Util {
         if (span == null) {
             return true;
         }
-        KeyValue kvp = KeyValue.newBuilder().setKey("lightstep.meta_event").setBoolValue(true).build();
+        KeyValue kvp = KeyValue.newBuilder().setKey(LightStepConstants.MetaEvents.MetaEventKey).setBoolValue(true).build();
         return !span.getGrpcSpan().getTagsList().contains(kvp);
     }
 }

@@ -26,11 +26,11 @@ public class Span implements io.opentracing.Span {
         this.startTimestampRelativeNanos = startTimestampRelativeNanos;
 
         if (tracer != null && tracer.enableMetaReporting && Util.IsNotMetaSpan(this)) {
-            tracer.buildSpan("lightstep.span_start")
+            tracer.buildSpan(LightStepConstants.MetaEvents.SpanStartOperation)
                     .ignoreActiveSpan()
-                    .withTag("lightstep.meta_event", true)
-                    .withTag("lightstep.span_id", context.getSpanId())
-                    .withTag("lightstep.trace_id", context.getTraceId())
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.SpanIdKey, context.getSpanId())
+                    .withTag(LightStepConstants.MetaEvents.TraceIdKey, context.getTraceId())
                     .start()
                     .finish();
         }
@@ -49,11 +49,11 @@ public class Span implements io.opentracing.Span {
     @Override
     public void finish(long finishTimeMicros) {
         if (tracer.enableMetaReporting && Util.IsNotMetaSpan(this)) {
-            tracer.buildSpan("lightstep.span_finish")
+            tracer.buildSpan(LightStepConstants.MetaEvents.SpanFinishOperation)
                     .ignoreActiveSpan()
-                    .withTag("lightstep.meta_event", true)
-                    .withTag("lightstep.span_id", context.getSpanId())
-                    .withTag("lightstep.trace_id", context.getTraceId())
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.SpanIdKey, context.getSpanId())
+                    .withTag(LightStepConstants.MetaEvents.TraceIdKey, context.getTraceId())
                     .start()
                     .finish();
         }

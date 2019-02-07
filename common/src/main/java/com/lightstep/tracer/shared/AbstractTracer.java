@@ -196,10 +196,10 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
         if (!firstReportHasRun) {
-            buildSpan("lightstep.tracer_create")
+            buildSpan(LightStepConstants.MetaEvents.TracerCreateOperation)
                     .ignoreActiveSpan()
-                    .withTag("lightstep.meta_event", true)
-                    .withTag("lightstep.tracer_guid", reporter.getReporterId())
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.TracerGuidKey, reporter.getReporterId())
                     .start()
                     .finish();
             firstReportHasRun = true;
@@ -361,12 +361,12 @@ public abstract class AbstractTracer implements Tracer {
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
         if (enableMetaReporting) {
-            buildSpan("lightstep.inject_span")
+            buildSpan(LightStepConstants.MetaEvents.InjectOperation)
                     .ignoreActiveSpan()
-                    .withTag("lightstep.meta_event", true)
-                    .withTag("lightstep.span_id", lightstepSpanContext.getSpanId())
-                    .withTag("lightstep.trace_id", lightstepSpanContext.getTraceId())
-                    .withTag("lightstep.propagation_format", format.getClass().getName())
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.SpanIdKey, lightstepSpanContext.getSpanId())
+                    .withTag(LightStepConstants.MetaEvents.TraceIdKey, lightstepSpanContext.getTraceId())
+                    .withTag(LightStepConstants.MetaEvents.PropagationFormatKey, format.getClass().getName())
                     .start()
                     .finish();
         }
@@ -385,10 +385,10 @@ public abstract class AbstractTracer implements Tracer {
             return null;
         }
         if (enableMetaReporting) {
-            buildSpan("lightstep.extract_span")
+            buildSpan(LightStepConstants.MetaEvents.ExtractOperation)
                     .ignoreActiveSpan()
-                    .withTag("lightstep.meta_event", true)
-                    .withTag("lightstep.propagation_format", format.getClass().getName())
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.PropagationFormatKey, format.getClass().getName())
                     .start()
                     .finish();
         }
