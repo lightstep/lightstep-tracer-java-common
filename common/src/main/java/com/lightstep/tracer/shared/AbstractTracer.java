@@ -13,6 +13,7 @@ import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 
+import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,12 @@ import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
 
-public abstract class AbstractTracer implements Tracer {
+public abstract class AbstractTracer implements Tracer, Closeable {
     // Maximum interval between reports
     private static final long DEFAULT_CLOCK_STATE_INTERVAL_MILLIS = 500;
     private static final int DEFAULT_CLIENT_RESET_INTERVAL_MILLIS = 5 * 60 * 1000; // 5 min
+
+    private static final long DEFAULT_FLUSH_TIMEOUT_DURING_CLOSE = 5000;
 
     private static class ReportResult {
         private final int droppedSpans;
@@ -364,6 +367,25 @@ public abstract class AbstractTracer implements Tracer {
 
         Propagator<C> propagator = (Propagator<C>) propagators.get(format);
         return propagator.extract(carrier);
+    }
+
+    /**
+     * Closes this Tracer. Method tries to flush pending Spans, and closes the Tracer
+     * afterwards, turning subsequent method invocations into no-ops.
+     */
+    @Override
+    public void close() {
+      synchronized (mutex) {
+        if (isDisabled)
+          return;
+
+        flush(DEFAULT_FLUSH_TIMEOUT_DURING_CLOSE);
+      }
+
+      // disable() is only partially synchronized (on `mutex`),
+      // thus we cannot synchronize during its invocation.
+      // See disable() and doStopReporting() for details.
+      disable();
     }
 
     /**
