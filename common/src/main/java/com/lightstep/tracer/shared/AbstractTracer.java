@@ -120,6 +120,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
     private final Map<Format<?>, Propagator<?>> propagators;
 
+    private boolean firstReportHasRun;
+    public boolean enableMetaReporting;
+
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
@@ -167,6 +170,8 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         }
 
         propagators = options.propagators;
+        firstReportHasRun = false;
+        enableMetaReporting = options.enableMetaEventLogging;
     }
 
     /**
@@ -192,6 +197,15 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     private void maybeStartReporting() {
         if (reportingThread != null) {
             return;
+        }
+        if (!firstReportHasRun) {
+            buildSpan(LightStepConstants.MetaEvents.TracerCreateOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.TracerGuidKey, reporter.getReporterId())
+                    .start()
+                    .finish();
+            firstReportHasRun = true;
         }
         reportingThread = new Thread(reportingLoop);
         reportingThread.setDaemon(true);
@@ -349,7 +363,16 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             return;
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
-
+        if (enableMetaReporting) {
+            buildSpan(LightStepConstants.MetaEvents.InjectOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.SpanIdKey, lightstepSpanContext.getSpanId())
+                    .withTag(LightStepConstants.MetaEvents.TraceIdKey, lightstepSpanContext.getTraceId())
+                    .withTag(LightStepConstants.MetaEvents.PropagationFormatKey, format.getClass().getName())
+                    .start()
+                    .finish();
+        }
         if (!propagators.containsKey(format)) {
             info("Unsupported carrier type: " + carrier.getClass());
             return;
@@ -364,7 +387,14 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;
         }
-
+        if (enableMetaReporting) {
+            buildSpan(LightStepConstants.MetaEvents.ExtractOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.PropagationFormatKey, format.getClass().getName())
+                    .start()
+                    .finish();
+        }
         Propagator<C> propagator = (Propagator<C>) propagators.get(format);
         return propagator.extract(carrier);
     }
@@ -505,6 +535,15 @@ public abstract class AbstractTracer implements Tracer, Closeable {
                 this.error("Collector response contained error: ", err);
             }
             return ReportResult.Error(spans.size());
+        }
+
+        if (!response.getCommandsList().isEmpty()) {
+            List<Command> cmds = response.getCommandsList();
+            for (Command cmd : cmds) {
+                if (cmd.getDevMode()) {
+                    this.enableMetaReporting = true;
+                }
+            }
         }
 
         if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {

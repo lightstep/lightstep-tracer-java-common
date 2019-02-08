@@ -24,6 +24,16 @@ public class Span implements io.opentracing.Span {
         this.tracer = tracer;
         this.grpcSpan = grpcSpan;
         this.startTimestampRelativeNanos = startTimestampRelativeNanos;
+
+        if (tracer != null && tracer.enableMetaReporting && Util.IsNotMetaSpan(this)) {
+            tracer.buildSpan(LightStepConstants.MetaEvents.SpanStartOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.SpanIdKey, context.getSpanId())
+                    .withTag(LightStepConstants.MetaEvents.TraceIdKey, context.getTraceId())
+                    .start()
+                    .finish();
+        }
     }
 
     @Override
@@ -38,6 +48,15 @@ public class Span implements io.opentracing.Span {
 
     @Override
     public void finish(long finishTimeMicros) {
+        if (tracer.enableMetaReporting && Util.IsNotMetaSpan(this)) {
+            tracer.buildSpan(LightStepConstants.MetaEvents.SpanFinishOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.SpanIdKey, context.getSpanId())
+                    .withTag(LightStepConstants.MetaEvents.TraceIdKey, context.getTraceId())
+                    .start()
+                    .finish();
+        }
         synchronized (mutex) {
             grpcSpan.setDurationMicros(durationMicros(finishTimeMicros));
             tracer.addSpan(grpcSpan.build());

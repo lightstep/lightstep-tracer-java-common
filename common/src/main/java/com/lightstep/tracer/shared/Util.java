@@ -1,6 +1,7 @@
 package com.lightstep.tracer.shared;
 
 import com.google.protobuf.Timestamp;
+import com.lightstep.tracer.grpc.KeyValue;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -62,5 +63,13 @@ class Util {
 
     static String toHexString(long l) {
         return Long.toHexString(l);
+    }
+
+    static boolean IsNotMetaSpan(Span span) {
+        if (span == null) {
+            return true;
+        }
+        KeyValue kvp = KeyValue.newBuilder().setKey(LightStepConstants.MetaEvents.MetaEventKey).setBoolValue(true).build();
+        return !span.getGrpcSpan().getTagsList().contains(kvp);
     }
 }

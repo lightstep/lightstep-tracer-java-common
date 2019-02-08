@@ -130,18 +130,19 @@ public final class Collector {
       "2\031.lightstep.collector.Span\022\037\n\027timestamp" +
       "_offset_micros\030\005 \001(\003\022>\n\020internal_metrics" +
       "\030\006 \001(\0132$.lightstep.collector.InternalMet" +
-      "rics\"\032\n\007Command\022\017\n\007disable\030\001 \001(\010\"\340\001\n\016Rep" +
-      "ortResponse\022.\n\010commands\030\001 \003(\0132\034.lightste" +
-      "p.collector.Command\0225\n\021receive_timestamp" +
-      "\030\002 \001(\0132\032.google.protobuf.Timestamp\0226\n\022tr" +
-      "ansmit_timestamp\030\003 \001(\0132\032.google.protobuf" +
-      ".Timestamp\022\016\n\006errors\030\004 \003(\t\022\020\n\010warnings\030\005" +
-      " \003(\t\022\r\n\005infos\030\006 \003(\t2\225\001\n\020CollectorService" +
-      "\022\200\001\n\006Report\022\".lightstep.collector.Report" +
-      "Request\032#.lightstep.collector.ReportResp" +
-      "onse\"-\202\323\344\223\002\'\"\017/api/v2/reports:\001*Z\021\022\017/api" +
-      "/v2/reportsB1\n\031com.lightstep.tracer.grpc" +
-      "P\001Z\013collectorpb\242\002\004LSPBb\006proto3"
+      "rics\",\n\007Command\022\017\n\007disable\030\001 \001(\010\022\020\n\010dev_" +
+      "mode\030\002 \001(\010\"\340\001\n\016ReportResponse\022.\n\010command" +
+      "s\030\001 \003(\0132\034.lightstep.collector.Command\0225\n" +
+      "\021receive_timestamp\030\002 \001(\0132\032.google.protob" +
+      "uf.Timestamp\0226\n\022transmit_timestamp\030\003 \001(\013" +
+      "2\032.google.protobuf.Timestamp\022\016\n\006errors\030\004" +
+      " \003(\t\022\020\n\010warnings\030\005 \003(\t\022\r\n\005infos\030\006 \003(\t2\225\001" +
+      "\n\020CollectorService\022\200\001\n\006Report\022\".lightste" +
+      "p.collector.ReportRequest\032#.lightstep.co" +
+      "llector.ReportResponse\"-\202\323\344\223\002\'\"\017/api/v2/" +
+      "reports:\001*Z\021\022\017/api/v2/reportsB1\n\031com.lig" +
+      "htstep.tracer.grpcP\001Z\013collectorpb\242\002\004LSPB" +
+      "b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -228,7 +229,7 @@ public final class Collector {
     internal_static_lightstep_collector_Command_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_lightstep_collector_Command_descriptor,
-        new java.lang.String[] { "Disable", });
+        new java.lang.String[] { "Disable", "DevMode", });
     internal_static_lightstep_collector_ReportResponse_descriptor =
       getDescriptor().getMessageTypes().get(11);
     internal_static_lightstep_collector_ReportResponse_fieldAccessorTable = new
