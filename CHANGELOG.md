@@ -1,5 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.10...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.0...master)
+
+<a name="0.16.0"></a>
+## [0.16.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.10...0.16.0)
+* Add meta event support.
+* Make Tracer extends the Closeable interface.
 
 <a name="0.15.10"></a>
 ## [0.15.10](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.9...0.15.10)
