@@ -198,7 +198,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         if (reportingThread != null) {
             return;
         }
-        if (!firstReportHasRun) {
+        if (enableMetaReporting && !firstReportHasRun) {
             buildSpan(LightStepConstants.MetaEvents.TracerCreateOperation)
                     .ignoreActiveSpan()
                     .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
