@@ -2,6 +2,15 @@ package com.lightstep.tracer.shared;
 
 public final class LightStepConstants {
     private LightStepConstants() {}
+
+    public final class Tags {
+        private Tags() {}
+
+        public static final String LEGACY_COMPONENT_NAME_KEY = "component_name";
+        public static final String COMPONENT_NAME_KEY = "lightstep.component_name";
+        public static final String GUID_KEY = "lightstep.guid";
+    }
+
     public final class MetaEvents {
         private MetaEvents() {}
 

@@ -61,14 +61,6 @@ public final class Options {
 
     static final String COLLECTOR_PATH = "/api/v2/reports";
 
-    // TAG KEYS
-
-    static final String LEGACY_COMPONENT_NAME_KEY = "component_name";
-
-    static final String COMPONENT_NAME_KEY = "lightstep.component_name";
-
-    static final String GUID_KEY = "lightstep.guid";
-
     // BUILTIN PROPAGATORS
     static final Map<Format<?>, Propagator<?>> BUILTIN_PROPAGATORS = Collections.unmodifiableMap(
             new HashMap<Format<?>, Propagator<?>>() {{
@@ -163,7 +155,7 @@ public final class Options {
     }
 
     long getGuid() {
-        return (long) tags.get(GUID_KEY);
+        return (long) tags.get(LightStepConstants.Tags.GUID_KEY);
     }
 
     @SuppressWarnings({"WeakerAccess"})
@@ -313,7 +305,7 @@ public final class Options {
          * @param name The name of the component being traced.
          */
         public OptionsBuilder withComponentName(String name) {
-            return withTag(COMPONENT_NAME_KEY, name);
+            return withTag(LightStepConstants.Tags.COMPONENT_NAME_KEY, name);
         }
 
         /**
@@ -458,8 +450,8 @@ public final class Options {
         }
 
         private void defaultGuid() {
-            if (tags.get(GUID_KEY) == null) {
-                withTag(GUID_KEY, Util.generateRandomGUID());
+            if (tags.get(LightStepConstants.Tags.GUID_KEY) == null) {
+                withTag(LightStepConstants.Tags.GUID_KEY, Util.generateRandomGUID());
             }
         }
 
@@ -467,7 +459,7 @@ public final class Options {
          * If not set, provides a default value for the component name.
          */
         private void defaultComponentName() {
-            if (tags.get(COMPONENT_NAME_KEY) == null) {
+            if (tags.get(LightStepConstants.Tags.COMPONENT_NAME_KEY) == null) {
                 String componentNameSystemProperty = System.getProperty(COMPONENT_NAME_SYSTEM_PROPERTY_KEY);
                 if (componentNameSystemProperty != null) {
                     StringTokenizer st = new StringTokenizer(componentNameSystemProperty);

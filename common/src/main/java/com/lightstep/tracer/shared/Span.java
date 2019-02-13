@@ -123,6 +123,14 @@ public class Span implements io.opentracing.Span {
         return this;
     }
 
+    public Span setComponentName(String componentName) {
+        if (componentName == null) {
+            tracer.debug("componentName is null, ignoring");
+            return this;
+        }
+        return setTag(LightStepConstants.Tags.COMPONENT_NAME_KEY, componentName);
+    }
+
     @SuppressWarnings("WeakerAccess")
     public void close() {
         finish();
