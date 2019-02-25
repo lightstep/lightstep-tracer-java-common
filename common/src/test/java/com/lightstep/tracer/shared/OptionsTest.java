@@ -1,14 +1,14 @@
 package com.lightstep.tracer.shared;
 
+import static com.lightstep.tracer.shared.LightStepConstants.Tags.COMPONENT_NAME_KEY;
+import static com.lightstep.tracer.shared.LightStepConstants.Tags.GUID_KEY;
+import static com.lightstep.tracer.shared.LightStepConstants.Tags.LEGACY_COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.Options.BUILTIN_PROPAGATORS;
 import static com.lightstep.tracer.shared.Options.COLLECTOR_PATH;
-import static com.lightstep.tracer.shared.Options.COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.Options.DEFAULT_PLAINTEXT_PORT;
 import static com.lightstep.tracer.shared.Options.DEFAULT_SECURE_PORT;
-import static com.lightstep.tracer.shared.Options.GUID_KEY;
 import static com.lightstep.tracer.shared.Options.HTTP;
 import static com.lightstep.tracer.shared.Options.HTTPS;
-import static com.lightstep.tracer.shared.Options.LEGACY_COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
