@@ -4,7 +4,6 @@ package com.lightstep.tracer.shared;
 import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -119,6 +118,8 @@ public final class Options {
     final boolean useClockCorrection;
     final ScopeManager scopeManager;
     final Map<Format<?>, Propagator<?>> propagators;
+    final String grpcCollectorTarget;
+    final boolean grpcRoundRobin;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -137,7 +138,9 @@ public final class Options {
             boolean useClockCorrection,
             ScopeManager scopeManager,
             long deadlineMillis,
-            Map<Format<?>, Propagator<?>> propagators
+            Map<Format<?>, Propagator<?>> propagators,
+            String grpcCollectorTarget,
+            boolean grpcRoundRobin
     ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
@@ -151,6 +154,8 @@ public final class Options {
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
         this.propagators = propagators;
+        this.grpcCollectorTarget = grpcCollectorTarget;
+        this.grpcRoundRobin = grpcRoundRobin;
         this.enableMetaEventLogging = false;
     }
 
@@ -175,6 +180,8 @@ public final class Options {
         private long deadlineMillis = -1;
         private Map<Format<?>, Propagator<?>> propagators = new HashMap<>();
         private boolean enableMetaEventLogging = false;
+        private String grpcCollectorTarget;
+        private boolean grpcRoundRobin = false;
 
         public OptionsBuilder() {
         }
@@ -195,6 +202,8 @@ public final class Options {
             this.deadlineMillis = options.deadlineMillis;
             this.propagators = options.propagators;
             this.enableMetaEventLogging = options.enableMetaEventLogging;
+            this.grpcCollectorTarget = options.grpcCollectorTarget;
+            this.grpcRoundRobin = options.grpcRoundRobin;
         }
 
         /**
@@ -280,6 +289,37 @@ public final class Options {
                 throw new IllegalArgumentException("Invalid collector port: " + collectorPort);
             }
             this.collectorPort = collectorPort;
+            return this;
+        }
+
+
+        /**
+         * Sets the target address when using gRPC for transport. Useful when used in conjunction
+         * with supplying a custom gRPC NameResolverProvider to lookup the satellites via your
+         * preferred service discovery system.
+         *
+         * @param grpcCollectorTarget The target URI for the LightStep collector.
+         * @throws IllegalArgumentException If the grpcCollectorTarget is invalid.
+         */
+        public OptionsBuilder withGrpcCollectorTarget(String grpcCollectorTarget) {
+            if (grpcCollectorTarget == null) {
+                throw new IllegalArgumentException(
+                  "Invalid grpc collector target: " + grpcCollectorTarget);
+            }
+            this.grpcCollectorTarget = grpcCollectorTarget;
+            return this;
+        }
+
+        /**
+         * Instructs gRPC to round-robin between satellites instances in a pool when sending traces.
+         * If not enabled defaults to picking the first record returned by the operating system
+         * resolver.
+         *
+         * @param grpcRoundRobin Use round robin on a per request basis when sending requests to
+         *                       the satellites.
+         */
+        public OptionsBuilder withGrpcRoundRobin(boolean grpcRoundRobin) {
+            this.grpcRoundRobin = grpcRoundRobin;
             return this;
         }
 
@@ -427,7 +467,9 @@ public final class Options {
                     useClockCorrection,
                     scopeManager,
                     deadlineMillis,
-                    propagators
+                    propagators,
+                    grpcCollectorTarget,
+                    grpcRoundRobin
             );
         }
 
