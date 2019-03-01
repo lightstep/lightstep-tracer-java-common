@@ -4,6 +4,7 @@
 <a name="0.16.2"></a>
 ## [0.16.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.1...0.16.2)
 * Allow setting Component name per Span.
+* Instruct gRPC to round-robin between all the available satellites.
 
 <a name="0.16.1"></a>
 ## [0.16.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.0...0.16.1)
