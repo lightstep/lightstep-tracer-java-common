@@ -70,11 +70,15 @@ public final class Options {
     static final String GUID_KEY = "lightstep.guid";
 
     // BUILTIN PROPAGATORS
-    static final Map<Format<?>, Propagator<?>> BUILTIN_PROPAGATORS = Collections.unmodifiableMap(
-            new HashMap<Format<?>, Propagator<?>>() {{
-                put(Format.Builtin.TEXT_MAP, Propagator.TEXT_MAP);
+    static final Map<Format<?>, Propagator> BUILTIN_PROPAGATORS = Collections.unmodifiableMap(
+            new HashMap<Format<?>, Propagator>() {{
                 put(Format.Builtin.HTTP_HEADERS, Propagator.HTTP_HEADERS);
+                put(Format.Builtin.TEXT_MAP, Propagator.TEXT_MAP);
+                put(Format.Builtin.TEXT_MAP_INJECT, Propagator.TEXT_MAP);
+                put(Format.Builtin.TEXT_MAP_EXTRACT, Propagator.TEXT_MAP);
                 put(Format.Builtin.BINARY, Propagator.BINARY);
+                put(Format.Builtin.BINARY_INJECT, Propagator.BINARY);
+                put(Format.Builtin.BINARY_EXTRACT, Propagator.BINARY);
             }}
     );
 
@@ -121,7 +125,7 @@ public final class Options {
     final boolean resetClient;
     final boolean useClockCorrection;
     final ScopeManager scopeManager;
-    final Map<Format<?>, Propagator<?>> propagators;
+    final Map<Format<?>, Propagator> propagators;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -140,7 +144,7 @@ public final class Options {
             boolean useClockCorrection,
             ScopeManager scopeManager,
             long deadlineMillis,
-            Map<Format<?>, Propagator<?>> propagators
+            Map<Format<?>, Propagator> propagators
     ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
@@ -175,7 +179,7 @@ public final class Options {
         private Map<String, Object> tags = new HashMap<>();
         private ScopeManager scopeManager;
         private long deadlineMillis = -1;
-        private Map<Format<?>, Propagator<?>> propagators = new HashMap<>();
+        private Map<Format<?>, Propagator> propagators = new HashMap<>();
 
         public OptionsBuilder() {
         }
@@ -215,7 +219,7 @@ public final class Options {
          * @param propagator Instance of {@link Propagator} to be used
          * @param <T> Type of the carrier.
          */
-        public <T> OptionsBuilder withPropagator(Format<T> format, Propagator<T> propagator) {
+        public <T> OptionsBuilder withPropagator(Format<T> format, Propagator propagator) {
             if (format == null) {
                 throw new IllegalArgumentException("format cannot be null");
             }
@@ -468,7 +472,7 @@ public final class Options {
         }
 
         private void defaultPropagators() {
-            for (Map.Entry<Format<?>, Propagator<?>> entry: BUILTIN_PROPAGATORS.entrySet()) {
+            for (Map.Entry<Format<?>, Propagator> entry: BUILTIN_PROPAGATORS.entrySet()) {
                 Format<?> format = entry.getKey();
                 if (!propagators.containsKey(format)) {
                     propagators.put(format, entry.getValue());

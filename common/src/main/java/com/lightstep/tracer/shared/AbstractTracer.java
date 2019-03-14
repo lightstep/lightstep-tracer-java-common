@@ -115,7 +115,7 @@ public abstract class AbstractTracer implements Tracer {
 
     private final ScopeManager scopeManager;
 
-    private final Map<Format<?>, Propagator<?>> propagators;
+    private final Map<Format<?>, Propagator> propagators;
 
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
@@ -357,7 +357,7 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
 
-        Propagator<C> propagator = (Propagator<C>) propagators.get(format);
+        Propagator propagator = (Propagator) propagators.get(format);
         propagator.inject(lightstepSpanContext, carrier);
     }
 
@@ -367,7 +367,7 @@ public abstract class AbstractTracer implements Tracer {
             return null;
         }
 
-        Propagator<C> propagator = (Propagator<C>) propagators.get(format);
+        Propagator propagator = (Propagator) propagators.get(format);
         return propagator.extract(carrier);
     }
 

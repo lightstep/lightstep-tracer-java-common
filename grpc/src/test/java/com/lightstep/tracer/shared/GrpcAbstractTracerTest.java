@@ -205,7 +205,7 @@ public class GrpcAbstractTracerTest {
     @Test
     public void testInject_binary() throws Exception {
         StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
-        undertest.inject(spanContext, Format.Builtin.BINARY, BinaryAdapters.injectionCarrier(byteBuffer));
+        undertest.inject(spanContext, Format.Builtin.BINARY_INJECT, BinaryAdapters.injectionCarrier(byteBuffer));
         verifyZeroInteractions(byteBuffer);
     }
 

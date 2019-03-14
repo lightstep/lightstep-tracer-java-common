@@ -2,8 +2,9 @@ package com.lightstep.tracer.shared;
 
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.Format.Builtin;
-import io.opentracing.propagation.TextMap;
+import io.opentracing.propagation.TextMapExtract;
 import io.opentracing.propagation.TextMapExtractAdapter;
+import io.opentracing.propagation.TextMapInject;
 import io.opentracing.propagation.TextMapInjectAdapter;
 import org.junit.Test;
 
@@ -127,20 +128,21 @@ public class PropagatorStackTest {
         assertNull(propagatorStack.extract(new TextMapExtractAdapter(carrier)));
     }
 
-    static class StubPropagator implements Propagator<TextMap> {
+    static class StubPropagator implements Propagator {
         public final static String STUB_TRACE_ID = "stub_trace_id";
         public final static String STUB_SPAN_ID = "stub_span_id";
 
-        public void inject(SpanContext context, TextMap carrier) {
-            carrier.put(STUB_TRACE_ID, Long.toString(context.getTraceId()));
-            carrier.put(STUB_SPAN_ID, Long.toString(context.getSpanId()));
+        public <C> void inject(SpanContext context, C carrier) {
+            TextMapInject textCarrier = (TextMapInject) carrier;
+            textCarrier.put(STUB_TRACE_ID, Long.toString(context.getTraceId()));
+            textCarrier.put(STUB_SPAN_ID, Long.toString(context.getSpanId()));
         }
 
-        public SpanContext extract(TextMap carrier) {
+        public <C> SpanContext extract(C carrier) {
             Long traceId = null;
             Long spanId = null;
 
-            for (Map.Entry<String, String> entry: carrier) {
+            for (Map.Entry<String, String> entry: (TextMapExtract)carrier) {
                 if (entry.getKey().equals(STUB_TRACE_ID)) {
                     traceId = Long.valueOf(entry.getValue());
                 } else if (entry.getKey().equals(STUB_SPAN_ID)) {

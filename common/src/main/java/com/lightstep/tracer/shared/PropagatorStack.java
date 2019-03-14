@@ -18,9 +18,9 @@ import java.util.List;
  * On {@link inject}, PropagatorStack inserts all propagation formats into
  * the carrier.
  */
-public final class PropagatorStack<C> implements Propagator<C> {
-    Format<C> format;
-    List<Propagator<C>> propagators;
+public final class PropagatorStack implements Propagator {
+    Format format;
+    List<Propagator> propagators;
 
     /**
      * Creates a new PropagatorStack associated with the specified
@@ -33,16 +33,16 @@ public final class PropagatorStack<C> implements Propagator<C> {
      * @param format Instance of {@link io.opentracing.propagation.Format}
      *               associated with this PropagatorStack.
      */
-    public PropagatorStack(Format<C> format) {
+    public PropagatorStack(Format format) {
         if (format == null) {
             throw new IllegalArgumentException("format cannot be null");
         }
 
         this.format = format;
-        propagators = new LinkedList<Propagator<C>>();
+        propagators = new LinkedList<Propagator>();
     }
 
-    public Format<C> format() {
+    public Format format() {
         return format;
     }
 
@@ -51,7 +51,7 @@ public final class PropagatorStack<C> implements Propagator<C> {
      *
      * @param propagator Instance of {@link Propagator} used as part of extraction and injection.
      */
-    public PropagatorStack pushPropagator(Propagator<C> propagator) {
+    public PropagatorStack pushPropagator(Propagator propagator) {
         if (propagator == null) {
             throw new IllegalArgumentException("propagator cannot be null");
         }
@@ -60,7 +60,7 @@ public final class PropagatorStack<C> implements Propagator<C> {
         return this;
     }
 
-    public SpanContext extract(C carrier) {
+    public <C> SpanContext extract(C carrier) {
         for (int i = propagators.size() - 1; i >= 0; i--) {
             SpanContext context = propagators.get(i).extract(carrier);
             if (context != null)
@@ -70,7 +70,7 @@ public final class PropagatorStack<C> implements Propagator<C> {
         return null;
     }
 
-    public void inject(SpanContext context, C carrier) {
+    public <C> void inject(SpanContext context, C carrier) {
         for (int i = 0; i < propagators.size(); i++) {
             propagators.get(i).inject(context, carrier);
         }

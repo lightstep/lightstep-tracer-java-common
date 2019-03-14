@@ -2,12 +2,12 @@ package com.lightstep.tracer.shared;
 
 import io.opentracing.propagation.Binary;
 
-class BinaryPropagator implements Propagator<Binary> {
-    public void inject(SpanContext spanContext, Binary carrier) {
+class BinaryPropagator implements Propagator {
+    public <C> void inject(SpanContext spanContext, C carrier) {
         // TODO: implement
     }
 
-    public SpanContext extract(Binary carrier) {
+    public <C> SpanContext extract(C carrier) {
         // TODO: implement
         return null;
     }

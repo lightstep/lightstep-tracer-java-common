@@ -35,7 +35,7 @@ public class OptionsTest {
     private static final String TAG_VALUE = "my-tag-value";
     private static final long GUID_VALUE = 123;
     private static final long DEADLINE_MILLIS = 150;
-    private static final Propagator<TextMap> CUSTOM_PROPAGATOR = new B3Propagator();
+    private static final Propagator CUSTOM_PROPAGATOR = new B3Propagator();
 
     /**
      * Basic test of OptionsBuilder that ensures if I set everything explicitly, that these values
