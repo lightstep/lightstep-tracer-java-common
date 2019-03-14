@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private Command() {
     disable_ = false;
+    devMode_ = false;
   }
 
   @java.lang.Override
@@ -43,16 +44,21 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
+          case 8: {
+
+            disable_ = input.readBool();
+            break;
+          }
+          case 16: {
+
+            devMode_ = input.readBool();
+            break;
+          }
           default: {
             if (!parseUnknownFieldProto3(
                 input, unknownFields, extensionRegistry, tag)) {
               done = true;
             }
-            break;
-          }
-          case 8: {
-
-            disable_ = input.readBool();
             break;
           }
         }
@@ -72,6 +78,7 @@ private static final long serialVersionUID = 0L;
     return com.lightstep.tracer.grpc.Collector.internal_static_lightstep_collector_Command_descriptor;
   }
 
+  @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
     return com.lightstep.tracer.grpc.Collector.internal_static_lightstep_collector_Command_fieldAccessorTable
@@ -88,7 +95,17 @@ private static final long serialVersionUID = 0L;
     return disable_;
   }
 
+  public static final int DEV_MODE_FIELD_NUMBER = 2;
+  private boolean devMode_;
+  /**
+   * <code>bool dev_mode = 2;</code>
+   */
+  public boolean getDevMode() {
+    return devMode_;
+  }
+
   private byte memoizedIsInitialized = -1;
+  @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
     if (isInitialized == 1) return true;
@@ -98,14 +115,19 @@ private static final long serialVersionUID = 0L;
     return true;
   }
 
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (disable_ != false) {
       output.writeBool(1, disable_);
     }
+    if (devMode_ != false) {
+      output.writeBool(2, devMode_);
+    }
     unknownFields.writeTo(output);
   }
 
+  @java.lang.Override
   public int getSerializedSize() {
     int size = memoizedSize;
     if (size != -1) return size;
@@ -114,6 +136,10 @@ private static final long serialVersionUID = 0L;
     if (disable_ != false) {
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(1, disable_);
+    }
+    if (devMode_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(2, devMode_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -133,6 +159,8 @@ private static final long serialVersionUID = 0L;
     boolean result = true;
     result = result && (getDisable()
         == other.getDisable());
+    result = result && (getDevMode()
+        == other.getDevMode());
     result = result && unknownFields.equals(other.unknownFields);
     return result;
   }
@@ -147,6 +175,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + DISABLE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getDisable());
+    hash = (37 * hash) + DEV_MODE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getDevMode());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -222,6 +253,7 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
+  @java.lang.Override
   public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
@@ -229,6 +261,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder(com.lightstep.tracer.grpc.Command prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+  @java.lang.Override
   public Builder toBuilder() {
     return this == DEFAULT_INSTANCE
         ? new Builder() : new Builder().mergeFrom(this);
@@ -252,6 +285,7 @@ private static final long serialVersionUID = 0L;
       return com.lightstep.tracer.grpc.Collector.internal_static_lightstep_collector_Command_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.lightstep.tracer.grpc.Collector.internal_static_lightstep_collector_Command_fieldAccessorTable
@@ -274,22 +308,28 @@ private static final long serialVersionUID = 0L;
               .alwaysUseFieldBuilders) {
       }
     }
+    @java.lang.Override
     public Builder clear() {
       super.clear();
       disable_ = false;
 
+      devMode_ = false;
+
       return this;
     }
 
+    @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
       return com.lightstep.tracer.grpc.Collector.internal_static_lightstep_collector_Command_descriptor;
     }
 
+    @java.lang.Override
     public com.lightstep.tracer.grpc.Command getDefaultInstanceForType() {
       return com.lightstep.tracer.grpc.Command.getDefaultInstance();
     }
 
+    @java.lang.Override
     public com.lightstep.tracer.grpc.Command build() {
       com.lightstep.tracer.grpc.Command result = buildPartial();
       if (!result.isInitialized()) {
@@ -298,39 +338,48 @@ private static final long serialVersionUID = 0L;
       return result;
     }
 
+    @java.lang.Override
     public com.lightstep.tracer.grpc.Command buildPartial() {
       com.lightstep.tracer.grpc.Command result = new com.lightstep.tracer.grpc.Command(this);
       result.disable_ = disable_;
+      result.devMode_ = devMode_;
       onBuilt();
       return result;
     }
 
+    @java.lang.Override
     public Builder clone() {
       return (Builder) super.clone();
     }
+    @java.lang.Override
     public Builder setField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         java.lang.Object value) {
       return (Builder) super.setField(field, value);
     }
+    @java.lang.Override
     public Builder clearField(
         com.google.protobuf.Descriptors.FieldDescriptor field) {
       return (Builder) super.clearField(field);
     }
+    @java.lang.Override
     public Builder clearOneof(
         com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return (Builder) super.clearOneof(oneof);
     }
+    @java.lang.Override
     public Builder setRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         int index, java.lang.Object value) {
       return (Builder) super.setRepeatedField(field, index, value);
     }
+    @java.lang.Override
     public Builder addRepeatedField(
         com.google.protobuf.Descriptors.FieldDescriptor field,
         java.lang.Object value) {
       return (Builder) super.addRepeatedField(field, value);
     }
+    @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.lightstep.tracer.grpc.Command) {
         return mergeFrom((com.lightstep.tracer.grpc.Command)other);
@@ -345,15 +394,20 @@ private static final long serialVersionUID = 0L;
       if (other.getDisable() != false) {
         setDisable(other.getDisable());
       }
+      if (other.getDevMode() != false) {
+        setDevMode(other.getDevMode());
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
     }
 
+    @java.lang.Override
     public final boolean isInitialized() {
       return true;
     }
 
+    @java.lang.Override
     public Builder mergeFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -397,11 +451,39 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
+
+    private boolean devMode_ ;
+    /**
+     * <code>bool dev_mode = 2;</code>
+     */
+    public boolean getDevMode() {
+      return devMode_;
+    }
+    /**
+     * <code>bool dev_mode = 2;</code>
+     */
+    public Builder setDevMode(boolean value) {
+      
+      devMode_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool dev_mode = 2;</code>
+     */
+    public Builder clearDevMode() {
+      
+      devMode_ = false;
+      onChanged();
+      return this;
+    }
+    @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFieldsProto3(unknownFields);
     }
 
+    @java.lang.Override
     public final Builder mergeUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.mergeUnknownFields(unknownFields);
@@ -423,6 +505,7 @@ private static final long serialVersionUID = 0L;
 
   private static final com.google.protobuf.Parser<Command>
       PARSER = new com.google.protobuf.AbstractParser<Command>() {
+    @java.lang.Override
     public Command parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -440,6 +523,7 @@ private static final long serialVersionUID = 0L;
     return PARSER;
   }
 
+  @java.lang.Override
   public com.lightstep.tracer.grpc.Command getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }

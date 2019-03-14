@@ -210,6 +210,25 @@ public class SpanTest {
     }
 
     @Test
+    public void testSetComponentName() {
+        Span result = undertest.setComponentName("custom");
+        assertSame(result, undertest);
+        verifyZeroInteractions(abstractTracer);
+
+        assertNotNull(grpcSpan.getTagsList());
+        assertEquals(1, grpcSpan.getTagsCount());
+        assertEquals(KeyValue.newBuilder().setKey(LightStepConstants.Tags.COMPONENT_NAME_KEY).setStringValue("custom").build(), grpcSpan.getTags(0));
+    }
+
+    @Test
+    public void testSetComponentName_withNullValue() {
+        Span result = undertest.setComponentName(null);
+        assertSame(result, undertest);
+        verify(abstractTracer).debug("componentName is null, ignoring");
+        verifyZeroInteractions(abstractTracer);
+    }
+
+    @Test
     public void testClose() {
         assertEquals(0L, grpcSpan.getDurationMicros());
         undertest.close();

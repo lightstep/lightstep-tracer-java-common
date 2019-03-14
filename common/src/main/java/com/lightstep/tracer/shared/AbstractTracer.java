@@ -13,6 +13,7 @@ import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 
+import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,12 @@ import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
 
-public abstract class AbstractTracer implements Tracer {
+public abstract class AbstractTracer implements Tracer, Closeable {
     // Maximum interval between reports
     private static final long DEFAULT_CLOCK_STATE_INTERVAL_MILLIS = 500;
     private static final int DEFAULT_CLIENT_RESET_INTERVAL_MILLIS = 5 * 60 * 1000; // 5 min
+
+    private static final long DEFAULT_FLUSH_TIMEOUT_DURING_CLOSE = 5000;
 
     private static class ReportResult {
         private final int droppedSpans;
@@ -117,6 +120,9 @@ public abstract class AbstractTracer implements Tracer {
 
     private final Map<Format<?>, Propagator> propagators;
 
+    private boolean firstReportHasRun;
+    public boolean enableMetaReporting;
+
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
@@ -164,6 +170,8 @@ public abstract class AbstractTracer implements Tracer {
         }
 
         propagators = options.propagators;
+        firstReportHasRun = false;
+        enableMetaReporting = options.enableMetaEventLogging;
     }
 
     /**
@@ -189,6 +197,15 @@ public abstract class AbstractTracer implements Tracer {
     private void maybeStartReporting() {
         if (reportingThread != null) {
             return;
+        }
+        if (enableMetaReporting && !firstReportHasRun) {
+            buildSpan(LightStepConstants.MetaEvents.TracerCreateOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.TracerGuidKey, reporter.getReporterId())
+                    .start()
+                    .finish();
+            firstReportHasRun = true;
         }
         reportingThread = new Thread(reportingLoop);
         reportingThread.setDaemon(true);
@@ -351,7 +368,16 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
-
+        if (enableMetaReporting) {
+            buildSpan(LightStepConstants.MetaEvents.InjectOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.SpanIdKey, lightstepSpanContext.getSpanId())
+                    .withTag(LightStepConstants.MetaEvents.TraceIdKey, lightstepSpanContext.getTraceId())
+                    .withTag(LightStepConstants.MetaEvents.PropagationFormatKey, format.getClass().getName())
+                    .start()
+                    .finish();
+        }
         if (!propagators.containsKey(format)) {
             info("Unsupported carrier type: " + carrier.getClass());
             return;
@@ -367,8 +393,36 @@ public abstract class AbstractTracer implements Tracer {
             return null;
         }
 
+        if (enableMetaReporting) {
+            buildSpan(LightStepConstants.MetaEvents.ExtractOperation)
+                    .ignoreActiveSpan()
+                    .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
+                    .withTag(LightStepConstants.MetaEvents.PropagationFormatKey, format.getClass().getName())
+                    .start()
+                    .finish();
+        }
+
         Propagator propagator = (Propagator) propagators.get(format);
         return propagator.extract(carrier);
+    }
+
+    /**
+     * Closes this Tracer. Method tries to flush pending Spans, and closes the Tracer
+     * afterwards, turning subsequent method invocations into no-ops.
+     */
+    @Override
+    public void close() {
+      synchronized (mutex) {
+        if (isDisabled)
+          return;
+
+        flush(DEFAULT_FLUSH_TIMEOUT_DURING_CLOSE);
+      }
+
+      // disable() is only partially synchronized (on `mutex`),
+      // thus we cannot synchronize during its invocation.
+      // See disable() and doStopReporting() for details.
+      disable();
     }
 
     /**
@@ -488,6 +542,15 @@ public abstract class AbstractTracer implements Tracer {
                 this.error("Collector response contained error: ", err);
             }
             return ReportResult.Error(spans.size());
+        }
+
+        if (!response.getCommandsList().isEmpty()) {
+            List<Command> cmds = response.getCommandsList();
+            for (Command cmd : cmds) {
+                if (cmd.getDevMode()) {
+                    this.enableMetaReporting = true;
+                }
+            }
         }
 
         if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {

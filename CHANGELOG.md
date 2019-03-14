@@ -1,9 +1,29 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.2...master)
+
+<a name="0.16.2"></a>
+## [0.16.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.1...0.16.2)
+* Allow setting Component name per Span.
+* Instruct gRPC to round-robin between all the available satellites.
+
+<a name="0.16.1"></a>
+## [0.16.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.0...0.16.1)
+* Minor fix: do not send a first-run meta Span if meta reporting is disabled.
 
 <a name="0.16.0"></a>
-## [0.16.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...0.16.0)
+## [0.16.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.10...0.16.0)
+* Add meta event support.
+* Make Tracer extends the Closeable interface.
+
+<a name="0.15.10"></a>
+## [0.15.10](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.9...0.15.10)
+* Handle empty SpanContext headers upon extraction.
+
+<a name="0.15.9"></a>
+## [0.15.9](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.8...0.15.9)
+
 * Removes LEGACY_COMPONENT_NAME_KEY for default component name.
+* Allow specifying the ScopeManager instance for our Tracer.
 
 <a name="0.15.8"></a>
 ## [0.15.8](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.15.7...0.15.8)

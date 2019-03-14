@@ -4,7 +4,6 @@ package com.lightstep.tracer.shared;
 import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -61,14 +60,6 @@ public final class Options {
 
     static final String COLLECTOR_PATH = "/api/v2/reports";
 
-    // TAG KEYS
-
-    static final String LEGACY_COMPONENT_NAME_KEY = "component_name";
-
-    static final String COMPONENT_NAME_KEY = "lightstep.component_name";
-
-    static final String GUID_KEY = "lightstep.guid";
-
     // BUILTIN PROPAGATORS
     static final Map<Format<?>, Propagator> BUILTIN_PROPAGATORS = Collections.unmodifiableMap(
             new HashMap<Format<?>, Propagator>() {{
@@ -114,6 +105,11 @@ public final class Options {
     @SuppressWarnings("WeakerAccess")
     public static final int VERBOSITY_NONE = 0;
 
+    /**
+     * Enable LightStep Meta Event Reporting
+     */
+    final boolean enableMetaEventLogging;
+
     final String accessToken;
     final URL collectorUrl;
     final Map<String, Object> tags;
@@ -126,6 +122,8 @@ public final class Options {
     final boolean useClockCorrection;
     final ScopeManager scopeManager;
     final Map<Format<?>, Propagator> propagators;
+    final String grpcCollectorTarget;
+    final boolean grpcRoundRobin;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -144,7 +142,9 @@ public final class Options {
             boolean useClockCorrection,
             ScopeManager scopeManager,
             long deadlineMillis,
-            Map<Format<?>, Propagator> propagators
+            Map<Format<?>, Propagator> propagators,
+            String grpcCollectorTarget,
+            boolean grpcRoundRobin
     ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
@@ -158,10 +158,13 @@ public final class Options {
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
         this.propagators = propagators;
+        this.grpcCollectorTarget = grpcCollectorTarget;
+        this.grpcRoundRobin = grpcRoundRobin;
+        this.enableMetaEventLogging = false;
     }
 
     long getGuid() {
-        return (long) tags.get(GUID_KEY);
+        return (long) tags.get(LightStepConstants.Tags.GUID_KEY);
     }
 
     @SuppressWarnings({"WeakerAccess"})
@@ -180,6 +183,9 @@ public final class Options {
         private ScopeManager scopeManager;
         private long deadlineMillis = -1;
         private Map<Format<?>, Propagator> propagators = new HashMap<>();
+        private boolean enableMetaEventLogging = false;
+        private String grpcCollectorTarget;
+        private boolean grpcRoundRobin = false;
 
         public OptionsBuilder() {
         }
@@ -199,6 +205,9 @@ public final class Options {
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
             this.propagators = options.propagators;
+            this.enableMetaEventLogging = options.enableMetaEventLogging;
+            this.grpcCollectorTarget = options.grpcCollectorTarget;
+            this.grpcRoundRobin = options.grpcRoundRobin;
         }
 
         /**
@@ -287,6 +296,37 @@ public final class Options {
             return this;
         }
 
+
+        /**
+         * Sets the target address when using gRPC for transport. Useful when used in conjunction
+         * with supplying a custom gRPC NameResolverProvider to lookup the satellites via your
+         * preferred service discovery system.
+         *
+         * @param grpcCollectorTarget The target URI for the LightStep collector.
+         * @throws IllegalArgumentException If the grpcCollectorTarget is invalid.
+         */
+        public OptionsBuilder withGrpcCollectorTarget(String grpcCollectorTarget) {
+            if (grpcCollectorTarget == null) {
+                throw new IllegalArgumentException(
+                  "Invalid grpc collector target: " + grpcCollectorTarget);
+            }
+            this.grpcCollectorTarget = grpcCollectorTarget;
+            return this;
+        }
+
+        /**
+         * Instructs gRPC to round-robin between satellites instances in a pool when sending traces.
+         * If not enabled defaults to picking the first record returned by the operating system
+         * resolver.
+         *
+         * @param grpcRoundRobin Use round robin on a per request basis when sending requests to
+         *                       the satellites.
+         */
+        public OptionsBuilder withGrpcRoundRobin(boolean grpcRoundRobin) {
+            this.grpcRoundRobin = grpcRoundRobin;
+            return this;
+        }
+
         /**
          * Sets scope manager attribute. If not set, will default to the ThreadLocalScopeManager
          *
@@ -309,7 +349,7 @@ public final class Options {
          * @param name The name of the component being traced.
          */
         public OptionsBuilder withComponentName(String name) {
-            return withTag(COMPONENT_NAME_KEY, name);
+            return withTag(LightStepConstants.Tags.COMPONENT_NAME_KEY, name);
         }
 
         /**
@@ -387,6 +427,16 @@ public final class Options {
             return this;
         }
 
+        /**
+         * Enables LightStep Meta Event Reporting
+         * @param enableMetaEvents
+         * @return
+         */
+        public OptionsBuilder withMetaEventLogging(boolean enableMetaEvents) {
+            this.enableMetaEventLogging = enableMetaEvents;
+            return this;
+        }
+
 	@SuppressWarnings("SameParameterValue")
     public OptionsBuilder withClockSkewCorrection(boolean clockCorrection) {
 	    this.useClockCorrection = clockCorrection;
@@ -421,7 +471,9 @@ public final class Options {
                     useClockCorrection,
                     scopeManager,
                     deadlineMillis,
-                    propagators
+                    propagators,
+                    grpcCollectorTarget,
+                    grpcRoundRobin
             );
         }
 
@@ -444,8 +496,8 @@ public final class Options {
         }
 
         private void defaultGuid() {
-            if (tags.get(GUID_KEY) == null) {
-                withTag(GUID_KEY, Util.generateRandomGUID());
+            if (tags.get(LightStepConstants.Tags.GUID_KEY) == null) {
+                withTag(LightStepConstants.Tags.GUID_KEY, Util.generateRandomGUID());
             }
         }
 
@@ -453,7 +505,7 @@ public final class Options {
          * If not set, provides a default value for the component name.
          */
         private void defaultComponentName() {
-            if (tags.get(COMPONENT_NAME_KEY) == null) {
+            if (tags.get(LightStepConstants.Tags.COMPONENT_NAME_KEY) == null) {
                 String componentNameSystemProperty = System.getProperty(COMPONENT_NAME_SYSTEM_PROPERTY_KEY);
                 if (componentNameSystemProperty != null) {
                     StringTokenizer st = new StringTokenizer(componentNameSystemProperty);

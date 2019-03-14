@@ -1,6 +1,7 @@
 package com.lightstep.tracer.shared;
 
 import com.google.protobuf.Timestamp;
+import com.lightstep.tracer.grpc.KeyValue;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -46,11 +47,29 @@ class Util {
         return System.currentTimeMillis() * 1000;
     }
 
-    static long fromHexString(String hexString) {
-        return new BigInteger(hexString, 16).longValue();
+    static Long fromHexString(String hexString) {
+        if (hexString == null || hexString.length() == 0) {
+            return null;
+        }
+
+        Long value = null;
+        try {
+            value = new BigInteger(hexString, 16).longValue();
+        } catch (NumberFormatException e) {
+        }
+
+        return value;
     }
 
     static String toHexString(long l) {
         return Long.toHexString(l);
+    }
+
+    static boolean IsNotMetaSpan(Span span) {
+        if (span == null) {
+            return true;
+        }
+        KeyValue kvp = KeyValue.newBuilder().setKey(LightStepConstants.MetaEvents.MetaEventKey).setBoolValue(true).build();
+        return !span.getGrpcSpan().getTagsList().contains(kvp);
     }
 }
