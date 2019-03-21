@@ -102,6 +102,21 @@ public class OptionsTest {
     }
 
     @Test
+    public void testOptionsBuilder_defaultAccessToken() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .build();
+        assertEquals("", options.accessToken);
+    }
+
+    @Test
+    public void testOptionsBuilder_withNullAccessToken() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .withAccessToken(null)
+                .build();
+        assertEquals("", options.accessToken);
+    }
+
+    @Test
     public void testOptionsBuilder_httpsNoPortProvided() throws Exception {
         Options options = new Options.OptionsBuilder()
                 .withCollectorProtocol(HTTPS)
