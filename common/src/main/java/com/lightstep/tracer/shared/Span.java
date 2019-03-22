@@ -25,7 +25,7 @@ public class Span implements io.opentracing.Span {
         this.grpcSpan = grpcSpan;
         this.startTimestampRelativeNanos = startTimestampRelativeNanos;
 
-        if (tracer != null && tracer.enableMetaReporting && Util.IsNotMetaSpan(this)) {
+        if (tracer != null && tracer.metaEventLoggingEnabled && Util.IsNotMetaSpan(this)) {
             tracer.buildSpan(LightStepConstants.MetaEvents.SpanStartOperation)
                     .ignoreActiveSpan()
                     .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
@@ -48,7 +48,7 @@ public class Span implements io.opentracing.Span {
 
     @Override
     public void finish(long finishTimeMicros) {
-        if (tracer.enableMetaReporting && Util.IsNotMetaSpan(this)) {
+        if (tracer.metaEventLoggingEnabled && Util.IsNotMetaSpan(this)) {
             tracer.buildSpan(LightStepConstants.MetaEvents.SpanFinishOperation)
                     .ignoreActiveSpan()
                     .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
