@@ -165,7 +165,7 @@ public final class Options {
 
     @SuppressWarnings({"WeakerAccess"})
     public static class OptionsBuilder {
-        private String accessToken;
+        private String accessToken = "";
         private String collectorProtocol = HTTPS;
         private String collectorHost = DEFAULT_COLLECTOR_HOST;
         private int collectorPort = -1;
@@ -243,6 +243,9 @@ public final class Options {
          * @param accessToken Your specific token for LightStep access.
          */
         public OptionsBuilder withAccessToken(String accessToken) {
+            if (accessToken == null)
+                accessToken = "";
+
             this.accessToken = accessToken;
             return this;
         }
