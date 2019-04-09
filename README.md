@@ -22,8 +22,6 @@ Contains the transport layer specific to the grpc flavor of the lightstep tracer
 
 Contains the transport layer specific to the okhttp flavor of the lightstep tracer.
 
-_N.B. http is an experimental feature for the lightstep tracer and collector. Please reach out before attempting to enable it._
-
 ## Development info
 
 See [DEV.md](DEV.md) for information on contributing to this instrumentation library.
