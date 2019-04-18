@@ -118,7 +118,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
     private final ScopeManager scopeManager;
 
-    private final Map<Format<?>, Propagator<?>> propagators;
+    private final Map<Format<?>, Propagator> propagators;
 
     boolean firstReportHasRun;
     boolean disableMetaEventLogging;
@@ -356,6 +356,11 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         return scope == null ? null : scope.span();
     }
 
+    @Override
+    public io.opentracing.Scope activateSpan(io.opentracing.Span span) {
+        return scopeManager.activate(span);
+    }
+
     public Tracer.SpanBuilder buildSpan(String operationName) {
         return new com.lightstep.tracer.shared.SpanBuilder(operationName, this);
     }
@@ -381,7 +386,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             return;
         }
 
-        Propagator<C> propagator = (Propagator<C>) propagators.get(format);
+        Propagator propagator = (Propagator) propagators.get(format);
         propagator.inject(lightstepSpanContext, carrier);
     }
 
@@ -390,6 +395,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             info("Unsupported carrier type: " + carrier.getClass());
             return null;
         }
+
         if (metaEventLoggingEnabled) {
             buildSpan(LightStepConstants.MetaEvents.ExtractOperation)
                     .ignoreActiveSpan()
@@ -398,7 +404,8 @@ public abstract class AbstractTracer implements Tracer, Closeable {
                     .start()
                     .finish();
         }
-        Propagator<C> propagator = (Propagator<C>) propagators.get(format);
+
+        Propagator propagator = (Propagator) propagators.get(format);
         return propagator.extract(carrier);
     }
 

@@ -1,11 +1,12 @@
 package com.lightstep.tracer.shared;
 
-import io.opentracing.propagation.TextMap;
+import io.opentracing.propagation.TextMapExtract;
+import io.opentracing.propagation.TextMapInject;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-class TextMapPropagator implements Propagator<TextMap> {
+class TextMapPropagator implements Propagator {
     private static final Locale english = new Locale("en", "US");
 
     private static final String PREFIX_TRACER_STATE = "ot-tracer-";
@@ -15,21 +16,30 @@ class TextMapPropagator implements Propagator<TextMap> {
     static final String FIELD_NAME_SPAN_ID = PREFIX_TRACER_STATE + "spanid";
     static final String FIELD_NAME_SAMPLED = PREFIX_TRACER_STATE + "sampled";
 
-    public void inject(SpanContext spanContext, final TextMap carrier) {
-        carrier.put(FIELD_NAME_TRACE_ID, Util.toHexString(spanContext.getTraceId()));
-        carrier.put(FIELD_NAME_SPAN_ID, Util.toHexString(spanContext.getSpanId()));
-        carrier.put(FIELD_NAME_SAMPLED, "true");
+    public <C> void inject(SpanContext spanContext, final C carrier) {
+        if (!(carrier instanceof TextMapInject)) {
+            return;
+        }
+
+        TextMapInject textCarrier = (TextMapInject) carrier;
+        textCarrier.put(FIELD_NAME_TRACE_ID, spanContext.toTraceId());
+        textCarrier.put(FIELD_NAME_SPAN_ID, spanContext.toSpanId());
+        textCarrier.put(FIELD_NAME_SAMPLED, "true");
         for (Map.Entry<String, String> e : spanContext.baggageItems()) {
-            carrier.put(PREFIX_BAGGAGE + e.getKey(), e.getValue());
+            textCarrier.put(PREFIX_BAGGAGE + e.getKey(), e.getValue());
         }
     }
 
-    public SpanContext extract(TextMap carrier) {
+    public <C> SpanContext extract(C carrier) {
+        if (!(carrier instanceof TextMapExtract)) {
+            return null;
+        }
+
         Long traceId = null;
         Long spanId = null;
         Map<String, String> baggage = new HashMap<>();
 
-        for (Map.Entry<String, String> entry : carrier) {
+        for (Map.Entry<String, String> entry : (TextMapExtract)carrier) {
             String key = entry.getKey().toLowerCase(english);
 
             if (FIELD_NAME_TRACE_ID.equals(key)) {

@@ -1,30 +1,40 @@
 package com.lightstep.tracer.shared;
 
-import io.opentracing.propagation.TextMap;
+import io.opentracing.propagation.TextMapInject;
+import io.opentracing.propagation.TextMapExtract;
 import java.util.Map;
 
-public class B3Propagator implements Propagator<TextMap> {
+public class B3Propagator implements Propagator {
 
     private static final String TRACE_ID_NAME = "X-B3-TraceId";
     private static final String SPAN_ID_NAME = "X-B3-SpanId";
     private static final String SAMPLED_NAME = "X-B3-Sampled";
 
     @Override
-    public void inject(SpanContext spanContext, TextMap carrier) {
+    public <C> void inject(SpanContext spanContext, C carrier) {
+        if (!(carrier instanceof TextMapInject)) {
+            return;
+        }
+
+        TextMapInject textCarrier = (TextMapInject) carrier;
         long traceId = spanContext.getTraceId();
         long spanId = spanContext.getSpanId();
 
-        carrier.put(TRACE_ID_NAME, Util.toHexString(traceId));
-        carrier.put(SPAN_ID_NAME, Util.toHexString(spanId));
-        carrier.put(SAMPLED_NAME, "true");
+        textCarrier.put(TRACE_ID_NAME, Util.toHexString(traceId));
+        textCarrier.put(SPAN_ID_NAME, Util.toHexString(spanId));
+        textCarrier.put(SAMPLED_NAME, "true");
     }
 
     @Override
-    public SpanContext extract(TextMap carrier) {
+    public <C> SpanContext extract(C carrier) {
+        if (!(carrier instanceof TextMapExtract)) {
+            return null;
+        }
+
         Long traceId = null;
         Long spanId = null;
 
-        for (Map.Entry<String, String> entry : carrier) {
+        for (Map.Entry<String, String> entry : (TextMapExtract)carrier) {
             if (entry.getKey().equalsIgnoreCase(TRACE_ID_NAME)) {
                 traceId = Util.fromHexString(entry.getValue());
             } else if (entry.getKey().equalsIgnoreCase(SPAN_ID_NAME)) {
