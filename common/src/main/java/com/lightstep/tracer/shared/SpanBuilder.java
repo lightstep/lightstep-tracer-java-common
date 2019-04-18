@@ -1,6 +1,5 @@
 package com.lightstep.tracer.shared;
 
-import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Reference;
 import com.lightstep.tracer.grpc.Reference.Relationship;
 import io.opentracing.Scope;
@@ -84,6 +83,23 @@ public class SpanBuilder implements Tracer.SpanBuilder {
 
     public Tracer.SpanBuilder withTag(String key, Number value) {
         numTags.put(key, value);
+        return this;
+    }
+
+    public <T> Tracer.SpanBuilder withTag(io.opentracing.tag.Tag<T> tag, T value) {
+        if (tag == null || value == null) {
+            tracer.debug("tag (" + tag + ") or value (" + value + ") is null, ignoring");
+            return this;
+        }
+
+        if (value instanceof Number) {
+            numTags.put(tag.getKey(), (Number)value);
+        } else if (value instanceof Boolean) {
+            boolTags.put(tag.getKey(), (Boolean)value);
+        } else {
+            stringTags.put(tag.getKey(), value.toString());
+        }
+
         return this;
     }
 

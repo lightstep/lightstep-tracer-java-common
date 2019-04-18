@@ -40,6 +40,11 @@ class NoopSpan implements Span {
     }
 
     @Override
+    public <T> Span setTag(io.opentracing.tag.Tag<T> tag, T value) {
+        return this;
+    }
+
+    @Override
     public Span log(String message) {
         return this;
     }
@@ -77,6 +82,16 @@ class NoopSpan implements Span {
         @Override
         public Iterable<Map.Entry<String, String>> baggageItems() {
             return Collections.emptySet();
+        }
+
+        @Override
+        public String toTraceId() {
+            return "";
+        }
+
+        @Override
+        public String toSpanId() {
+            return "";
         }
     }
 }

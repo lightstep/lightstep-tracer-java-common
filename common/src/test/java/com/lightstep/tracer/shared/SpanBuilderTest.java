@@ -2,6 +2,8 @@ package com.lightstep.tracer.shared;
 
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.Span.Builder;
+import io.opentracing.tag.Tag;
+import io.opentracing.tag.Tags;
 import io.opentracing.util.ThreadLocalScopeManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -110,6 +113,7 @@ public class SpanBuilderTest {
         undertest.withTag("key1", "value1");
         undertest.withTag("key2", true);
         undertest.withTag("key3", 1001);
+        undertest.withTag(Tags.COMPONENT, "mytest");
 
         // start the Span
         io.opentracing.Span otSpan = undertest.start();
@@ -123,8 +127,26 @@ public class SpanBuilderTest {
         assertTrue(attributes.contains(KeyValue.newBuilder().setKey("key1").setStringValue("value1").build()));
         assertTrue(attributes.contains(KeyValue.newBuilder().setKey("key2").setBoolValue(true).build()));
         assertTrue(attributes.contains(KeyValue.newBuilder().setKey("key3").setIntValue(1001).build()));
+        assertTrue(attributes.contains(KeyValue.newBuilder().setKey(Tags.COMPONENT.getKey()).setStringValue("mytest")
+                    .build()));
 
         verifyResultingSpan(lsSpan);
+    }
+
+    @Test
+    public void testTagNull() {
+        undertest.withTag((Tag)null, "mytest");
+        // start the Span
+        io.opentracing.Span otSpan = undertest.start();
+        assertNotNull(otSpan);
+        assertTrue(otSpan instanceof Span);
+        Span lsSpan = (Span) otSpan;
+
+        Builder record = lsSpan.getGrpcSpan();
+
+        List<KeyValue> attributes = record.getTagsList();
+        assertEquals(0, attributes.size());
+        verify(tracer).debug("tag (null) or value (mytest) is null, ignoring");
     }
 
     /**

@@ -1,18 +1,19 @@
 package com.lightstep.tracer.shared;
 
-import org.junit.Assert;
+import io.opentracing.propagation.BinaryAdapters;
+import java.nio.ByteBuffer;
+import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Map;
 
 import io.opentracing.SpanContext;
+import io.opentracing.propagation.Binary;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
 
@@ -21,6 +22,7 @@ import static com.lightstep.tracer.shared.Options.VERBOSITY_ERRORS_ONLY;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_NONE;
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -203,8 +205,7 @@ public class GrpcAbstractTracerTest {
     @Test
     public void testInject_binary() throws Exception {
         StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
-        undertest.inject(spanContext, Format.Builtin.BINARY, byteBuffer);
-
+        undertest.inject(spanContext, Format.Builtin.BINARY_INJECT, BinaryAdapters.injectionCarrier(byteBuffer));
         verifyZeroInteractions(byteBuffer);
     }
 
@@ -216,5 +217,15 @@ public class GrpcAbstractTracerTest {
         StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.inject(spanContext, genericFormat, textMap);
         verifyZeroInteractions(textMap);
+    }
+
+    @Test
+    public void testSpanContext_TraceId() throws Exception {
+        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        Span span = (Span) undertest.buildSpan("traceId").start();
+        io.opentracing.Scope scope = undertest.activateSpan(span);
+        assertEquals(Util.toHexString(span.context().getTraceId()), span.context().toTraceId());
+        assertEquals(Util.toHexString(span.context().getSpanId()), span.context().toSpanId());
+        scope.close();
     }
 }
