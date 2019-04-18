@@ -1,15 +1,11 @@
 package com.lightstep.tracer.grpc;
 
-import io.grpc.Metadata;
-import io.grpc.ServerCall;
-
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 import static io.grpc.stub.ClientCalls.asyncUnaryCall;
 import static io.grpc.stub.ClientCalls.blockingUnaryCall;
 import static io.grpc.stub.ClientCalls.futureUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
-import static io.grpc.Metadata.*;
 
 /**
  TODO generated annotation was removed because it was making it difficult to compile the android tracer.
@@ -21,7 +17,6 @@ public class CollectorServiceGrpc {
 
   public static final String SERVICE_NAME = "lightstep.collector.CollectorService";
 
-  public static final Key<String> ACCESS_TOKEN_HEADER = Key.of("LightStep-Access-Token", ASCII_STRING_MARSHALLER);
 
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
@@ -103,8 +98,6 @@ public class CollectorServiceGrpc {
      */
     public void report(com.lightstep.tracer.grpc.ReportRequest request,
         io.grpc.stub.StreamObserver<com.lightstep.tracer.grpc.ReportResponse> responseObserver) {
-      Metadata headers = new Metadata();
-      headers.put(ACCESS_TOKEN_HEADER, request.getAuth().getAccessToken());
 
       asyncUnaryCall(
           getChannel().newCall(METHOD_REPORT, getCallOptions()), request, responseObserver);

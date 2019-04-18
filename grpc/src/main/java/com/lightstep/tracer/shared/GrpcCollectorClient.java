@@ -1,16 +1,11 @@
 package com.lightstep.tracer.shared;
 
-import com.google.protobuf.ByteString;
-import com.lightstep.tracer.grpc.CollectorServiceGrpc;
+import com.lightstep.tracer.grpc.*;
 import com.lightstep.tracer.grpc.CollectorServiceGrpc.CollectorServiceBlockingStub;
-import com.lightstep.tracer.grpc.ReportRequest;
-import com.lightstep.tracer.grpc.ReportResponse;
-import com.lightstep.tracer.grpc.Span;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 class GrpcCollectorClient extends CollectorClient {
@@ -50,6 +45,7 @@ class GrpcCollectorClient extends CollectorClient {
     try {
       ReportResponse response = blockingStub.
               withDeadlineAfter(deadlineMillis, TimeUnit.MILLISECONDS).
+              withInterceptors(new GrpcClientInterceptor(request.getAuth().getAccessToken())).
               report(request);
 
       return response;
