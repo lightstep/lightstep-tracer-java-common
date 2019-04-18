@@ -120,8 +120,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
     private final Map<Format<?>, Propagator> propagators;
 
-    private boolean firstReportHasRun;
-    public boolean enableMetaReporting;
+    boolean firstReportHasRun;
+    boolean disableMetaEventLogging;
+    boolean metaEventLoggingEnabled;
 
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
@@ -170,8 +171,10 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         }
 
         propagators = options.propagators;
+
         firstReportHasRun = false;
-        enableMetaReporting = options.enableMetaEventLogging;
+        metaEventLoggingEnabled = false;
+        disableMetaEventLogging = options.disableMetaEventLogging;
     }
 
     /**
@@ -198,7 +201,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         if (reportingThread != null) {
             return;
         }
-        if (enableMetaReporting && !firstReportHasRun) {
+        if (metaEventLoggingEnabled && !firstReportHasRun) {
             buildSpan(LightStepConstants.MetaEvents.TracerCreateOperation)
                     .ignoreActiveSpan()
                     .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
@@ -368,7 +371,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             return;
         }
         SpanContext lightstepSpanContext = (SpanContext) spanContext;
-        if (enableMetaReporting) {
+        if (metaEventLoggingEnabled) {
             buildSpan(LightStepConstants.MetaEvents.InjectOperation)
                     .ignoreActiveSpan()
                     .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
@@ -393,7 +396,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             return null;
         }
 
-        if (enableMetaReporting) {
+        if (metaEventLoggingEnabled) {
             buildSpan(LightStepConstants.MetaEvents.ExtractOperation)
                     .ignoreActiveSpan()
                     .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
@@ -544,15 +547,6 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             return ReportResult.Error(spans.size());
         }
 
-        if (!response.getCommandsList().isEmpty()) {
-            List<Command> cmds = response.getCommandsList();
-            for (Command cmd : cmds) {
-                if (cmd.getDevMode()) {
-                    this.enableMetaReporting = true;
-                }
-            }
-        }
-
         if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {
             long deltaMicros = (System.nanoTime() - originRelativeNanos) / 1000;
             long destinationMicros = originMicros + deltaMicros;
@@ -571,6 +565,10 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             for (Command command : response.getCommandsList()) {
                 if (command.getDisable()) {
                     disable();
+                } else if (command.getDevMode()) {
+                    if (!disableMetaEventLogging) {
+                        metaEventLoggingEnabled = true;
+                    }
                 }
             }
         }

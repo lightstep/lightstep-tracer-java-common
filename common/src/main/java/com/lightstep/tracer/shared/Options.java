@@ -106,9 +106,10 @@ public final class Options {
     public static final int VERBOSITY_NONE = 0;
 
     /**
-     * Enable LightStep Meta Event Reporting
+     * Disable Meta Event Reporting
+     * even if a server command requested it.
      */
-    final boolean enableMetaEventLogging;
+    final boolean disableMetaEventLogging;
 
     final String accessToken;
     final URL collectorUrl;
@@ -144,7 +145,8 @@ public final class Options {
             long deadlineMillis,
             Map<Format<?>, Propagator> propagators,
             String grpcCollectorTarget,
-            boolean grpcRoundRobin
+            boolean grpcRoundRobin,
+            boolean disableMetaEventLogging
     ) {
         this.accessToken = accessToken;
         this.collectorUrl = collectorUrl;
@@ -160,7 +162,7 @@ public final class Options {
         this.propagators = propagators;
         this.grpcCollectorTarget = grpcCollectorTarget;
         this.grpcRoundRobin = grpcRoundRobin;
-        this.enableMetaEventLogging = false;
+        this.disableMetaEventLogging = disableMetaEventLogging;
     }
 
     long getGuid() {
@@ -169,7 +171,7 @@ public final class Options {
 
     @SuppressWarnings({"WeakerAccess"})
     public static class OptionsBuilder {
-        private String accessToken;
+        private String accessToken = "";
         private String collectorProtocol = HTTPS;
         private String collectorHost = DEFAULT_COLLECTOR_HOST;
         private int collectorPort = -1;
@@ -183,7 +185,7 @@ public final class Options {
         private ScopeManager scopeManager;
         private long deadlineMillis = -1;
         private Map<Format<?>, Propagator> propagators = new HashMap<>();
-        private boolean enableMetaEventLogging = false;
+        private boolean disableMetaEventLogging = false;
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
 
@@ -205,7 +207,7 @@ public final class Options {
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
             this.propagators = options.propagators;
-            this.enableMetaEventLogging = options.enableMetaEventLogging;
+            this.disableMetaEventLogging = options.disableMetaEventLogging;
             this.grpcCollectorTarget = options.grpcCollectorTarget;
             this.grpcRoundRobin = options.grpcRoundRobin;
         }
@@ -247,6 +249,9 @@ public final class Options {
          * @param accessToken Your specific token for LightStep access.
          */
         public OptionsBuilder withAccessToken(String accessToken) {
+            if (accessToken == null)
+                accessToken = "";
+
             this.accessToken = accessToken;
             return this;
         }
@@ -428,12 +433,12 @@ public final class Options {
         }
 
         /**
-         * Enables LightStep Meta Event Reporting
-         * @param enableMetaEvents
-         * @return
+         * Disables LightStep Meta Event Reporting
+         * even if a server command requested it.
+         * @param disableMetaEventLogging
          */
-        public OptionsBuilder withMetaEventLogging(boolean enableMetaEvents) {
-            this.enableMetaEventLogging = enableMetaEvents;
+        public OptionsBuilder withDisableMetaEventLogging(boolean disableMetaEventLogging) {
+            this.disableMetaEventLogging = disableMetaEventLogging;
             return this;
         }
 
@@ -473,7 +478,8 @@ public final class Options {
                     deadlineMillis,
                     propagators,
                     grpcCollectorTarget,
-                    grpcRoundRobin
+                    grpcRoundRobin,
+                    disableMetaEventLogging
             );
         }
 

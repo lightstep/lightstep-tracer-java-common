@@ -102,6 +102,21 @@ public class OptionsTest {
     }
 
     @Test
+    public void testOptionsBuilder_defaultAccessToken() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .build();
+        assertEquals("", options.accessToken);
+    }
+
+    @Test
+    public void testOptionsBuilder_withNullAccessToken() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .withAccessToken(null)
+                .build();
+        assertEquals("", options.accessToken);
+    }
+
+    @Test
     public void testOptionsBuilder_httpsNoPortProvided() throws Exception {
         Options options = new Options.OptionsBuilder()
                 .withCollectorProtocol(HTTPS)
@@ -207,6 +222,7 @@ public class OptionsTest {
                 .withDeadlineMillis(DEADLINE_MILLIS)
                 .withPropagator(Builtin.TEXT_MAP, CUSTOM_PROPAGATOR)
                 .withScopeManager(new ThreadLocalScopeManager())
+                .withDisableMetaEventLogging(true)
                 .build();
     }
 
@@ -228,5 +244,6 @@ public class OptionsTest {
         assertEquals(DEADLINE_MILLIS, options.deadlineMillis);
         assertFalse(options.propagators.keySet().isEmpty());
         assertEquals(CUSTOM_PROPAGATOR, options.propagators.get(Builtin.TEXT_MAP));
+        assertTrue(options.disableMetaEventLogging);
     }
 }
