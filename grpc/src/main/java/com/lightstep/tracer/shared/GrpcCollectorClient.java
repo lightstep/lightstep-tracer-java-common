@@ -1,6 +1,9 @@
 package com.lightstep.tracer.shared;
 
-import com.lightstep.tracer.grpc.*;
+import com.lightstep.tracer.grpc.ReportResponse;
+import com.lightstep.tracer.grpc.ReportRequest;
+import com.lightstep.tracer.grpc.GrpcClientInterceptor;
+import com.lightstep.tracer.grpc.CollectorServiceGrpc;
 import com.lightstep.tracer.grpc.CollectorServiceGrpc.CollectorServiceBlockingStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;

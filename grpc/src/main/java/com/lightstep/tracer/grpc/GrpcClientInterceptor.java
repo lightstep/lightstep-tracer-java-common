@@ -4,7 +4,7 @@ import io.grpc.*;
 import static io.grpc.Metadata.*;
 
 public class GrpcClientInterceptor implements ClientInterceptor {
-    public static final Key<String> ACCESS_TOKEN_HEADER = Key.of("LightStep-Access-Token", ASCII_STRING_MARSHALLER);
+    public static final Key<String> ACCESS_TOKEN_HEADER = Key.of("Lightstep-Access-Token", ASCII_STRING_MARSHALLER);
 
     private String authToken;
 

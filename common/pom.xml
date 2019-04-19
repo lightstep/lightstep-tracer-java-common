@@ -5,7 +5,7 @@
     <parent>
         <artifactId>java</artifactId>
         <groupId>com.lightstep.tracer</groupId>
-        <version>0.17.1</version>
+        <version>0.17.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -39,10 +39,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0-M1</version>
-                <configuration>
-                    <failOnError>false</failOnError>
-                </configuration>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>

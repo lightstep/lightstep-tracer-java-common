@@ -61,7 +61,7 @@ class HttpCollectorClient extends CollectorClient {
         return new Request.Builder()
                 .url(this.collectorURL)
                 .post(RequestBody.create(protoMediaType, request.toByteArray()))
-                .addHeader("LightStep-Access-Token", request.getAuth().getAccessToken())
+                .addHeader("Lightstep-Access-Token", request.getAuth().getAccessToken())
                 .build();
     }
 
