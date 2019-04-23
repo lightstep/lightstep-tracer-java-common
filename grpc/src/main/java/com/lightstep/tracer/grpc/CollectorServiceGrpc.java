@@ -17,6 +17,7 @@ public class CollectorServiceGrpc {
 
   public static final String SERVICE_NAME = "lightstep.collector.CollectorService";
 
+
   // Static method descriptors that strictly reflect the proto.
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static final io.grpc.MethodDescriptor<com.lightstep.tracer.grpc.ReportRequest,
@@ -97,6 +98,7 @@ public class CollectorServiceGrpc {
      */
     public void report(com.lightstep.tracer.grpc.ReportRequest request,
         io.grpc.stub.StreamObserver<com.lightstep.tracer.grpc.ReportResponse> responseObserver) {
+
       asyncUnaryCall(
           getChannel().newCall(METHOD_REPORT, getCallOptions()), request, responseObserver);
     }
