@@ -1,7 +1,15 @@
 package com.lightstep.tracer.grpc;
 
-import io.grpc.*;
-import static io.grpc.Metadata.*;
+import io.grpc.CallOptions;
+import io.grpc.Channel;
+import io.grpc.ClientCall;
+import io.grpc.ClientInterceptor;
+import io.grpc.ForwardingClientCall;
+import io.grpc.Metadata;
+import io.grpc.Metadata.Key;
+import io.grpc.MethodDescriptor;
+
+import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class GrpcClientInterceptor implements ClientInterceptor {
     public static final Key<String> ACCESS_TOKEN_HEADER = Key.of("Lightstep-Access-Token", ASCII_STRING_MARSHALLER);
