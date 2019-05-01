@@ -370,6 +370,28 @@ public class SpanTest {
     }
 
     @Test
+    public void testLog_nullMapKey() {
+        Map<String, String> fields = new HashMap<>();
+        fields.put(null, "myvalue1");
+
+        Span result = undertest.log(fields);
+        Log logRecord = grpcSpan.getLogs(0);
+        Map<String, String> fieldMap = getLogFieldMap(logRecord);
+        assertEquals(null, fieldMap.get(null));
+    }
+
+    @Test
+    public void testLog_nullMapValue() {
+        Map<String, String> fields = new HashMap<>();
+        fields.put("mykey1", null);
+
+        Span result = undertest.log(fields);
+        Log logRecord = grpcSpan.getLogs(0);
+        Map<String, String> fieldMap = getLogFieldMap(logRecord);
+        assertEquals("", fieldMap.get("mykey1"));
+    }
+
+    @Test
     public void testGenerateTraceURL() {
         String expecteResult = "https://something.com/";
         when(abstractTracer.generateTraceURL(SPAN_ID)).thenReturn(expecteResult);
