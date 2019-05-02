@@ -160,8 +160,19 @@ public class Span implements io.opentracing.Span {
         com.lightstep.tracer.grpc.Log.Builder log = Log.newBuilder()
             .setTimestamp(Util.epochTimeMicrosToProtoTime(timestampMicros));
         for (Map.Entry<String, ?> kv : fields.entrySet()) {
-            final Object inValue = kv.getValue();
-            final KeyValue.Builder outKV = KeyValue.newBuilder().setKey(kv.getKey());
+            String key = kv.getKey();
+            Object value = kv.getValue();
+
+            if (key == null) {
+                continue; // There's not much we can do here.
+            }
+            if (value == null) {
+                value = ""; // Fallback
+            }
+
+            final KeyValue.Builder outKV = KeyValue.newBuilder().setKey(key);
+            final Object inValue = value;
+
             if (inValue instanceof String) {
                 outKV.setStringValue((String)inValue);
             } else if (inValue instanceof Number) {
