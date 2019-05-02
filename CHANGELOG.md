@@ -1,5 +1,14 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.2...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.1...master)
+
+<a name="0.17.1"></a>
+## [0.17.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.0...0.17.1)
+* Handle null keys/values for Span.log()
+* Add Access Token as header to GRPC and HTTP Tracing Requests.
+
+<a name="0.17.0"></a>
+## [0.17.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.2...0.17.0)
+* Update our OpenTracing dependency to 0.32.0
 
 <a name="0.16.2"></a>
 ## [0.16.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.16.1...0.16.2)
