@@ -54,9 +54,15 @@ public final class Options {
      */
     private static final long DEFAULT_DEADLINE_MILLIS = 30000;
 
-    static final String HTTPS = "https";
+    /**
+     * A constant representing {@code https}, to be used as the collector protocol. This is the default.
+     */
+    public static final String HTTPS = "https";
 
-    static final String HTTP = "http";
+    /**
+     * A constant representing {@code http}, to be used as the collector protocol.
+     */
+    public static final String HTTP = "http";
 
     static final String COLLECTOR_PATH = "/api/v2/reports";
 
@@ -257,9 +263,10 @@ public final class Options {
         }
 
         /**
-         * Sets the protocol which will be used when sending data to the tracer.
+         * Sets the protocol which will be used when sending data to the tracer. Valid values
+         * are either the {@code HTTPS} or the {@code HTTP} constants.
          *
-         * @param protocol Either 'http' or 'https'
+         * @param protocol Either {@code HTTPS} or {@code HTTP}.
          * @throws IllegalArgumentException If the protocol argument is invalid.
          */
         public OptionsBuilder withCollectorProtocol(String protocol) {
