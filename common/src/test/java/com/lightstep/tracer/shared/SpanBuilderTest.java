@@ -46,8 +46,6 @@ public class SpanBuilderTest {
         baggageItems = Collections.emptyMap();
         context = new SpanContext(TRACE_ID, SPAN_ID, baggageItems);
         undertest = new SpanBuilder(OPERATION_NAME, tracer);
-
-        when(tracer.scopeManager()).thenReturn(new ThreadLocalScopeManager());
     }
 
     /**

@@ -352,8 +352,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
     @Override
     public io.opentracing.Span activeSpan() {
-        Scope scope = scopeManager.active();
-        return scope == null ? null : scope.span();
+        return scopeManager.activeSpan();
     }
 
     @Override
