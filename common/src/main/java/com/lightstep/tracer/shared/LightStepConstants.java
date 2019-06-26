@@ -25,4 +25,10 @@ public final class LightStepConstants {
         public static final String SpanFinishOperation = "lightstep.span_finish";
         public static final String TracerCreateOperation = "lightstep.tracer_create";
     }
+
+    final class Internal {
+        private Internal() {}
+
+        static final String REPORTING_THREAD_NAME = "lightstep-reporting-thread";
+    }
 }
