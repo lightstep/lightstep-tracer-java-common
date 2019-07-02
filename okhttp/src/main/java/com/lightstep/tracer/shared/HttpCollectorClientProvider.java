@@ -26,7 +26,8 @@ public class HttpCollectorClientProvider extends CollectorClientProvider {
         return new HttpCollectorClient(
                 tracer,
                 options.collectorUrl,
-                options.deadlineMillis
+                options.deadlineMillis,
+                options.okhttpDns
         );
     }
 }

@@ -15,6 +15,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -22,6 +23,12 @@ import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format.Builtin;
 import io.opentracing.propagation.TextMap;
 import io.opentracing.util.ThreadLocalScopeManager;
+import java.net.InetAddress;
+import java.util.Collections;
+import java.util.List;
+
+import com.lightstep.tracer.shared.Options.OkHttpDns;
+
 import org.junit.Test;
 
 public class OptionsTest {
@@ -36,6 +43,12 @@ public class OptionsTest {
     private static final long GUID_VALUE = 123;
     private static final long DEADLINE_MILLIS = 150;
     private static final Propagator CUSTOM_PROPAGATOR = new B3Propagator();
+    private static final OkHttpDns CUSTOM_DNS = new OkHttpDns(){
+        @Override
+        public List<InetAddress> lookup(String hostname) {
+            return Collections.emptyList();
+        }
+    };
 
     /**
      * Basic test of OptionsBuilder that ensures if I set everything explicitly, that these values
@@ -101,6 +114,12 @@ public class OptionsTest {
                 .withScopeManager(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testOptionsBuilder_nullOkHttpDns() {
+        new Options.OptionsBuilder()
+                .withOkHttpDns(null);
+    }
+
     @Test
     public void testOptionsBuilder_defaultAccessToken() throws Exception {
         Options options = new Options.OptionsBuilder()
@@ -149,6 +168,15 @@ public class OptionsTest {
                 .build();
 
         assertEquals(DEFAULT_PLAINTEXT_PORT, options.collectorUrl.getPort());
+    }
+
+    @Test
+    public void testOptionsBuilder_noOkHttpDnsProvided() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .withCollectorProtocol(HTTP)
+                .build();
+
+        assertNull(options.okhttpDns);
     }
 
     @Test
@@ -223,6 +251,7 @@ public class OptionsTest {
                 .withPropagator(Builtin.TEXT_MAP, CUSTOM_PROPAGATOR)
                 .withScopeManager(new ThreadLocalScopeManager())
                 .withDisableMetaEventLogging(true)
+                .withOkHttpDns(CUSTOM_DNS)
                 .build();
     }
 
@@ -245,5 +274,6 @@ public class OptionsTest {
         assertFalse(options.propagators.keySet().isEmpty());
         assertEquals(CUSTOM_PROPAGATOR, options.propagators.get(Builtin.TEXT_MAP));
         assertTrue(options.disableMetaEventLogging);
+        assertEquals(CUSTOM_DNS, options.okhttpDns);
     }
 }
