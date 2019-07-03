@@ -210,7 +210,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
                     .finish();
             firstReportHasRun = true;
         }
-        reportingThread = new Thread(reportingLoop);
+        reportingThread = new Thread(reportingLoop, LightStepConstants.Internal.REPORTING_THREAD_NAME);
         reportingThread.setDaemon(true);
         reportingThread.start();
     }

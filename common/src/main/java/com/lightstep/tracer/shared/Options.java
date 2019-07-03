@@ -5,9 +5,11 @@ import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
 import java.net.MalformedURLException;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -79,6 +81,14 @@ public final class Options {
             }}
     );
 
+    /**
+     * A DNS service passed to the OkHttp transport to resolve IP addresses
+     * for hostnames. Designed to allow users to provide custom DNS resolution.
+     */
+    public interface OkHttpDns {
+        public List<InetAddress> lookup(String hostname);
+    }
+
     // LOG LEVELS
 
     /**
@@ -129,8 +139,11 @@ public final class Options {
     final boolean useClockCorrection;
     final ScopeManager scopeManager;
     final Map<Format<?>, Propagator> propagators;
+
     final String grpcCollectorTarget;
     final boolean grpcRoundRobin;
+
+    final OkHttpDns okhttpDns;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -152,6 +165,7 @@ public final class Options {
             Map<Format<?>, Propagator> propagators,
             String grpcCollectorTarget,
             boolean grpcRoundRobin,
+            OkHttpDns okhttpDns,
             boolean disableMetaEventLogging
     ) {
         this.accessToken = accessToken;
@@ -168,6 +182,7 @@ public final class Options {
         this.propagators = propagators;
         this.grpcCollectorTarget = grpcCollectorTarget;
         this.grpcRoundRobin = grpcRoundRobin;
+        this.okhttpDns = okhttpDns;
         this.disableMetaEventLogging = disableMetaEventLogging;
     }
 
@@ -194,6 +209,7 @@ public final class Options {
         private boolean disableMetaEventLogging = false;
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
+        private OkHttpDns okhttpDns;
 
         public OptionsBuilder() {
         }
@@ -216,6 +232,7 @@ public final class Options {
             this.disableMetaEventLogging = options.disableMetaEventLogging;
             this.grpcCollectorTarget = options.grpcCollectorTarget;
             this.grpcRoundRobin = options.grpcRoundRobin;
+            this.okhttpDns = options.okhttpDns;
         }
 
         /**
@@ -336,6 +353,22 @@ public final class Options {
          */
         public OptionsBuilder withGrpcRoundRobin(boolean grpcRoundRobin) {
             this.grpcRoundRobin = grpcRoundRobin;
+            return this;
+        }
+
+        /**
+         * Sets the DNS service used to lookup IP addresses for hostnames when using the
+         * OkHttp transport. If not set, the default DNS service used by OkHttp will be used.
+         *
+         * <p>This has no effect when using gRPC as transport system.
+         *
+         * @param okhttpDns the Dns service object.
+         */
+        public OptionsBuilder withOkHttpDns(OkHttpDns okhttpDns) {
+            if (okhttpDns == null) {
+                throw new IllegalArgumentException("dns cannot be null");
+            }
+            this.okhttpDns = okhttpDns;
             return this;
         }
 
@@ -486,6 +519,7 @@ public final class Options {
                     propagators,
                     grpcCollectorTarget,
                     grpcRoundRobin,
+                    okhttpDns,
                     disableMetaEventLogging
             );
         }
