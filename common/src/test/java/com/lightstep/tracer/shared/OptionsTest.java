@@ -3,12 +3,12 @@ package com.lightstep.tracer.shared;
 import static com.lightstep.tracer.shared.LightStepConstants.Tags.COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.LightStepConstants.Tags.GUID_KEY;
 import static com.lightstep.tracer.shared.LightStepConstants.Tags.LEGACY_COMPONENT_NAME_KEY;
+import static com.lightstep.tracer.shared.LightStepConstants.Collector.DEFAULT_PLAINTEXT_PORT;
+import static com.lightstep.tracer.shared.LightStepConstants.Collector.DEFAULT_SECURE_PORT;
+import static com.lightstep.tracer.shared.LightStepConstants.Collector.PATH;
+import static com.lightstep.tracer.shared.LightStepConstants.Collector.PROTOCOL_HTTP;
+import static com.lightstep.tracer.shared.LightStepConstants.Collector.PROTOCOL_HTTPS;
 import static com.lightstep.tracer.shared.Options.BUILTIN_PROPAGATORS;
-import static com.lightstep.tracer.shared.Options.COLLECTOR_PATH;
-import static com.lightstep.tracer.shared.Options.DEFAULT_PLAINTEXT_PORT;
-import static com.lightstep.tracer.shared.Options.DEFAULT_SECURE_PORT;
-import static com.lightstep.tracer.shared.Options.HTTP;
-import static com.lightstep.tracer.shared.Options.HTTPS;
 import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -138,7 +138,7 @@ public class OptionsTest {
     @Test
     public void testOptionsBuilder_httpsNoPortProvided() throws Exception {
         Options options = new Options.OptionsBuilder()
-                .withCollectorProtocol(HTTPS)
+                .withCollectorProtocol(PROTOCOL_HTTPS)
                 .build();
 
         assertEquals(DEFAULT_SECURE_PORT, options.collectorUrl.getPort());
@@ -164,7 +164,7 @@ public class OptionsTest {
     @Test
     public void testOptionsBuilder_httpNoPortProvided() throws Exception {
         Options options = new Options.OptionsBuilder()
-                .withCollectorProtocol(HTTP)
+                .withCollectorProtocol(PROTOCOL_HTTP)
                 .build();
 
         assertEquals(DEFAULT_PLAINTEXT_PORT, options.collectorUrl.getPort());
@@ -173,7 +173,7 @@ public class OptionsTest {
     @Test
     public void testOptionsBuilder_noOkHttpDnsProvided() throws Exception {
         Options options = new Options.OptionsBuilder()
-                .withCollectorProtocol(HTTP)
+                .withCollectorProtocol(PROTOCOL_HTTP)
                 .build();
 
         assertNull(options.okhttpDns);
@@ -259,7 +259,7 @@ public class OptionsTest {
         assertEquals(VERBOSITY_DEBUG, options.verbosity);
         assertEquals(ACCESS_TOKEN, options.accessToken);
         assertEquals(
-                "https://my-collector-host:123" + COLLECTOR_PATH,
+                "https://my-collector-host:123" + PATH,
                 options.collectorUrl.toString()
         );
         assertEquals(COMPONENT_NAME, options.tags.get(COMPONENT_NAME_KEY));

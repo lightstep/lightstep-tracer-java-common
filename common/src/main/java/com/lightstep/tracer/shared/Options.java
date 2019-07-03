@@ -26,21 +26,6 @@ public final class Options {
     private static final String COMPONENT_NAME_SYSTEM_PROPERTY_KEY = "sun.java.command";
 
     /**
-     * Hostname that will be used for the collector if no other value is provided.
-     */
-    private static final String DEFAULT_COLLECTOR_HOST = "collector-grpc.lightstep.com";
-
-    /**
-     * Default collector port for HTTPS
-     */
-    static final int DEFAULT_SECURE_PORT = 443;
-
-    /**
-     * Default collector port for HTTP
-     */
-    static final int DEFAULT_PLAINTEXT_PORT = 80;
-
-    /**
      * Default maximum number of Spans buffered locally (a protective mechanism)
      */
     @SuppressWarnings("WeakerAccess")
@@ -55,18 +40,6 @@ public final class Options {
      * Default duration the tracer should wait for a response from the collector when sending a report.
      */
     private static final long DEFAULT_DEADLINE_MILLIS = 30000;
-
-    /**
-     * A constant representing {@code https}, to be used as the collector protocol. This is the default.
-     */
-    public static final String HTTPS = "https";
-
-    /**
-     * A constant representing {@code http}, to be used as the collector protocol.
-     */
-    public static final String HTTP = "http";
-
-    static final String COLLECTOR_PATH = "/api/v2/reports";
 
     // BUILTIN PROPAGATORS
     static final Map<Format<?>, Propagator> BUILTIN_PROPAGATORS = Collections.unmodifiableMap(
@@ -193,8 +166,8 @@ public final class Options {
     @SuppressWarnings({"WeakerAccess"})
     public static class OptionsBuilder {
         private String accessToken = "";
-        private String collectorProtocol = HTTPS;
-        private String collectorHost = DEFAULT_COLLECTOR_HOST;
+        private String collectorProtocol = LightStepConstants.Collector.PROTOCOL_HTTPS;
+        private String collectorHost = LightStepConstants.Collector.DEFAULT_HOST;
         private int collectorPort = -1;
         private long maxReportingIntervalMillis;
         private int maxBufferedSpans = -1;
@@ -281,13 +254,15 @@ public final class Options {
 
         /**
          * Sets the protocol which will be used when sending data to the tracer. Valid values
-         * are either the {@code HTTPS} or the {@code HTTP} constants.
+         * are either {@code LightStepConstants.Collector.PROTOCOL_HTTPS} or
+         * {@code LightStepConstants.Collector.PROTOCOL_HTTP}.
          *
-         * @param protocol Either {@code HTTPS} or {@code HTTP}.
+         * @param protocol Either {@code PROTOCOL_HTTPS} or {@code PROTOCOL_HTTP}.
          * @throws IllegalArgumentException If the protocol argument is invalid.
          */
         public OptionsBuilder withCollectorProtocol(String protocol) {
-            if (!HTTPS.equals(protocol) && !HTTP.equals(protocol)) {
+            if (!LightStepConstants.Collector.PROTOCOL_HTTPS.equals(protocol) && 
+                !LightStepConstants.Collector.PROTOCOL_HTTP.equals(protocol)) {
                 throw new IllegalArgumentException("Invalid protocol for collector: " + protocol);
             }
             this.collectorProtocol = protocol;
@@ -311,8 +286,8 @@ public final class Options {
 
         /**
          * Sets the port to which the tracer will send data. If not set, will default to
-         * {@code DEFAULT_SECURE_PORT} when the protocol is https and {@code DEFAULT_PLAINTEXT_PORT}
-         * when the protocol is http.
+         * {@code LightStepConstants.Collector.DEFAULT_SECURE_PORT} when the protocol is https and
+         * {@code LightStepConstants.Collector.DEFAULT_PLAINTEXT_PORT} when the protocol is http.
          *
          * @param collectorPort The port for the LightStep collector.
          * @throws IllegalArgumentException If the collectorPort is invalid.
@@ -582,16 +557,16 @@ public final class Options {
         private int getPort() {
             if (collectorPort > 0) {
                 return collectorPort;
-            } else if (collectorProtocol.equals(HTTPS)) {
-                return DEFAULT_SECURE_PORT;
+            } else if (collectorProtocol.equals(LightStepConstants.Collector.PROTOCOL_HTTPS)) {
+                return LightStepConstants.Collector.DEFAULT_SECURE_PORT;
             } else {
-                return DEFAULT_PLAINTEXT_PORT;
+                return LightStepConstants.Collector.DEFAULT_PLAINTEXT_PORT;
             }
         }
 
         private URL getCollectorUrl() throws MalformedURLException {
             int port = getPort();
-            return new URL(collectorProtocol, collectorHost, port, COLLECTOR_PATH);
+            return new URL(collectorProtocol, collectorHost, port, LightStepConstants.Collector.PATH);
         }
     }
 

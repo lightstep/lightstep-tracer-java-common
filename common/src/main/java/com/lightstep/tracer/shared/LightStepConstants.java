@@ -3,6 +3,30 @@ package com.lightstep.tracer.shared;
 public final class LightStepConstants {
     private LightStepConstants() {}
 
+    public final class Collector {
+      private Collector() {}
+
+      /**
+       * Hostname that will be used for the collector if no other value is provided.
+       */
+      static final String DEFAULT_HOST = "collector-grpc.lightstep.com";
+
+      static final String PATH = "/api/v2/reports";
+
+      /**
+       * Default collector port for HTTPS
+       */
+      static final int DEFAULT_SECURE_PORT = 443;
+
+      /**
+       * Default collector port for HTTP
+       */
+      static final int DEFAULT_PLAINTEXT_PORT = 80;
+
+      public static final String PROTOCOL_HTTPS = "https";
+      public static final String PROTOCOL_HTTP = "http";
+    }
+
     public final class Tags {
         private Tags() {}
 
