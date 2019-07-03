@@ -1,5 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.1...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.2...master)
+
+<a name="0.17.2"></a>
+## [0.17.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.1...0.17.2)
+* Allow the user to specify custom DNS for the OkHttp provider.
+* Give a name to our reporting thread. This helps users at debug time.
 
 <a name="0.17.1"></a>
 ## [0.17.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.0...0.17.1)
