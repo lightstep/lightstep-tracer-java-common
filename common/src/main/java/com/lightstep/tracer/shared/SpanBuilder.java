@@ -108,16 +108,6 @@ public class SpanBuilder implements Tracer.SpanBuilder {
         return this;
     }
 
-    @Override
-    public Scope startActive(boolean finishOnClose) {
-        return tracer.scopeManager().activate(startManual(), finishOnClose);
-    }
-
-    @Override
-    public io.opentracing.Span start() {
-        return startManual();
-    }
-
     /**
      * Sets the traceId and the spanId for the span being created. If the span has a parent, the
      * traceId of the parent will override this traceId value.
@@ -139,12 +129,12 @@ public class SpanBuilder implements Tracer.SpanBuilder {
     }
 
     private SpanContext activeSpanContext() {
-        Scope handle = this.tracer.scopeManager().active();
-        if (handle == null || handle.span() == null) {
+        io.opentracing.Span span = this.tracer.activeSpan();
+        if (span == null) {
             return null;
         }
 
-        io.opentracing.SpanContext spanContext = handle.span().context();
+        io.opentracing.SpanContext spanContext = span.context();
         if(spanContext instanceof SpanContext) {
             return (SpanContext) spanContext;
         }
@@ -153,7 +143,7 @@ public class SpanBuilder implements Tracer.SpanBuilder {
     }
 
     @Override
-    public io.opentracing.Span startManual() {
+    public io.opentracing.Span start() {
         if (tracer.isDisabled()) {
             return NoopSpan.INSTANCE;
         }

@@ -9,7 +9,7 @@ public class Main {
                 .build()
         );
 
-        Span span = tracer.buildSpan("parent span").startManual();
+        Span span = tracer.buildSpan("parent span").start();
 
         Thread.sleep(1000);
 
