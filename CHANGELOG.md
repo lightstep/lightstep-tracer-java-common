@@ -1,5 +1,11 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.2...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.18.0...master)
+
+<a name="0.18.0"></a>
+## [0.18.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.2...0.18.0)
+* Updated OpenTracing to 0.33.0.
+* Use a better name for our reporting thread (helps debugging).
+* Expose http and https ports as constants to ease tracer configuration.
 
 <a name="0.17.2"></a>
 ## [0.17.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.1...0.17.2)
