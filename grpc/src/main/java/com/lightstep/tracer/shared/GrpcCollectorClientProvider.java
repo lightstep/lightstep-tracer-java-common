@@ -38,9 +38,9 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
                 );
             }
 
-//            if (options.grpcRoundRobin) {
-//                builder.loadBalancerFactory(RoundRobinLoadBalancerFactory.getInstance());
-//            }
+            if (options.grpcRoundRobin) {
+                builder.defaultLoadBalancingPolicy("round_robin");
+            }
 
             if (options.collectorUrl.getProtocol().equals("http")) {
                 builder.usePlaintext(true);
