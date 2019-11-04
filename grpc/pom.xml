@@ -13,8 +13,8 @@
     <artifactId>tracer-grpc</artifactId>
 
     <properties>
-        <io.grpc.version>1.11.0</io.grpc.version>
-        <io.netty.version>2.0.8.Final</io.netty.version>
+        <io.grpc.version>1.23.0</io.grpc.version>
+        <io.netty.version>2.0.25.Final</io.netty.version>
     </properties>
 
     <build>

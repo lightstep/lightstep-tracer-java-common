@@ -2,7 +2,7 @@ package com.lightstep.tracer.shared;
 
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.ManagedChannelProvider;
-import io.grpc.util.RoundRobinLoadBalancerFactory;
+//import io.grpc.util.RoundRobinLoadBalancerFactory;
 
 // public for reflective instantiation.
 public class GrpcCollectorClientProvider extends CollectorClientProvider {
@@ -39,7 +39,7 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
             }
 
             if (options.grpcRoundRobin) {
-                builder.loadBalancerFactory(RoundRobinLoadBalancerFactory.getInstance());
+                builder.defaultLoadBalancingPolicy("round_robin");
             }
 
             if (options.collectorUrl.getProtocol().equals("http")) {
