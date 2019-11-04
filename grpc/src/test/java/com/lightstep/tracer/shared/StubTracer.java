@@ -10,6 +10,8 @@ class StubTracer extends AbstractTracer {
     private final List<LogCall> consoleLogCalls;
     SimpleFuture<Boolean> flushResult = null;
 
+    private static final SimpleFuture<Boolean> SUCCESS_FUTURE = new SimpleFuture(true);
+
     StubTracer(Options options) {
         super(options);
         consoleLogCalls = new ArrayList<>();
@@ -17,6 +19,10 @@ class StubTracer extends AbstractTracer {
 
     @Override
     protected SimpleFuture<Boolean> flushInternal(boolean explicitRequest) {
+        if (flushResult == null) {
+            return SUCCESS_FUTURE;
+        }
+
         return flushResult;
     }
 

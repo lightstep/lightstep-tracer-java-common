@@ -3,6 +3,7 @@ package com.lightstep.tracer.shared;
 import io.opentracing.propagation.BinaryAdapters;
 import java.nio.ByteBuffer;
 import junit.framework.TestCase;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,12 +56,21 @@ public class GrpcAbstractTracerTest {
     @Mock
     private Format<Object> genericFormat;
 
+    private StubTracer undertest;
+
     private com.lightstep.tracer.shared.SpanContext spanContext;
 
     @Before
     public void setup() {
         Map<String, String> baggage = Collections.singletonMap(BAGGAGE_KEY, BAGGAGE_VALUE);
         spanContext = new com.lightstep.tracer.shared.SpanContext(TRACE_ID, SPAN_ID, baggage);
+    }
+
+    @After
+    public void teardown() {
+        if (undertest != null) {
+            undertest.close();
+        }
     }
 
     /**
@@ -85,7 +95,7 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testVerbosityDebug() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_DEBUG);
+        undertest = createTracer(VERBOSITY_DEBUG);
         callAllLogMethods(undertest);
 
         // At debug level, all of the calls should be logged
@@ -94,7 +104,7 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testVerbosityInfo() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_INFO);
+        undertest = createTracer(VERBOSITY_INFO);
         callAllLogMethods(undertest);
 
         // At info level, all of the calls should be logged, except the debug log
@@ -103,7 +113,7 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testVerbosityErrorsOnly() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         callAllLogMethods(undertest);
         undertest.error(TEST_MSG); // make an extra call to error, all error calls should be logged
 
@@ -113,7 +123,7 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testVerbosityNone() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_NONE);
+        undertest = createTracer(VERBOSITY_NONE);
         callAllLogMethods(undertest);
 
         // At none, nothing should be logged
@@ -122,7 +132,7 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testVerbosityFirstErrorOnly() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_FIRST_ERROR_ONLY);
+        undertest = createTracer(VERBOSITY_FIRST_ERROR_ONLY);
         callAllLogMethods(undertest);
         undertest.error(TEST_MSG); // make a second call to error
 
@@ -142,21 +152,21 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testFlush_timeoutOccurs() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.flushResult = new SimpleFuture<>();
         assertNull(undertest.flush(1L));
     }
 
     @Test
     public void testFlush_noTimeoutSuccess() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.flushResult = new SimpleFuture<>(true);
         assertTrue(undertest.flush(20000L));
     }
 
     @Test
     public void testFlush_noTimeoutFailure() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.flushResult = new SimpleFuture<>(false);
         assertFalse(undertest.flush(20000L));
     }
@@ -164,7 +174,7 @@ public class GrpcAbstractTracerTest {
     @Test
     public void testGenerateTraceURL() throws Exception {
         long spanId = 3;
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         String result = undertest.generateTraceURL(spanId);
         String expectedUrlStart = "https://app.lightstep.com/" + ACCESS_TOKEN + "/trace?span_guid="
                 + Long.toHexString(spanId) + "&at_micros=";
@@ -177,14 +187,14 @@ public class GrpcAbstractTracerTest {
      */
     @Test
     public void testInject_invalidSpanContextType() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.inject(invalidSpanContext, Format.Builtin.TEXT_MAP, textMap);
         verifyZeroInteractions(textMap);
     }
 
     @Test
     public void testInject_textMap() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.inject(spanContext, Format.Builtin.TEXT_MAP, textMap);
         verify(textMap).put(TextMapPropagator.FIELD_NAME_TRACE_ID, Long.toHexString(TRACE_ID));
         verify(textMap).put(TextMapPropagator.FIELD_NAME_SPAN_ID, Long.toHexString(SPAN_ID));
@@ -194,7 +204,7 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testInject_httpHeaders() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.inject(spanContext, Format.Builtin.HTTP_HEADERS, httpHeaders);
         verify(httpHeaders).put(TextMapPropagator.FIELD_NAME_TRACE_ID, Long.toHexString(TRACE_ID));
         verify(httpHeaders).put(TextMapPropagator.FIELD_NAME_SPAN_ID, Long.toHexString(SPAN_ID));
@@ -204,7 +214,7 @@ public class GrpcAbstractTracerTest {
 
     @Test
     public void testInject_binary() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.inject(spanContext, Format.Builtin.BINARY_INJECT, BinaryAdapters.injectionCarrier(byteBuffer));
         verifyZeroInteractions(byteBuffer);
     }
@@ -214,14 +224,14 @@ public class GrpcAbstractTracerTest {
      */
     @Test
     public void testInject_unsupportedFormat() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         undertest.inject(spanContext, genericFormat, textMap);
         verifyZeroInteractions(textMap);
     }
 
     @Test
     public void testSpanContext_TraceId() throws Exception {
-        StubTracer undertest = createTracer(VERBOSITY_ERRORS_ONLY);
+        undertest = createTracer(VERBOSITY_ERRORS_ONLY);
         Span span = (Span) undertest.buildSpan("traceId").start();
         io.opentracing.Scope scope = undertest.activateSpan(span);
         assertEquals(Util.toHexString(span.context().getTraceId()), span.context().toTraceId());
