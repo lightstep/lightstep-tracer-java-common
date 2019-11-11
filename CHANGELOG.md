@@ -1,5 +1,12 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.18.0...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.0...master)
+
+<a name="0.19.0"></a>
+## [0.19.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.18.0...0.19.0)
+* Updated grpc to 1.23.0.
+* Updated netty to 2.0.25.
+* Updated protobuf to 3.9.0.
+* Updated google-apis to 1.17.0.
 
 <a name="0.18.0"></a>
 ## [0.18.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.17.2...0.18.0)
