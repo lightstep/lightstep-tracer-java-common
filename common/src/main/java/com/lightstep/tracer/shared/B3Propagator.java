@@ -36,7 +36,7 @@ public class B3Propagator implements Propagator {
 
         for (Map.Entry<String, String> entry : (TextMapExtract)carrier) {
             if (entry.getKey().equalsIgnoreCase(TRACE_ID_NAME)) {
-                traceId = Util.fromHexString(entry.getValue());
+                traceId = Util.fromHexString(normalizeTraceId(entry.getValue()));
             } else if (entry.getKey().equalsIgnoreCase(SPAN_ID_NAME)) {
                 spanId = Util.fromHexString(entry.getValue());
             }
@@ -47,6 +47,15 @@ public class B3Propagator implements Propagator {
         }
 
         return null;
+    }
+
+    // Use the 64 least significant bits, represented by the right-most
+    // 16 characters. See https://github.com/openzipkin/b3-propagation#traceid-1
+    static String normalizeTraceId(String traceId) {
+        if (traceId.length() > 16) {
+            return traceId.substring(traceId.length() - 16);
+        }
+        return traceId;
     }
 }
 

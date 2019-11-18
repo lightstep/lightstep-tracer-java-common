@@ -53,6 +53,24 @@ public class B3PropagatorTest {
     }
 
     @Test
+    public void testExtract128BitTraceId() {
+        String traceId = "463ac35c9f6413ad48485a3953bb6124";
+        String spanId = "463ac35c9f6413ad";
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("X-B3-TraceId", traceId);
+        headers.put("X-B3-SpanId", spanId);
+
+        B3Propagator undertest = new B3Propagator();
+        SpanContext result = undertest.extract(new TextMapExtractAdapter(headers));
+
+        // `48485a3953bb6124` (the right-most part) from the trace id
+        // should be used, which is `5208512171318403364` in decimal.
+        assertEquals(5208512171318403364L, result.getTraceId());
+        assertEquals(5060571933882717101L, result.getSpanId());
+    }
+
+    @Test
     public void testExtractEmptyHeaders() {
         Map<String, String> headers = new HashMap<>();
 
