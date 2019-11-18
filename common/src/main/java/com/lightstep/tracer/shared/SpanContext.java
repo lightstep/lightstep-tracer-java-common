@@ -7,6 +7,7 @@ public class SpanContext implements io.opentracing.SpanContext {
     private final long traceId;
     private final long spanId;
     private final Map<String, String> baggage;
+    private final String foreignTraceId;
     private final String[] toIds = new String[]{"", ""};
     private static final int TRACE_INDEX = 0;
     private static final int SPAN_INDEX = 1;
@@ -16,7 +17,7 @@ public class SpanContext implements io.opentracing.SpanContext {
     }
 
     public SpanContext(long traceId, long spanId) {
-        this(traceId, spanId, null);
+        this(traceId, spanId, null, null);
     }
 
     SpanContext(long traceId) {
@@ -28,6 +29,14 @@ public class SpanContext implements io.opentracing.SpanContext {
     }
 
     SpanContext(Long traceId, Long spanId, Map<String, String> baggage) {
+        this(traceId, spanId, baggage, null);
+    }
+
+    SpanContext(Long traceId, Long spanId, String foreignTraceId) {
+        this(traceId, spanId, null, foreignTraceId);
+    }
+
+    SpanContext(Long traceId, Long spanId, Map<String, String> baggage, String foreignTraceId) {
         if (traceId == null) {
             traceId = Util.generateRandomGUID();
         }
@@ -43,6 +52,7 @@ public class SpanContext implements io.opentracing.SpanContext {
         this.traceId = traceId;
         this.spanId = spanId;
         this.baggage = baggage;
+        this.foreignTraceId = foreignTraceId;
         toIds[TRACE_INDEX] = Util.toHexString(traceId);
         toIds[SPAN_INDEX] = Util.toHexString(spanId);
     }
@@ -55,6 +65,10 @@ public class SpanContext implements io.opentracing.SpanContext {
     @SuppressWarnings("WeakerAccess")
     public long getTraceId() {
         return this.traceId;
+    }
+
+    public String getForeignTraceId() {
+        return this.foreignTraceId;
     }
 
     @Override
@@ -78,7 +92,7 @@ public class SpanContext implements io.opentracing.SpanContext {
     SpanContext withBaggageItem(String key, String value) {
         // This is really a "set" not a "with" but keeping as is to preserve behavior.
         this.baggage.put(key, value);
-        return new SpanContext(this.getTraceId(), this.getSpanId(), this.baggage);
+        return new SpanContext(this.getTraceId(), this.getSpanId(), this.baggage, this.foreignTraceId);
     }
 
     @Override

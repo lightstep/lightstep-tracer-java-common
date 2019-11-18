@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import io.opentracing.propagation.TextMap;
 import io.opentracing.propagation.TextMapExtractAdapter;
+import io.opentracing.propagation.TextMapInjectAdapter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -50,6 +51,31 @@ public class B3PropagatorTest {
 
         assertEquals(spanContext.getTraceId(), result.getTraceId());
         assertEquals(spanContext.getSpanId(), result.getSpanId());
+    }
+
+    @Test
+    public void testInjectAndExtract128BitTraceId() {
+        String traceId = "463ac35c9f6413ad48485a3953bb6124";
+        String spanId = "463ac35c9f6413ad";
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("X-B3-TraceId", traceId);
+        headers.put("X-B3-SpanId", spanId);
+
+        B3Propagator undertest = new B3Propagator();
+        SpanContext result = undertest.extract(new TextMapExtractAdapter(headers));
+
+        // `48485a3953bb6124` (the right-most part) from the trace id
+        // should be used, which is `5208512171318403364` in decimal.
+        assertEquals(5208512171318403364L, result.getTraceId());
+        assertEquals(5060571933882717101L, result.getSpanId());
+
+        headers.clear();
+        undertest.inject(result, new TextMapInjectAdapter(headers));
+
+        // Inject the original, non-truncated 128-bit traceId.
+        assertEquals(traceId, headers.get("X-B3-TraceId"));
+        assertEquals(spanId, headers.get("X-B3-SpanId"));
     }
 
     @Test

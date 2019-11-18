@@ -44,7 +44,7 @@ public class SpanTest {
 
     @Before
     public void setup() {
-        spanContext = new SpanContext(TRACE_ID, SPAN_ID, null);
+        spanContext = new SpanContext(TRACE_ID, SPAN_ID, null, null);
         grpcSpan = com.lightstep.tracer.grpc.Span.newBuilder();
         undertest = new Span(abstractTracer, spanContext, grpcSpan, 0L);
     }
