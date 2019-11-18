@@ -19,8 +19,14 @@ public class B3Propagator implements Propagator {
         TextMapInject textCarrier = (TextMapInject) carrier;
         long traceId = spanContext.getTraceId();
         long spanId = spanContext.getSpanId();
+        String foreignTraceId = spanContext.getForeignTraceId();
 
-        textCarrier.put(TRACE_ID_NAME, Util.toHexString(traceId));
+        // Inject the original, non-truncated traceId if available.
+        if (foreignTraceId != null) {
+            textCarrier.put(TRACE_ID_NAME, foreignTraceId);
+        } else {
+            textCarrier.put(TRACE_ID_NAME, Util.toHexString(traceId));
+        }
         textCarrier.put(SPAN_ID_NAME, Util.toHexString(spanId));
         textCarrier.put(SAMPLED_NAME, "true");
     }
@@ -33,17 +39,19 @@ public class B3Propagator implements Propagator {
 
         Long traceId = null;
         Long spanId = null;
+        String foreignTraceId = null;
 
         for (Map.Entry<String, String> entry : (TextMapExtract)carrier) {
             if (entry.getKey().equalsIgnoreCase(TRACE_ID_NAME)) {
-                traceId = Util.fromHexString(normalizeTraceId(entry.getValue()));
+                foreignTraceId = entry.getValue();
+                traceId = Util.fromHexString(normalizeTraceId(foreignTraceId));
             } else if (entry.getKey().equalsIgnoreCase(SPAN_ID_NAME)) {
                 spanId = Util.fromHexString(entry.getValue());
             }
         }
 
         if (null != traceId && null != spanId) {
-            return new SpanContext(traceId, spanId);
+            return new SpanContext(traceId, spanId, foreignTraceId);
         }
 
         return null;
