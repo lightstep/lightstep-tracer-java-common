@@ -1,5 +1,9 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.0...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.1...master)
+
+<a name="0.19.1"></a>
+## [0.19.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.0...0.19.1)
+* Improved the B3 format support, handling 128-bit trace ids.
 
 <a name="0.19.0"></a>
 ## [0.19.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.18.0...0.19.0)
