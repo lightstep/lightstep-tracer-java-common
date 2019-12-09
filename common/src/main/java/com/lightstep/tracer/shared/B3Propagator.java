@@ -28,7 +28,7 @@ public class B3Propagator implements Propagator {
             textCarrier.put(TRACE_ID_NAME, Util.toHexString(traceId));
         }
         textCarrier.put(SPAN_ID_NAME, Util.toHexString(spanId));
-        textCarrier.put(SAMPLED_NAME, "true");
+        textCarrier.put(SAMPLED_NAME, "1");
     }
 
     @Override
