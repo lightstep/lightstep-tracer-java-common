@@ -19,7 +19,7 @@ public class B3PropagatorTest {
 
         mixedCaseHeaders.put("X-B3-SpanId", Long.toHexString(1));
         mixedCaseHeaders.put("X-b3-traceId", Long.toHexString(2));
-        mixedCaseHeaders.put("x-B3-sampled", "true");
+        mixedCaseHeaders.put("x-B3-sampled", "1");
 
         B3Propagator subject = new B3Propagator();
 
@@ -51,6 +51,18 @@ public class B3PropagatorTest {
 
         assertEquals(spanContext.getTraceId(), result.getTraceId());
         assertEquals(spanContext.getSpanId(), result.getSpanId());
+    }
+
+    @Test
+    public void testInjectSampled() {
+        B3Propagator undertest = new B3Propagator();
+        Map<String, String> headers = new HashMap<>();
+
+        SpanContext spanContext = new SpanContext();
+        undertest.inject(spanContext, new TextMapInjectAdapter(headers));
+
+        // Verify we use the new sampled value format.
+        assertEquals(headers.get("X-B3-Sampled"), "1");
     }
 
     @Test
@@ -104,5 +116,24 @@ public class B3PropagatorTest {
         SpanContext span = subject.extract(new TextMapExtractAdapter(headers));
 
         assertNull(span);
+    }
+
+    @Test
+    public void testExtractSampledOldFormat() {
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("X-B3-SpanId", "12345");
+        headers.put("X-B3-TraceId", "67890");
+        headers.put("X-B3-Sampled", "true"); // true/false instead of 0/1.
+
+        B3Propagator subject = new B3Propagator();
+
+        SpanContext span = subject.extract(new TextMapExtractAdapter(headers));
+
+        // Although currently we do not use/propagate the (old) sampled value,
+        // we want to make sure we always handle both the old and new formats.
+        assertNotNull(span);
+        assertEquals(span.toSpanId(), "12345");
+        assertEquals(span.toTraceId(), "67890");
     }
 }
