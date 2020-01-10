@@ -1,10 +1,9 @@
 package com.lightstep.tracer.shared;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
 
 public class GrpcCollectorClientProviderTest {
     @Test
@@ -14,10 +13,10 @@ public class GrpcCollectorClientProviderTest {
 
     @Test
     public void testProvideBounded() {
-        assertNotNull(CollectorClientProvider.provider());
+        assertNotNull(CollectorClientProvider.provider(null));
         assertEquals(
                 GrpcCollectorClientProvider.provider().getClass(),
-                CollectorClientProvider.provider().getClass()
+                CollectorClientProvider.provider(null).getClass()
         );
     }
 }

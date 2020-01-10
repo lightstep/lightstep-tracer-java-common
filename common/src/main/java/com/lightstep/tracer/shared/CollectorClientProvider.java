@@ -1,6 +1,5 @@
 package com.lightstep.tracer.shared;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.ServiceLoader;
  * https://github.com/grpc/grpc-java/blob/v1.6.1/core/src/main/java/io/grpc/ManagedChannelProvider.java
  */
 public abstract class CollectorClientProvider {
-    private static final CollectorClientProvider provider = load();
 
     public static class ProviderNotFoundException extends RuntimeException {
         public ProviderNotFoundException(String message) {
@@ -24,7 +22,8 @@ public abstract class CollectorClientProvider {
         }
     }
 
-    public static CollectorClientProvider provider() throws ProviderNotFoundException {
+    public static CollectorClientProvider provider(Options.ClientProvider type) throws ProviderNotFoundException {
+        CollectorClientProvider provider = load(type);
         if (provider == null) {
             throw new ProviderNotFoundException(
                     "No functional collector client provider found. " +
@@ -33,13 +32,17 @@ public abstract class CollectorClientProvider {
         return provider;
     }
 
-    private static CollectorClientProvider load() {
+    private static CollectorClientProvider load(Options.ClientProvider type) {
         Iterable<CollectorClientProvider> candidates = loadCandidates();
 
         CollectorClientProvider candidate = null;
 
         // Find the first highest priority provider.
         for (CollectorClientProvider current : candidates) {
+            if (current.type().equals(type)) {
+                return current;
+            }
+
             if (candidate == null || current.priority() > candidate.priority()) {
                 candidate = current;
             }
@@ -121,6 +124,8 @@ public abstract class CollectorClientProvider {
     }
 
     protected abstract int priority();
+
+    protected abstract Options.ClientProvider type();
 
     abstract CollectorClient forOptions(AbstractTracer abstractTracer, Options options);
 }

@@ -1,7 +1,5 @@
 package com.lightstep.tracer.shared;
 
-import java.net.URL;
-
 // public for reflective instantiation.
 public class HttpCollectorClientProvider extends CollectorClientProvider {
     private static HttpCollectorClientProvider INSTANCE = new HttpCollectorClientProvider();
@@ -16,6 +14,11 @@ public class HttpCollectorClientProvider extends CollectorClientProvider {
     @Override
     protected int priority() {
         return 0;
+    }
+
+    @Override
+    protected Options.ClientProvider type() {
+        return Options.ClientProvider.HTTP;
     }
 
     @Override

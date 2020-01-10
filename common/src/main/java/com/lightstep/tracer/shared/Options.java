@@ -55,6 +55,15 @@ public final class Options {
     );
 
     /**
+     * Select the client provider explicitly.
+     * This is only needed if both client providers are in the classpath.
+     */
+    public enum ClientProvider {
+        HTTP,
+        GRPC
+    }
+
+    /**
      * A DNS service passed to the OkHttp transport to resolve IP addresses
      * for hostnames. Designed to allow users to provide custom DNS resolution.
      */
@@ -113,6 +122,8 @@ public final class Options {
     final ScopeManager scopeManager;
     final Map<Format<?>, Propagator> propagators;
 
+    final ClientProvider clientProvider;
+
     final String grpcCollectorTarget;
     final boolean grpcRoundRobin;
 
@@ -136,6 +147,7 @@ public final class Options {
             ScopeManager scopeManager,
             long deadlineMillis,
             Map<Format<?>, Propagator> propagators,
+            ClientProvider clientProvider,
             String grpcCollectorTarget,
             boolean grpcRoundRobin,
             OkHttpDns okhttpDns,
@@ -153,6 +165,7 @@ public final class Options {
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
         this.propagators = propagators;
+        this.clientProvider = clientProvider;
         this.grpcCollectorTarget = grpcCollectorTarget;
         this.grpcRoundRobin = grpcRoundRobin;
         this.okhttpDns = okhttpDns;
@@ -180,6 +193,7 @@ public final class Options {
         private long deadlineMillis = -1;
         private Map<Format<?>, Propagator> propagators = new HashMap<>();
         private boolean disableMetaEventLogging = false;
+        private ClientProvider clientProvider;
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
         private OkHttpDns okhttpDns;
@@ -203,6 +217,7 @@ public final class Options {
             this.deadlineMillis = options.deadlineMillis;
             this.propagators = options.propagators;
             this.disableMetaEventLogging = options.disableMetaEventLogging;
+            this.clientProvider = options.clientProvider;
             this.grpcCollectorTarget = options.grpcCollectorTarget;
             this.grpcRoundRobin = options.grpcRoundRobin;
             this.okhttpDns = options.okhttpDns;
@@ -300,6 +315,16 @@ public final class Options {
             return this;
         }
 
+        /**
+         * Sets the client provider explicitly. If not set, will default to the client provider
+         * which is found in the classpath.
+         *
+         * @param clientProvider The client provider to use
+         */
+        public OptionsBuilder withClientProvider(ClientProvider clientProvider) {
+            this.clientProvider = clientProvider;
+            return this;
+        }
 
         /**
          * Sets the target address when using gRPC for transport. Useful when used in conjunction
@@ -492,6 +517,7 @@ public final class Options {
                     scopeManager,
                     deadlineMillis,
                     propagators,
+                    clientProvider,
                     grpcCollectorTarget,
                     grpcRoundRobin,
                     okhttpDns,

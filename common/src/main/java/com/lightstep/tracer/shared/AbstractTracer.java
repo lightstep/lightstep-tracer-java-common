@@ -1,5 +1,11 @@
 package com.lightstep.tracer.shared;
 
+import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.DEBUG;
+import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.ERROR;
+import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
+import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
+import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
+
 import com.lightstep.tracer.grpc.Auth;
 import com.lightstep.tracer.grpc.Command;
 import com.lightstep.tracer.grpc.KeyValue;
@@ -7,25 +13,15 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
-import io.opentracing.Scope;
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
-import io.opentracing.propagation.TextMap;
-
 import java.io.Closeable;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.DEBUG;
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.ERROR;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
 
 public abstract class AbstractTracer implements Tracer, Closeable {
     // Maximum interval between reports
@@ -154,7 +150,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
         // initialize collector client
         boolean validCollectorClient = true;
-        client = CollectorClientProvider.provider()
+        client = CollectorClientProvider.provider(options.clientProvider)
                 .forOptions(this, options);
         if (client == null) {
             error("Exception creating client.");
