@@ -22,8 +22,8 @@ public abstract class CollectorClientProvider {
         }
     }
 
-    public static CollectorClientProvider provider(Options.ClientProvider type) throws ProviderNotFoundException {
-        CollectorClientProvider provider = load(type);
+    public static CollectorClientProvider provider(Options.CollectorClient type, Warner warner) throws ProviderNotFoundException {
+        CollectorClientProvider provider = load(type, warner);
         if (provider == null) {
             throw new ProviderNotFoundException(
                     "No functional collector client provider found. " +
@@ -32,7 +32,7 @@ public abstract class CollectorClientProvider {
         return provider;
     }
 
-    private static CollectorClientProvider load(Options.ClientProvider type) {
+    private static CollectorClientProvider load(Options.CollectorClient type, Warner warner) {
         Iterable<CollectorClientProvider> candidates = loadCandidates();
 
         CollectorClientProvider candidate = null;
@@ -46,6 +46,11 @@ public abstract class CollectorClientProvider {
             if (candidate == null || current.priority() > candidate.priority()) {
                 candidate = current;
             }
+        }
+
+        if (type != null) {
+            warner.warn("expected " + type + " collector client was not present in classpath. " +
+                "Using " + candidate.type() + " instead.");
         }
 
         return candidate;
@@ -125,7 +130,7 @@ public abstract class CollectorClientProvider {
 
     protected abstract int priority();
 
-    protected abstract Options.ClientProvider type();
+    protected abstract Options.CollectorClient type();
 
     abstract CollectorClient forOptions(AbstractTracer abstractTracer, Options options);
 }

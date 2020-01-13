@@ -13,10 +13,8 @@ public class HttpCollectorClientProviderTest {
 
     @Test
     public void testProvideBounded() {
-        assertNotNull(CollectorClientProvider.provider(null));
-        assertEquals(
-                HttpCollectorClientProvider.provider().getClass(),
-                CollectorClientProvider.provider(null).getClass()
-        );
+        CollectorClientProvider provider = CollectorClientProvider.provider(null, null);
+        assertNotNull(provider);
+        assertEquals(HttpCollectorClientProvider.provider().getClass(), provider.getClass());
     }
 }

@@ -150,8 +150,12 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
         // initialize collector client
         boolean validCollectorClient = true;
-        client = CollectorClientProvider.provider(options.clientProvider)
-                .forOptions(this, options);
+        client = CollectorClientProvider.provider(options.collectorClient, new Warner() {
+            @Override
+            public void warn(String message) {
+                AbstractTracer.this.warn(message);
+            }
+        }).forOptions(this, options);
         if (client == null) {
             error("Exception creating client.");
             validCollectorClient = false;

@@ -17,8 +17,8 @@ public class HttpCollectorClientProvider extends CollectorClientProvider {
     }
 
     @Override
-    protected Options.ClientProvider type() {
-        return Options.ClientProvider.HTTP;
+    protected Options.CollectorClient type() {
+        return Options.CollectorClient.HTTP;
     }
 
     @Override

@@ -23,8 +23,8 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
     }
 
     @Override
-    protected Options.ClientProvider type() {
-        return Options.ClientProvider.GRPC;
+    protected Options.CollectorClient type() {
+        return Options.CollectorClient.GRPC;
     }
 
     @Override

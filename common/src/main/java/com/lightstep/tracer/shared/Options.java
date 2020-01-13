@@ -58,7 +58,7 @@ public final class Options {
      * Select the client provider explicitly.
      * This is only needed if both client providers are in the classpath.
      */
-    public enum ClientProvider {
+    public enum CollectorClient {
         HTTP,
         GRPC
     }
@@ -122,7 +122,7 @@ public final class Options {
     final ScopeManager scopeManager;
     final Map<Format<?>, Propagator> propagators;
 
-    final ClientProvider clientProvider;
+    final CollectorClient collectorClient;
 
     final String grpcCollectorTarget;
     final boolean grpcRoundRobin;
@@ -147,7 +147,7 @@ public final class Options {
             ScopeManager scopeManager,
             long deadlineMillis,
             Map<Format<?>, Propagator> propagators,
-            ClientProvider clientProvider,
+            CollectorClient collectorClient,
             String grpcCollectorTarget,
             boolean grpcRoundRobin,
             OkHttpDns okhttpDns,
@@ -165,7 +165,7 @@ public final class Options {
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
         this.propagators = propagators;
-        this.clientProvider = clientProvider;
+        this.collectorClient = collectorClient;
         this.grpcCollectorTarget = grpcCollectorTarget;
         this.grpcRoundRobin = grpcRoundRobin;
         this.okhttpDns = okhttpDns;
@@ -193,7 +193,7 @@ public final class Options {
         private long deadlineMillis = -1;
         private Map<Format<?>, Propagator> propagators = new HashMap<>();
         private boolean disableMetaEventLogging = false;
-        private ClientProvider clientProvider;
+        private CollectorClient collectorClient;
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
         private OkHttpDns okhttpDns;
@@ -217,7 +217,7 @@ public final class Options {
             this.deadlineMillis = options.deadlineMillis;
             this.propagators = options.propagators;
             this.disableMetaEventLogging = options.disableMetaEventLogging;
-            this.clientProvider = options.clientProvider;
+            this.collectorClient = options.collectorClient;
             this.grpcCollectorTarget = options.grpcCollectorTarget;
             this.grpcRoundRobin = options.grpcRoundRobin;
             this.okhttpDns = options.okhttpDns;
@@ -316,13 +316,13 @@ public final class Options {
         }
 
         /**
-         * Sets the client provider explicitly. If not set, will default to the client provider
+         * Sets the collector client explicitly. If not set, will default to the collector client
          * which is found in the classpath.
          *
-         * @param clientProvider The client provider to use
+         * @param collectorClient The collector client to use
          */
-        public OptionsBuilder withClientProvider(ClientProvider clientProvider) {
-            this.clientProvider = clientProvider;
+        public OptionsBuilder withCollectorClient(CollectorClient collectorClient) {
+            this.collectorClient = collectorClient;
             return this;
         }
 
@@ -517,7 +517,7 @@ public final class Options {
                     scopeManager,
                     deadlineMillis,
                     propagators,
-                    clientProvider,
+                    collectorClient,
                     grpcCollectorTarget,
                     grpcRoundRobin,
                     okhttpDns,
