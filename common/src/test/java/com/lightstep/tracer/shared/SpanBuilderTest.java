@@ -77,6 +77,15 @@ public class SpanBuilderTest {
     }
 
     /**
+     * Confirms that no error is caused when specifying a foreign SpanContext.
+     */
+    @Test
+    public void testStart_asFollowsFromForeignSpanContext() throws Exception {
+        undertest.addReference(FOLLOWS_FROM, io.opentracing.noop.NoopSpan.INSTANCE.context());
+        verifyResultingSpan((Span) undertest.start());
+    }
+
+    /**
      * Confirms the inherited baggage of the Span when the builder is given a parent SpanContext.
      */
     @Test

@@ -1,6 +1,11 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.2...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.3...master)
 * Bump okhttp from 3.10.0 to 4.3.1
+
+<a name="0.19.3"></a>
+## [0.19.3](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.2...0.19.3)
+* Handle foreign Spans handled to SpanBuilder.
+* Added CONTRIBUTING guide.
 
 <a name="0.19.2"></a>
 ## [0.19.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.1...0.19.2)
