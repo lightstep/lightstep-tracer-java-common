@@ -7,7 +7,7 @@
     <groupId>com.lightstep.tracer</groupId>
     <artifactId>java</artifactId>
     <packaging>pom</packaging>
-    <version>0.19.3</version>
+    <version>0.20.0</version>
 
     <name>LightStep Tracer Java Common (parent)</name>
     <description>LightStep Tracer Java Common (parent)</description>
