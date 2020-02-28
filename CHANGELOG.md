@@ -1,5 +1,8 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.3...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.20.0...master)
+
+<a name="0.20.0"></a>
+## [0.20.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.19.3...0.20.0)
 * Bump okhttp from 3.10.0 to 4.3.1
 
 <a name="0.19.3"></a>
