@@ -23,6 +23,11 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
     }
 
     @Override
+    protected Options.CollectorClient type() {
+        return Options.CollectorClient.GRPC;
+    }
+
+    @Override
     GrpcCollectorClient forOptions(
             AbstractTracer tracer,
             Options options

@@ -1,10 +1,12 @@
 package com.lightstep.tracer.shared;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.junit.Test;
 
 public class GrpcCollectorClientProviderTest {
     @Test
@@ -14,10 +16,24 @@ public class GrpcCollectorClientProviderTest {
 
     @Test
     public void testProvideBounded() {
-        assertNotNull(CollectorClientProvider.provider());
-        assertEquals(
-                GrpcCollectorClientProvider.provider().getClass(),
-                CollectorClientProvider.provider().getClass()
-        );
+        CollectorClientProvider provider = CollectorClientProvider.provider(null, null);
+        assertNotNull(provider);
+        assertEquals(GrpcCollectorClientProvider.provider().getClass(), provider.getClass());
+    }
+
+    @Test
+    public void testPreferredCollectorClientNotAvailable() {
+        final List<String> log = new ArrayList<>();
+        CollectorClientProvider provider = CollectorClientProvider.provider(
+            Options.CollectorClient.HTTP, new Warner() {
+                @Override
+                public void warn(String message) {
+                    log.add(message);
+                }
+            });
+        assertNotNull(provider);
+        assertEquals(GrpcCollectorClientProvider.provider().getClass(), provider.getClass());
+        assertEquals(Collections.singletonList(
+            "expected HTTP collector client was not present in classpath. Using GRPC instead."), log);
     }
 }

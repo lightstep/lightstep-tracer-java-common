@@ -1,9 +1,9 @@
 package com.lightstep.tracer.shared;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
 
 public class HttpCollectorClientProviderTest {
     @Test
@@ -13,10 +13,8 @@ public class HttpCollectorClientProviderTest {
 
     @Test
     public void testProvideBounded() {
-        assertNotNull(CollectorClientProvider.provider());
-        assertEquals(
-                HttpCollectorClientProvider.provider().getClass(),
-                CollectorClientProvider.provider().getClass()
-        );
+        CollectorClientProvider provider = CollectorClientProvider.provider(null, null);
+        assertNotNull(provider);
+        assertEquals(HttpCollectorClientProvider.provider().getClass(), provider.getClass());
     }
 }
