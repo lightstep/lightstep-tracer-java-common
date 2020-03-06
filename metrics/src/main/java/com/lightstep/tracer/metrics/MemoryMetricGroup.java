@@ -5,7 +5,7 @@ import java.io.IOException;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
 
-public class MemoryMetricGroup extends MetricGroup {
+class MemoryMetricGroup extends MetricGroup {
   MemoryMetricGroup(final HardwareAbstractionLayer hal) {
     super(hal, new GaugeMetric<>("mem.available", Long.class), new GaugeMetric<>("mem.total", Long.class));
   }

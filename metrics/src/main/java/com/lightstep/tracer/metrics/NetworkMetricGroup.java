@@ -5,7 +5,7 @@ import java.io.IOException;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.NetworkIF;
 
-public class NetworkMetricGroup extends MetricGroup {
+class NetworkMetricGroup extends MetricGroup {
   NetworkMetricGroup(final HardwareAbstractionLayer hal) {
     super(hal, new CounterMetric<>("net.bytes_sent", Long.class), new CounterMetric<>("net.bytes_recv", Long.class));
   }

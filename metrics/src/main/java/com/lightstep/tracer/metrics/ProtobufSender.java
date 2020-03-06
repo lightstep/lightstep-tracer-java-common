@@ -68,7 +68,7 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
     reporterPlatformVersionLabel.setStringValue(version);
     builder.addLabels(reporterPlatformVersionLabel);
 
-    metric.adapter.setValue(builder, metric.calculate(current, previous));
+    metric.adapter.setValue(builder, metric.compute(current, previous));
 
     request.addPoints(builder.build());
   }
@@ -79,7 +79,7 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
   }
 
   @Override
-  public IngestResponse run(final MetricGroup[] metricGroups, final long timeout) throws Exception {
+  IngestResponse run(final MetricGroup[] metricGroups, final long timeout) throws Exception {
     final IngestRequest.Builder request = getRequest();
     request.setIdempotencyKey(UUID.randomUUID().toString());
     return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).report(newSampleRequest(metricGroups, request).build());

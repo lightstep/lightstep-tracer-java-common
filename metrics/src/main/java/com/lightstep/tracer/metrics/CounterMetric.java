@@ -6,7 +6,7 @@ class CounterMetric<G extends MetricGroup,T extends Number> extends Metric<G,T> 
   }
 
   @Override
-  T calculate(final long current, final long previous) {
+  T compute(final long current, final long previous) {
     return adapter.diff(current, previous);
   }
 }

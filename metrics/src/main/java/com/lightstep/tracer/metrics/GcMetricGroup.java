@@ -6,7 +6,7 @@ import java.lang.management.ManagementFactory;
 
 import oshi.hardware.HardwareAbstractionLayer;
 
-public class GcMetricGroup extends MetricGroup {
+class GcMetricGroup extends MetricGroup {
   GcMetricGroup(final HardwareAbstractionLayer hal) {
     super(hal, new GaugeMetric<>("runtime.mem.heap_size", Long.class), new CounterMetric<>("runtime.gc.count", Long.class), new CounterMetric<>("runtime.gc.time", Long.class));
   }

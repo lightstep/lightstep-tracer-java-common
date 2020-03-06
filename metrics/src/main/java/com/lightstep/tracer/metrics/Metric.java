@@ -9,5 +9,5 @@ abstract class Metric<G extends MetricGroup,V extends Number> {
     this.adapter = ValueAdapter.get(type);
   }
 
-  abstract V calculate(long current, long previous);
+  abstract V compute(long current, long previous);
 }
