@@ -17,7 +17,6 @@ import com.lightstep.tracer.grpc.MetricsServiceGrpc.MetricsServiceBlockingStub;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import oshi.hardware.HardwareAbstractionLayer;
 
 class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
   private final ManagedChannel channel = ManagedChannelBuilder.forAddress("ingest.lightstep.com", 443).usePlaintext().build();
@@ -80,9 +79,9 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
   }
 
   @Override
-  public IngestResponse run(final MetricGroup[] metricGroups, final HardwareAbstractionLayer hal, final long timeout) throws Exception {
+  public IngestResponse run(final MetricGroup[] metricGroups, final long timeout) throws Exception {
     final IngestRequest.Builder request = getRequest();
     request.setIdempotencyKey(UUID.randomUUID().toString());
-    return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).report(newSampleRequest(metricGroups, hal, request).build());
+    return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).report(newSampleRequest(metricGroups, request).build());
   }
 }

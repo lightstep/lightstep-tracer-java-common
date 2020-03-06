@@ -12,10 +12,9 @@ import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 
 public class Metrics extends TimerTask implements Retryable<Void>, AutoCloseable {
-  private final MetricGroup[] metricGroups = {new CpuMetricGroup(), new NetworkMetricGroup(), new MemoryMetricGroup(), new GcMetricGroup()};
-
   private final SystemInfo systemInfo = new SystemInfo();
   private final HardwareAbstractionLayer hal = systemInfo.getHardware();
+  private final MetricGroup[] metricGroups = {new CpuMetricGroup(hal), new NetworkMetricGroup(hal), new MemoryMetricGroup(hal), new GcMetricGroup(hal)};
 
   private final int samplePeriodSeconds;
   private final ProtobufSender sender;
@@ -59,7 +58,7 @@ public class Metrics extends TimerTask implements Retryable<Void>, AutoCloseable
     if (timeout < 0)
       throw new RetryFailureException(attemptNo, retryPolicy.getDelayMs(attemptNo - 1));
 
-    sender.run(metricGroups, hal, timeout);
+    sender.run(metricGroups, timeout);
     return null;
   }
 

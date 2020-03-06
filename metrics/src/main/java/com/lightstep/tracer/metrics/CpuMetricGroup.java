@@ -9,12 +9,12 @@ import oshi.hardware.HardwareAbstractionLayer;
 class CpuMetricGroup extends MetricGroup {
   private static final GaugeMetric<CpuMetricGroup,Long> cpuPercent = new GaugeMetric<>("cpu.percent", Long.class);
 
-  CpuMetricGroup() {
-    super(new CounterMetric<>("cpu.user", Long.class), null, new CounterMetric<>("cpu.sys", Long.class), null, null, null, null, null, null, new GaugeMetric<>("cpu.percent", Long.class));
+  CpuMetricGroup(final HardwareAbstractionLayer hal) {
+    super(hal, new CounterMetric<>("cpu.user", Long.class), null, new CounterMetric<>("cpu.sys", Long.class), null, null, null, null, null, null, new GaugeMetric<>("cpu.percent", Long.class));
   }
 
   @Override
-  <I,O>long[] sample(final Sender<I,O> sender, final long timestampSeconds, final long durationSeconds, final I request, final HardwareAbstractionLayer hal) throws IOException {
+  <I,O>long[] newSample(final Sender<I,O> sender, final long timestampSeconds, final long durationSeconds, final I request) throws IOException {
     final CentralProcessor processor = hal.getProcessor();
     final long[] ticks = processor.getSystemCpuLoadTicks();
     final long[] previous = getPrevious();
@@ -33,9 +33,9 @@ class CpuMetricGroup extends MetricGroup {
   }
 
   @Override
-  <I,O>long[] execute(final Sender<I,O> sender, final long timestampSeconds, final long durationSeconds, final I request, final HardwareAbstractionLayer hal) throws IOException {
+  <I,O>long[] execute(final Sender<I,O> sender, final long timestampSeconds, final long durationSeconds, final I request) throws IOException {
     final long cpuLoad = (long)(hal.getProcessor().getSystemCpuLoadBetweenTicks(getPrevious()) * 100);
-    final long[] current = super.execute(sender, timestampSeconds, durationSeconds, request, hal);
+    final long[] current = super.execute(sender, timestampSeconds, durationSeconds, request);
     sender.createMessage(request, timestampSeconds, durationSeconds, cpuPercent, cpuLoad, 0L);
     return current;
   }
