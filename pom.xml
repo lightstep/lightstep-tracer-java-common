@@ -54,6 +54,7 @@
     <modules>
         <module>grpc</module>
         <module>okhttp</module>
+        <module>metrics</module>
         <module>common</module>
         <module>example</module>
         <module>bundle-test</module>
