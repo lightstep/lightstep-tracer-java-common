@@ -12,21 +12,19 @@ import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 
 public class Metrics extends TimerTask implements Retryable<Void>, AutoCloseable {
-  private final SystemInfo systemInfo = new SystemInfo();
-  private final HardwareAbstractionLayer hal = systemInfo.getHardware();
-  private final MetricGroup[] metricGroups = {new CpuMetricGroup(hal), new NetworkMetricGroup(hal), new MemoryMetricGroup(hal), new GcMetricGroup(hal)};
-
-  private final int samplePeriodSeconds;
-  private final ProtobufSender sender;
-
   private static final int attempts = Integer.MAX_VALUE;
   private static final int startDelay = 1000;
   private static final int factor = 2;
   private static final int maxDelay = Integer.MAX_VALUE;
 
   private final ExponentialBackoffRetryPolicy retryPolicy = new ExponentialBackoffRetryPolicy(attempts, startDelay, factor, maxDelay, true, 1);
-
   private final Timer timer = new Timer(true);
+
+  private final HardwareAbstractionLayer hal = new SystemInfo().getHardware();
+  private final MetricGroup[] metricGroups = {new CpuMetricGroup(hal), new NetworkMetricGroup(hal), new MemoryMetricGroup(hal), new GcMetricGroup(hal)};
+
+  private final int samplePeriodSeconds;
+  private final ProtobufSender sender;
 
   Metrics(final String componentName, final int samplePeriodSeconds) {
     if (samplePeriodSeconds < 1)
@@ -34,6 +32,9 @@ public class Metrics extends TimerTask implements Retryable<Void>, AutoCloseable
 
     this.samplePeriodSeconds = samplePeriodSeconds;
     this.sender = new ProtobufSender(componentName);
+  }
+
+  public void start() {
     timer.schedule(this, System.currentTimeMillis() - (System.currentTimeMillis() / 1000) * 1000, samplePeriodSeconds * 1000);
   }
 
