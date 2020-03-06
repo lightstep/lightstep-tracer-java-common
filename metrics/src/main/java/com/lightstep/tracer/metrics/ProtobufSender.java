@@ -79,7 +79,11 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
   }
 
   @Override
+<<<<<<< HEAD
   IngestResponse run(final MetricGroup[] metricGroups, final long timeout) throws Exception {
+=======
+  public IngestResponse run(final MetricGroup[] metricGroups, final long timeout) throws Exception {
+>>>>>>> Extract HardwareAbstractionLayer
     final IngestRequest.Builder request = getRequest();
     request.setIdempotencyKey(UUID.randomUUID().toString());
     return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).report(newSampleRequest(metricGroups, request).build());
