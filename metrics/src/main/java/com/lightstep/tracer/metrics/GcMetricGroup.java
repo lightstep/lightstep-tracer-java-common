@@ -8,7 +8,7 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 class GcMetricGroup extends MetricGroup {
   GcMetricGroup(final HardwareAbstractionLayer hal) {
-    super(hal, new GaugeMetric<>("runtime.mem.heap_size", Long.class), new CounterMetric<>("runtime.gc.count", Long.class), new CounterMetric<>("runtime.gc.time", Long.class));
+    super(hal, new GaugeMetric<>("runtime.java.heap_size", Long.class), new CounterMetric<>("runtime.gc.count", Long.class), new CounterMetric<>("runtime.gc.time", Long.class));
   }
 
   @Override
