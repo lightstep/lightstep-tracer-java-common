@@ -16,16 +16,10 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(Metrics.class);
-  private static final boolean isJdk17 = System.getProperty("java.version").equals("1.7");
   private static volatile boolean inited;
   private static Metrics instance;
 
   public static Metrics getInstance(final String componentName, final int samplePeriodSeconds, final String hostName, final int port) {
-    if (isJdk17) {
-      logger.warn("Metrics supports jdk1.8+");
-      return null;
-    }
-
     if (inited)
       return instance;
 
