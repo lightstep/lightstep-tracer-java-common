@@ -11,7 +11,7 @@ class NetworkMetricGroup extends MetricGroup {
   }
 
   @Override
-  <I,O>long[] newSample(final Sender<I,O> sender, final long timestampSeconds, final long durationSeconds, final I request) throws IOException {
+  <I,O>long[] newSample(final Sender<I,O> sender, final I request, final long timestampSeconds, final long durationSeconds) throws IOException {
     final long[] current = new long[2];
     for (final NetworkIF networkIF : hal.getNetworkIFs()) {
       current[0] += networkIF.getBytesSent();

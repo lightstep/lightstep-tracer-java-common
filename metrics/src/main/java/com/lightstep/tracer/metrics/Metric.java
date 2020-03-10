@@ -11,11 +11,11 @@ abstract class Metric<G extends MetricGroup,V extends Number> {
     this.adapter = Objects.requireNonNull(ValueAdapter.get(type), type.getName());
   }
 
-  ValueAdapter<V> getAdapter() {
+  final ValueAdapter<V> getAdapter() {
     return this.adapter;
   }
 
-  String getName() {
+  final String getName() {
     return this.name;
   }
 

@@ -15,14 +15,14 @@ import io.grpc.stub.StreamObserver;
 
 public class TestServer implements AutoCloseable {
   private static Server server;
-  private boolean offline = true;
+  private boolean started;
 
   public TestServer(final int port, final Consumer<IngestRequest> onRequest, final BiConsumer<IngestRequest,IngestResponse> onResponse) throws IOException {
     server = NettyServerBuilder.forPort(port).addService(new MetricsServiceImplBase() {
       @Override
       public void report(final IngestRequest request, final StreamObserver<IngestResponse> responseObserver) {
         onRequest.accept(request);
-        if (offline)
+        if (!started)
           throw new RuntimeException("Server is offline");
 
         final IngestResponse response = IngestResponse.newBuilder().build();
@@ -34,7 +34,7 @@ public class TestServer implements AutoCloseable {
   }
 
   public void start() {
-    offline = false;
+    started = true;
   }
 
   @Override

@@ -70,12 +70,13 @@ abstract class Sender<I,O> implements AutoCloseable {
   abstract I newRequest();
 
   final void updateSampleRequest(final MetricGroup[] metricGroups) throws IOException {
-    final I request = this.request != null ? this.request : newRequest();
     final long timestampSeconds = System.currentTimeMillis() / 1000;
     final long durationSeconds = timestampSeconds - getPreviousTimestamp();
     previousTime = timestampSeconds;
+
+    final I request = this.request != null ? this.request : newRequest();
     for (final MetricGroup metricGroup : metricGroups)
-      metricGroup.execute(this, timestampSeconds, durationSeconds, request);
+      metricGroup.execute(this, request, timestampSeconds, durationSeconds);
 
     setRequest(request);
   }

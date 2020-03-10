@@ -2,7 +2,6 @@ package com.lightstep.tracer.metrics;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
@@ -13,7 +12,7 @@ public class MetricsTest {
   private static final int port = 8851;
 
   @Test
-  public void testSamplePeriod() throws InterruptedException, IOException {
+  public void testSamplePeriod() throws Exception {
     final int samplePeriod = 2;
     final AtomicInteger counter = new AtomicInteger();
     final String[] id = new String[1];
@@ -35,7 +34,7 @@ public class MetricsTest {
   }
 
   @Test
-  public void testRetryWithinSamplePeriod() throws InterruptedException, IOException {
+  public void testRetryWithinSamplePeriod() throws Exception {
     final int samplePeriod = 5;
     final AtomicInteger counter = new AtomicInteger();
 
@@ -69,7 +68,7 @@ public class MetricsTest {
   }
 
   @Test
-  public void testRetryBeyondOneSamplePeriod() throws InterruptedException, IOException {
+  public void testRetryBeyondOneSamplePeriod() throws Exception {
     final int samplePeriod = 5;
     final AtomicInteger counter = new AtomicInteger();
 
@@ -104,7 +103,7 @@ public class MetricsTest {
   }
 
   @Test
-  public void testRetryBeyondTwoSamplePeriods() throws InterruptedException, IOException {
+  public void testRetryBeyondTwoSamplePeriods() throws Exception {
     final int samplePeriod = 4;
     final AtomicInteger counter = new AtomicInteger();
 

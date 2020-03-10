@@ -43,11 +43,16 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   private static final int factor = 2;
   private static final int maxDelay = Integer.MAX_VALUE;
 
-  private final ExponentialBackoffRetryPolicy retryPolicy = new ExponentialBackoffRetryPolicy(attempts, startDelay, factor, maxDelay, true, 1) {
+  private static final ExponentialBackoffRetryPolicy retryPolicy = new ExponentialBackoffRetryPolicy(attempts, startDelay, factor, maxDelay, true, 1) {
     private static final long serialVersionUID = 7311364828386985449L;
 
     @Override
     protected boolean retryOn(final Exception e) {
+      if (logger.isDebugEnabled())
+        logger.warn(e.getMessage(), e);
+      else
+        logger.warn(e.getClass().getName() + ": " + e.getMessage());
+
       return true;
     }
   };
@@ -56,7 +61,7 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   private final MetricGroup[] metricGroups = {new CpuMetricGroup(hal), new NetworkMetricGroup(hal), new MemoryMetricGroup(hal), new GcMetricGroup(hal)};
 
   private final int samplePeriodSeconds;
-  private final ProtobufSender sender;
+  private final Sender<?,?> sender;
   private boolean closed;
 
   private Metrics(final String componentName, final int samplePeriodSeconds, final String hostName, final int port) {
@@ -84,7 +89,10 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
               retryPolicy.run(Metrics.this, finishBy - System.currentTimeMillis());
             }
             catch (final RetryFailureException e) {
-              e.printStackTrace();
+              if (logger.isDebugEnabled())
+                logger.warn(e.getMessage(), e);
+              else
+                logger.warn(e.getClass().getName() + ": " + e.getMessage());
             }
           }
         };
@@ -128,7 +136,7 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   }
 
   @Override
-  public void close() throws InterruptedException {
+  public void close() throws Exception {
     closed = true;
     interrupt();
     sender.close();

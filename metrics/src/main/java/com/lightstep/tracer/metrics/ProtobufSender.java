@@ -79,7 +79,7 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
 
   @Override
   IngestResponse invoke(final long timeout) throws Exception {
-    final IngestRequest.Builder request = this.getRequest();
+    final IngestRequest.Builder request = getRequest();
     if (request == null)
       throw new IllegalStateException("Request should not be null");
 

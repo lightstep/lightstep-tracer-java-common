@@ -136,7 +136,7 @@ public abstract class RetryPolicy implements Serializable {
       }
 
       if (logger.isDebugEnabled())
-        logger.debug("Retrying attemptNo = " + attemptNo + ", runtime = " + (System.currentTimeMillis() - startTime));
+        logger.debug("Retrying attemptNo = " + attemptNo + ", runTime = " + runTime);
     }
   }
 
