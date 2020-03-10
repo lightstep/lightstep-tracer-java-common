@@ -16,10 +16,14 @@ public class MetricsTest {
   public void testSamplePeriod() throws InterruptedException, IOException {
     final int samplePeriod = 2;
     final AtomicInteger counter = new AtomicInteger();
+    final String[] id = new String[1];
     try (
-      final TestServer server = new TestServer(port, (req,res) -> {
+      final TestServer server = new TestServer(port, req -> {
+        assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
+      }, (req,res) -> {
         assertEquals(10, req.getPointsCount());
         counter.getAndIncrement();
+        id[0] = null;
       });
       final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
     ) {
@@ -37,10 +41,14 @@ public class MetricsTest {
 
     // Set both expected point counts to 10, because the server will consume requests within the samplePeriod time.
     final int[] expectedPointCounts = {10, 10};
+    final String[] id = new String[1];
     try (
       final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
-      final TestServer server = new TestServer(port, (req,res) -> {
+      final TestServer server = new TestServer(port, req -> {
+        assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
+      }, (req,res) -> {
         assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
+        id[0] = null;
       });
     ) {
       // 1. Start the metrics engine, but the server is off.
@@ -68,10 +76,14 @@ public class MetricsTest {
     // Set first expected point count to 20, because the first request is not delivered in time until samplePeriod laps.
     // Set second expected point count to 10, because the server will be running by then, and subsequent requests will be delivered.
     final int[] expectedPointCounts = {20, 10};
+    final String[] id = new String[1];
     try (
       final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
-      final TestServer server = new TestServer(port, (req,res) -> {
+      final TestServer server = new TestServer(port, req -> {
+        assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
+      }, (req,res) -> {
         assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
+        id[0] = null;
       });
     ) {
       // 1. Start the metrics engine, but the server is off.
@@ -99,10 +111,14 @@ public class MetricsTest {
     // Set first expected point count to 30, because the first and second requests are not delivered in time until samplePeriod laps.
     // Set second expected point count to 10, because the server will be running by then, and subsequent requests will be delivered.
     final int[] expectedPointCounts = {30, 10};
+    final String[] id = new String[1];
     try (
       final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
-      final TestServer server = new TestServer(port, (req,res) -> {
+      final TestServer server = new TestServer(port, req -> {
+        assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
+      }, (req,res) -> {
         assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
+        id[0] = null;
       });
     ) {
       // 1. Start the metrics engine, but the server is off.

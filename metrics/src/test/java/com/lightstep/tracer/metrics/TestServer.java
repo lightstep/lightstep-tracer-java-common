@@ -1,9 +1,9 @@
 package com.lightstep.tracer.metrics;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import com.lightstep.tracer.grpc.IngestRequest;
 import com.lightstep.tracer.grpc.IngestResponse;
@@ -17,10 +17,11 @@ public class TestServer implements AutoCloseable {
   private static Server server;
   private boolean offline = true;
 
-  public TestServer(final int port, final BiConsumer<IngestRequest,IngestResponse> onResponse) throws IOException {
+  public TestServer(final int port, final Consumer<IngestRequest> onRequest, final BiConsumer<IngestRequest,IngestResponse> onResponse) throws IOException {
     server = NettyServerBuilder.forPort(port).addService(new MetricsServiceImplBase() {
       @Override
       public void report(final IngestRequest request, final StreamObserver<IngestResponse> responseObserver) {
+        onRequest.accept(request);
         if (offline)
           throw new RuntimeException("Server is offline");
 

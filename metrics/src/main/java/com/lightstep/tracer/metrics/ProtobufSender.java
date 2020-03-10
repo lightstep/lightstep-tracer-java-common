@@ -72,7 +72,9 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
 
   @Override
   IngestRequest.Builder newRequest() {
-    return IngestRequest.newBuilder();
+    final IngestRequest.Builder request = IngestRequest.newBuilder();
+    request.setIdempotencyKey(UUID.randomUUID().toString());
+    return request;
   }
 
   @Override
@@ -81,7 +83,6 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
     if (request == null)
       throw new IllegalStateException("Request should not be null");
 
-    request.setIdempotencyKey(UUID.randomUUID().toString());
     return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).report(request.build());
   }
 
