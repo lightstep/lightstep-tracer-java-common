@@ -22,7 +22,7 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
 
   public static Metrics getInstance(final String componentName, final int samplePeriodSeconds, final String hostName, final int port) {
     if (isJdk17) {
-      logger.warn("Metrics does supports jdk1.8+");
+      logger.warn("Metrics supports jdk1.8+");
       return null;
     }
 
