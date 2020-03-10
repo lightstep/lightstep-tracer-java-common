@@ -12,13 +12,7 @@ class MemoryMetricGroup extends MetricGroup {
 
   @Override
   <I,O>long[] newSample(final Sender<I,O> sender, final long timestampSeconds, final long durationSeconds, final I request) throws IOException {
-    final long[] current = new long[2];
-
     final GlobalMemory memory = hal.getMemory();
-    current[0] = memory.getAvailable();
-    current[1] = memory.getTotal();
-
-    System.err.println("Memory [available/total]: " + current[0] + "/" + current[1]);
-    return current;
+    return new long[] {memory.getAvailable(), memory.getTotal()};
   }
 }

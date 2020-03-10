@@ -2,6 +2,9 @@ package com.lightstep.tracer.retry;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A policy that defines the conditions and timing of when retries should be
  * performed.
@@ -14,6 +17,7 @@ import java.io.Serializable;
  */
 public abstract class RetryPolicy implements Serializable {
   private static final long serialVersionUID = -8480057566592276543L;
+  private static final Logger logger = LoggerFactory.getLogger(RetryPolicy.class);
 
   private final int maxRetries;
   private final double jitter;
@@ -130,6 +134,9 @@ public abstract class RetryPolicy implements Serializable {
           throw new RetryFailureException(ie, attemptNo, delayMs);
         }
       }
+
+      if (logger.isDebugEnabled())
+        logger.debug("Retrying attemptNo = " + attemptNo + ", runtime = " + (System.currentTimeMillis() - startTime));
     }
   }
 

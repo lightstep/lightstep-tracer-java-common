@@ -19,18 +19,20 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
-  private final ManagedChannel channel = ManagedChannelBuilder.forAddress("ingest.lightstep.com", 443).usePlaintext().build();
-  private final MetricsServiceBlockingStub stub = MetricsServiceGrpc.newBlockingStub(channel);
+  private final ManagedChannel channel;
+  private final MetricsServiceBlockingStub stub;
 
-  ProtobufSender(final String componentName) {
-    super(componentName);
+  ProtobufSender(final String componentName, final String hostName, final int port) {
+    super(componentName, hostName, port);
+    channel = ManagedChannelBuilder.forAddress(hostName, port).usePlaintext().build();
+    stub = MetricsServiceGrpc.newBlockingStub(channel);
   }
 
   @Override
   final <V extends Number>void createMessage(final IngestRequest.Builder request, final long timestampSeconds, final long durationSeconds, final Metric<?,V> metric, final long current, final long previous) throws IOException {
     final MetricPoint.Builder builder = MetricPoint.newBuilder();
     builder.setKind(MetricKind.DELTA);
-    builder.setMetricName(metric.name);
+    builder.setMetricName(metric.getName());
 
     final Timestamp.Builder timestamp = Timestamp.newBuilder();
     timestamp.setSeconds(timestampSeconds);
@@ -53,22 +55,17 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
     hostnameLabel.setStringValue(hostname);
     builder.addLabels(hostnameLabel);
 
-    final Package mainPackage = ProtobufSender.class.getPackage();
-    final String version = mainPackage.getImplementationVersion();
-    final String groupId = mainPackage.getName();
-    final String artifactId = mainPackage.getImplementationTitle();
-
     final KeyValue.Builder reporterPlatformLabel = KeyValue.newBuilder();
     reporterPlatformLabel.setKey("lightstep.reporterPlatform");
-    reporterPlatformLabel.setStringValue(groupId + ":" + artifactId);
+    reporterPlatformLabel.setStringValue(getPlatformReporter());
     builder.addLabels(reporterPlatformLabel);
 
     final KeyValue.Builder reporterPlatformVersionLabel = KeyValue.newBuilder();
     reporterPlatformVersionLabel.setKey("lightstep.reporterPlatformVersion");
-    reporterPlatformVersionLabel.setStringValue(version);
+    reporterPlatformVersionLabel.setStringValue(getPlatformVersion());
     builder.addLabels(reporterPlatformVersionLabel);
 
-    metric.adapter.setValue(builder, metric.compute(current, previous));
+    metric.getAdapter().setValue(builder, metric.compute(current, previous));
 
     request.addPoints(builder.build());
   }
@@ -79,9 +76,17 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
   }
 
   @Override
-  IngestResponse run(final MetricGroup[] metricGroups, final long timeout) throws Exception {
-    final IngestRequest.Builder request = getRequest();
+  IngestResponse invoke(final long timeout) throws Exception {
+    final IngestRequest.Builder request = this.getRequest();
+    if (request == null)
+      throw new IllegalStateException("Request should not be null");
+
     request.setIdempotencyKey(UUID.randomUUID().toString());
-    return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).report(newSampleRequest(metricGroups, request).build());
+    return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).report(request.build());
+  }
+
+  @Override
+  public void close() throws InterruptedException {
+    channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
   }
 }

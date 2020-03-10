@@ -7,6 +7,6 @@ class GaugeMetric<G extends MetricGroup,T extends Number> extends Metric<G,T> {
 
   @Override
   T compute(final long current, final long previous) {
-    return adapter.toT(current);
+    return getAdapter().toT(current);
   }
 }

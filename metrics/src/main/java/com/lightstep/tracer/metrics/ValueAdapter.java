@@ -5,7 +5,9 @@ import java.util.HashMap;
 import com.lightstep.tracer.grpc.MetricPoint;
 
 abstract class ValueAdapter<V extends Number> {
-  final ValueAdapter<Long> LONG = new ValueAdapter<Long>(Long.class) {
+  private static final HashMap<Class<?>,ValueAdapter<?>> instances = new HashMap<>();
+
+  static final ValueAdapter<Long> LONG = new ValueAdapter<Long>(Long.class) {
     @Override
     long toLong(final Long value) {
       return value;
@@ -27,7 +29,7 @@ abstract class ValueAdapter<V extends Number> {
     }
   };
 
-  final ValueAdapter<Double> DOUBLE = new ValueAdapter<Double>(Double.class) {
+  static final ValueAdapter<Double> DOUBLE = new ValueAdapter<Double>(Double.class) {
     @Override
     long toLong(final Double value) {
       return Double.doubleToLongBits(value);
@@ -53,8 +55,6 @@ abstract class ValueAdapter<V extends Number> {
   abstract long toLong(V value);
   abstract V toT(long value);
   abstract void setValue(MetricPoint.Builder builder, V value);
-
-  private static final HashMap<Class<?>,ValueAdapter<?>> instances = new HashMap<>();
 
   private ValueAdapter(final Class<V> type) {
     instances.put(type, this);

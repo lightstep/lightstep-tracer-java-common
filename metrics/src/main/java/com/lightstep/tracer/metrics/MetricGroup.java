@@ -2,9 +2,13 @@ package com.lightstep.tracer.metrics;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import oshi.hardware.HardwareAbstractionLayer;
 
 abstract class MetricGroup {
+  static final Logger logger = LoggerFactory.getLogger(CpuMetricGroup.class);
   private final Metric<? extends MetricGroup,?>[] metrics;
   private long[] previous;
   final HardwareAbstractionLayer hal;
@@ -20,8 +24,18 @@ abstract class MetricGroup {
 
   <I,O>long[] execute(final Sender<I,O> sender, final long timestampSeconds, final long durationSeconds, final I request) throws IOException {
     final long[] current = newSample(sender, timestampSeconds, durationSeconds, request);
-    for (int i = 0; i < metrics.length; ++i)
-      sender.createMessage(request, timestampSeconds, durationSeconds, metrics[i], current[i], previous[i]);
+    if (logger.isDebugEnabled())
+    logger.debug(getClass().getSimpleName() + " {");
+    for (int i = 0; i < metrics.length; ++i) {
+      if (metrics[i] != null) {
+        if (logger.isDebugEnabled()) {
+          final Object value = metrics[i].compute(current[i], previous[i]);
+          logger.debug("'-- " + metrics[i].getName() + "[" + value + "]");
+        }
+
+        sender.createMessage(request, timestampSeconds, durationSeconds, metrics[i], current[i], previous[i]);
+      }
+    }
 
     return this.previous = current;
   }

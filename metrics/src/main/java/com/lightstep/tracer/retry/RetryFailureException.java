@@ -22,7 +22,7 @@ public class RetryFailureException extends Exception {
    *          attempt.
    */
   public RetryFailureException(final Throwable cause, final int attemptNo, final long delayMs) {
-    super(cause);
+    super("attemptNo = " + attemptNo + ", delayMs = " + delayMs, cause);
     this.attemptNo = attemptNo;
     this.delayMs = delayMs;
   }

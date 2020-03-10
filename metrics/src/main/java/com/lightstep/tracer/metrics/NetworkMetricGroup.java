@@ -18,7 +18,6 @@ class NetworkMetricGroup extends MetricGroup {
       current[1] += networkIF.getBytesRecv();
     }
 
-    System.err.println("Traffic [sent/received]: " + current[0] + "/" + current[1]);
     return current;
   }
 }

@@ -1,12 +1,22 @@
 package com.lightstep.tracer.metrics;
 
+import java.util.Objects;
+
 abstract class Metric<G extends MetricGroup,V extends Number> {
-  ValueAdapter<V> adapter;
-  final String name;
+  private final ValueAdapter<V> adapter;
+  private final String name;
 
   Metric(final String name, final Class<V> type) {
     this.name = name;
-    this.adapter = ValueAdapter.get(type);
+    this.adapter = Objects.requireNonNull(ValueAdapter.get(type), type.getName());
+  }
+
+  ValueAdapter<V> getAdapter() {
+    return this.adapter;
+  }
+
+  String getName() {
+    return this.name;
   }
 
   abstract V compute(long current, long previous);
