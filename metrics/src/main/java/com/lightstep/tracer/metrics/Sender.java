@@ -14,6 +14,8 @@ abstract class Sender<I,O> implements AutoCloseable {
   }
 
   abstract <V extends Number>void createMessage(I request, long timestampSeconds, long durationSeconds, Metric<?,V> metric, long current, long previous) throws IOException;
+  abstract I newRequest();
+  abstract I setIdempotency(I request);
   abstract O invoke(long timeout) throws Exception;
 
   private I request;
@@ -67,17 +69,15 @@ abstract class Sender<I,O> implements AutoCloseable {
     return previousTime;
   }
 
-  abstract I newRequest();
-
   final void updateSampleRequest(final MetricGroup[] metricGroups) throws IOException {
     final long timestampSeconds = System.currentTimeMillis() / 1000;
     final long durationSeconds = timestampSeconds - getPreviousTimestamp();
     previousTime = timestampSeconds;
 
-    final I request = this.request != null ? this.request : newRequest();
+    final I request = setIdempotency(this.request != null ? this.request : newRequest());
     for (final MetricGroup metricGroup : metricGroups)
       metricGroup.execute(this, request, timestampSeconds, durationSeconds);
 
-    setRequest(request);
+    this.request = request;
   }
 }

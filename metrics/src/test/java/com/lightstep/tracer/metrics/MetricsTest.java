@@ -6,7 +6,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
+import com.lightstep.tracer.grpc.IngestRequest;
+
 public class MetricsTest {
+  private static final int countsPerSample = 11;
   private static final String componentName = "test";
   private static final String hostName = "localhost";
   private static final int port = 8851;
@@ -20,7 +23,7 @@ public class MetricsTest {
       final TestServer server = new TestServer(port, req -> {
         assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
       }, (req,res) -> {
-        assertEquals(10, req.getPointsCount());
+        assertEquals(countsPerSample, req.getPointsCount());
         counter.getAndIncrement();
         id[0] = null;
       });
@@ -33,21 +36,57 @@ public class MetricsTest {
     }
   }
 
+  private class IdTest {
+    private boolean shouldBeEqual;
+    private String id;
+    private int count;
+    private boolean hasError;
+
+    private void assertIds(final IngestRequest req) {
+      System.out.println("IdTest.assertIds(" + req.getIdempotencyKey() + "[" + req.getPointsCount() + "])");
+      if (count == 0)
+        count = req.getPointsCount();
+
+      if (id == null) {
+        id = req.getIdempotencyKey();
+      }
+      else {
+        // If `shouldBeEqual`, then we're expecting the same request object...
+        // But, what if a sample period has lapsed?
+        // In this case, the same object should now have a new id cause it has more data.
+        if (shouldBeEqual)
+          shouldBeEqual = count == req.getPointsCount();
+
+        count = req.getPointsCount();
+        assertFalse(id + "[" + count + "] should " + (shouldBeEqual ? "" : "not ") + "be equal to " + req.getIdempotencyKey() + "[" + req.getPointsCount() + "]", hasError |= shouldBeEqual != id.equals(req.getIdempotencyKey()));
+      }
+
+      shouldBeEqual = true;
+      id = req.getIdempotencyKey();
+    }
+
+    private void reset() {
+      System.out.println("IdTest.reset()");
+      count = 0;
+      shouldBeEqual = false;
+    }
+  }
+
   @Test
   public void testRetryWithinSamplePeriod() throws Exception {
     final int samplePeriod = 5;
     final AtomicInteger counter = new AtomicInteger();
 
-    // Set both expected point counts to 10, because the server will consume requests within the samplePeriod time.
-    final int[] expectedPointCounts = {10, 10};
-    final String[] id = new String[1];
+    // Set both expected point counts to `countsPerSample`, because the server will consume requests within the samplePeriod time.
+    final int[] expectedPointCounts = {countsPerSample, countsPerSample};
+    final IdTest idTest = new IdTest();
     try (
       final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
       final TestServer server = new TestServer(port, req -> {
-        assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
+        idTest.assertIds(req);
       }, (req,res) -> {
         assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
-        id[0] = null;
+        idTest.reset();
       });
     ) {
       // 1. Start the metrics engine, but the server is off.
@@ -64,6 +103,8 @@ public class MetricsTest {
 
       Thread.sleep(5000);
       assertEquals(2, counter.get());
+
+      assertFalse(idTest.hasError);
     }
   }
 
@@ -72,17 +113,17 @@ public class MetricsTest {
     final int samplePeriod = 5;
     final AtomicInteger counter = new AtomicInteger();
 
-    // Set first expected point count to 20, because the first request is not delivered in time until samplePeriod laps.
-    // Set second expected point count to 10, because the server will be running by then, and subsequent requests will be delivered.
-    final int[] expectedPointCounts = {20, 10};
-    final String[] id = new String[1];
+    // Set first expected point count to 2x `countsPerSample`, because the first request is not delivered in time until samplePeriod laps.
+    // Set second expected point count to `countsPerSample`, because the server will be running by then, and subsequent requests will be delivered.
+    final int[] expectedPointCounts = {2 * countsPerSample, countsPerSample};
+    final IdTest idTest = new IdTest();
     try (
       final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
       final TestServer server = new TestServer(port, req -> {
-        assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
+        idTest.assertIds(req);
       }, (req,res) -> {
         assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
-        id[0] = null;
+        idTest.reset();
       });
     ) {
       // 1. Start the metrics engine, but the server is off.
@@ -107,17 +148,17 @@ public class MetricsTest {
     final int samplePeriod = 4;
     final AtomicInteger counter = new AtomicInteger();
 
-    // Set first expected point count to 30, because the first and second requests are not delivered in time until samplePeriod laps.
-    // Set second expected point count to 10, because the server will be running by then, and subsequent requests will be delivered.
-    final int[] expectedPointCounts = {30, 10};
-    final String[] id = new String[1];
+    // Set first expected point count to 3x `countsPerSample`, because the first and second requests are not delivered in time until samplePeriod laps.
+    // Set second expected point count to `countsPerSample`, because the server will be running by then, and subsequent requests will be delivered.
+    final int[] expectedPointCounts = {3 * countsPerSample, countsPerSample};
+    final IdTest idTest = new IdTest();
     try (
       final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
       final TestServer server = new TestServer(port, req -> {
-        assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
+        idTest.assertIds(req);
       }, (req,res) -> {
         assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
-        id[0] = null;
+        idTest.reset();
       });
     ) {
       // 1. Start the metrics engine, but the server is off.

@@ -72,9 +72,12 @@ class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
 
   @Override
   IngestRequest.Builder newRequest() {
-    final IngestRequest.Builder request = IngestRequest.newBuilder();
-    request.setIdempotencyKey(UUID.randomUUID().toString());
-    return request;
+    return IngestRequest.newBuilder();
+  }
+
+  @Override
+  IngestRequest.Builder setIdempotency(final IngestRequest.Builder request) {
+    return request.setIdempotencyKey(UUID.randomUUID().toString());
   }
 
   @Override
