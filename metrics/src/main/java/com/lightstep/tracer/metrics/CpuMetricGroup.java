@@ -2,10 +2,12 @@ package com.lightstep.tracer.metrics;
 
 import java.io.IOException;
 
+import oshi.hardware.CentralProcessor.TickType;
 import oshi.hardware.HardwareAbstractionLayer;
 
 class CpuMetricGroup extends MetricGroup {
-  private static final GaugeMetric<CpuMetricGroup,Long> cpuPercent = new GaugeMetric<>("cpu.percent", Long.class);
+  private static final CounterMetric<CpuMetricGroup,Long> cpuUsage = new CounterMetric<>("cpu.udage", Long.class);
+  private static final CounterMetric<CpuMetricGroup,Long> cpuTotal = new CounterMetric<>("cpu.total", Long.class);
 
   CpuMetricGroup(final HardwareAbstractionLayer hal) {
     super(hal, new CounterMetric<>("cpu.user", Long.class), null, new CounterMetric<>("cpu.sys", Long.class), null, null, null, null, null);
@@ -18,13 +20,24 @@ class CpuMetricGroup extends MetricGroup {
 
   @Override
   <I,O>long[] execute(final Sender<I,O> sender, final I request, final long timestampSeconds, final long durationSeconds) throws IOException {
-    final long cpuLoad = (long)(hal.getProcessor().getSystemCpuLoadBetweenTicks(getPrevious()) * 100);
     final long[] current = super.execute(sender, request, timestampSeconds, durationSeconds);
+    long currentTotal = 0;
+    for (int i = 0; i < current.length; ++i)
+      currentTotal += current[i];
+
+    final long[] previous = getPrevious();
+    long previousTotal = 0;
+    for (int i = 0; i < previous.length; ++i)
+      previousTotal += previous[i];
 
     if (logger.isDebugEnabled())
-      logger.debug("'-- " + cpuPercent.getName() + "[" + cpuLoad + "]");
+      logger.debug("'-- " + cpuTotal.getName() + "[" + (currentTotal - previousTotal) + "]");
 
-    sender.createMessage(request, timestampSeconds, durationSeconds, cpuPercent, cpuLoad, 0L);
+    final long currentUsage = currentTotal - current[TickType.IDLE.getIndex()];
+    final long previousUsage = currentTotal - previous[TickType.IDLE.getIndex()];
+
+    sender.createMessage(request, timestampSeconds, durationSeconds, cpuTotal, currentTotal, previousTotal);
+    sender.createMessage(request, timestampSeconds, durationSeconds, cpuUsage, currentUsage, previousUsage);
     return current;
   }
 }
