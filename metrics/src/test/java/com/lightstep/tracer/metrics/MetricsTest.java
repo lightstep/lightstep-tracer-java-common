@@ -2,11 +2,13 @@ package com.lightstep.tracer.metrics;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
 import com.lightstep.tracer.grpc.IngestRequest;
+import com.lightstep.tracer.grpc.MetricPoint;
 
 public class MetricsTest {
   private static final int countsPerSample = 11;
@@ -23,7 +25,7 @@ public class MetricsTest {
       final TestServer server = new TestServer(port, req -> {
         assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
       }, (req,res) -> {
-        assertEquals(countsPerSample, req.getPointsCount());
+        assertMetric(countsPerSample, req);
         counter.getAndIncrement();
         id[0] = null;
       });
@@ -34,6 +36,14 @@ public class MetricsTest {
       Thread.sleep(2 * samplePeriod * 1000 + 500);
       assertEquals(3, counter.get());
     }
+  }
+
+  private static final String[] pointNames = {"cpu.sys", "cpu.total", "cpu.usage", "cpu.user", "mem.available", "mem.total", "net.bytes_recv", "net.bytes_sent", "runtime.java.gc.count", "runtime.java.gc.time", "runtime.java.heap_size"};
+
+  private static void assertMetric(final int expectedCount, final IngestRequest req) {
+    assertEquals(expectedCount, req.getPointsCount());
+    for (final MetricPoint point : req.getPointsList())
+      assertNotEquals(-1, Arrays.binarySearch(pointNames, point.getMetricName()));
   }
 
   private class IdTest {
@@ -85,7 +95,7 @@ public class MetricsTest {
       final TestServer server = new TestServer(port, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
-        assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
+        assertMetric(expectedPointCounts[counter.getAndIncrement()], req);
         idTest.reset();
       });
     ) {
@@ -122,7 +132,7 @@ public class MetricsTest {
       final TestServer server = new TestServer(port, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
-        assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
+        assertMetric(expectedPointCounts[counter.getAndIncrement()], req);
         idTest.reset();
       });
     ) {
@@ -157,7 +167,7 @@ public class MetricsTest {
       final TestServer server = new TestServer(port, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
-        assertEquals(expectedPointCounts[counter.getAndIncrement()], req.getPointsCount());
+        assertMetric(expectedPointCounts[counter.getAndIncrement()], req);
         idTest.reset();
       });
     ) {

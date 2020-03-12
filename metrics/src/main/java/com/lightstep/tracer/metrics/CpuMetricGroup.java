@@ -6,7 +6,7 @@ import oshi.hardware.CentralProcessor.TickType;
 import oshi.hardware.HardwareAbstractionLayer;
 
 class CpuMetricGroup extends MetricGroup {
-  private static final CounterMetric<CpuMetricGroup,Long> cpuUsage = new CounterMetric<>("cpu.udage", Long.class);
+  private static final CounterMetric<CpuMetricGroup,Long> cpuUsage = new CounterMetric<>("cpu.usage", Long.class);
   private static final CounterMetric<CpuMetricGroup,Long> cpuTotal = new CounterMetric<>("cpu.total", Long.class);
 
   CpuMetricGroup(final HardwareAbstractionLayer hal) {
