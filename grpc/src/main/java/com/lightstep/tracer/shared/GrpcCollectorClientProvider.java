@@ -48,7 +48,7 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
             }
 
             if (options.collectorUrl.getProtocol().equals("http")) {
-                builder.usePlaintext(true);
+                builder.usePlaintext();
             }
             return new GrpcCollectorClient(
                     tracer,
