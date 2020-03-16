@@ -9,11 +9,11 @@ import com.lightstep.tracer.shared.SafeMetrics;
 public class SafeMetricsTest {
   @Test
   public void test() {
-    if (System.getProperty("java.version").startsWith("1.8")) {
+    if (!System.getProperty("java.version").startsWith("1.7")) {
       System.err.println("This test is meant to be run with jdk1.7");
       return;
     }
 
-    assertNull(SafeMetrics.getInstance(null, -1, null, -1));
+    assertNull(SafeMetrics.getInstance(null, 60, null, -1));
   }
 }
