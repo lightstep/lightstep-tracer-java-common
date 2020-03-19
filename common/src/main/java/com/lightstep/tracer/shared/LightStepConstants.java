@@ -27,6 +27,17 @@ public final class LightStepConstants {
       public static final String PROTOCOL_HTTP = "http";
     }
 
+    public final class Metrics {
+        private Metrics() {
+        }
+
+        static final long DEFAULT_INTERVAL_SECS = 30;
+        // TODO: Update to ingest.lightstep.com
+        static final String DEFAULT_HOST = "ingest.staging.lightstep.com";
+        static final String PATH = "/metrics";
+        static final int DEFAULT_PORT = 443;
+    }
+
     public final class Tags {
         private Tags() {}
 

@@ -13,6 +13,7 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
+import com.lightstep.tracer.metrics.Metrics;
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
@@ -108,6 +109,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     // This is set to non-null when a background Thread is actually reporting.
     private Thread reportingThread;
 
+    // This is set to non-null when a background Thread is sending metrics.
+    private Metrics metricsThread;
+
     private boolean isDisabled;
 
     private boolean resetClient;
@@ -191,6 +195,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             }
             reportingThread.interrupt();
             reportingThread = null;
+
+            metricsThread.interrupt();
+            metricsThread = null;
         }
     }
 
@@ -198,6 +205,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
      * This call is synchronized
      */
     private void maybeStartReporting() {
+        // We set both reporting/metrics thread in a single step.
         if (reportingThread != null) {
             return;
         }
@@ -213,6 +221,13 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread = new Thread(reportingLoop, LightStepConstants.Internal.REPORTING_THREAD_NAME);
         reportingThread.setDaemon(true);
         reportingThread.start();
+
+        metricsThread = Metrics.getInstance(auth.getAccessToken(),
+                LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS,
+                LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH,
+                LightStepConstants.Metrics.DEFAULT_PORT);
+        metricsThread.setDaemon(true);
+        metricsThread.start();
     }
 
     /**
