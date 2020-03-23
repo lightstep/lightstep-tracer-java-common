@@ -31,7 +31,7 @@ public final class LightStepConstants {
         private Metrics() {
         }
 
-        static final long DEFAULT_INTERVAL_SECS = 30;
+        static final int DEFAULT_INTERVAL_SECS = 30;
         // TODO: Update to ingest.lightstep.com
         static final String DEFAULT_HOST = "ingest.staging.lightstep.com";
         static final String PATH = "/metrics";

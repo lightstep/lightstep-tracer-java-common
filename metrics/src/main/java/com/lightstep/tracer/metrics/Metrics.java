@@ -19,7 +19,7 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   private static volatile boolean inited;
   private static Metrics instance;
 
-  public static Metrics getInstance(final String componentName, final int samplePeriodSeconds, final String hostName, final int port) {
+  public static Metrics getInstance(final Sender<?,?> sender, final int samplePeriodSeconds) {
     if (inited)
       return instance;
 
@@ -28,7 +28,7 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
         return instance;
 
       inited = true;
-      return instance = new Metrics(componentName, samplePeriodSeconds, hostName, port);
+      return instance = new Metrics(sender, samplePeriodSeconds);
     }
   }
 
@@ -58,12 +58,12 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   private final Sender<?,?> sender;
   private boolean closed;
 
-  private Metrics(final String componentName, final int samplePeriodSeconds, final String hostName, final int port) {
+  private Metrics(final Sender<?,?> sender, final int samplePeriodSeconds) {
     if (samplePeriodSeconds < 1)
       throw new IllegalArgumentException("samplePeriodSeconds (" + samplePeriodSeconds + ") < 1");
 
     this.samplePeriodSeconds = samplePeriodSeconds;
-    this.sender = new ProtobufSender(componentName, hostName, port);
+    this.sender = sender;
   }
 
   @Override
