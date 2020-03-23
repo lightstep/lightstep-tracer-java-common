@@ -234,12 +234,20 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
-        metricsThread = SafeMetrics.getInstance(metricsCollectorClient,
-                    componentName,
-                    auth.getAccessToken(),
-                    LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS,
-                    LightStepConstants.Metrics.DEFAULT_FULL_PATH,
-                    LightStepConstants.Metrics.DEFAULT_PORT);
+        final int samplePeriodSeconds = LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS;
+        final String componentName = auth.getAccessToken();
+        final String servicePath = LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH;
+        final int servicePort = LightStepConstants.Metrics.DEFAULT_PORT;
+
+        final Sender<?,?> sender;
+        if (metricsCollectorClient == Options.CollectorClient.HTTP)
+          sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, servicePath, servicePort);
+        else if (metricsCollectorClient == Options.CollectorClient.GRPC)
+          sender = new GrpcSender(componentName, LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH, LightStepConstants.Metrics.DEFAULT_PORT);
+        else
+          throw new IllegalArgumentException("Unknown CollectorClient: " + metricsCollectorClient);
+
+        metricsThread = Metrics.getInstance(sender, samplePeriodSeconds);
         metricsThread.setDaemon(true);
         metricsThread.start();
     }
