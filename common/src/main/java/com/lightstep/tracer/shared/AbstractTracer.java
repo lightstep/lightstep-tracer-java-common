@@ -13,7 +13,11 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
+import com.lightstep.tracer.metrics.GrpcSender;
 import com.lightstep.tracer.metrics.Metrics;
+import com.lightstep.tracer.metrics.OkHttpSender;
+import com.lightstep.tracer.metrics.Sender;
+
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
@@ -124,6 +128,8 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     boolean disableMetaEventLogging;
     boolean metaEventLoggingEnabled;
 
+    private final Options.CollectorClient metricsCollectorClient;
+
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
@@ -179,6 +185,8 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         firstReportHasRun = false;
         metaEventLoggingEnabled = false;
         disableMetaEventLogging = options.disableMetaEventLogging;
+
+        metricsCollectorClient = options.collectorClient;
     }
 
     /**
@@ -222,10 +230,20 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
-        metricsThread = Metrics.getInstance(auth.getAccessToken(),
-                LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS,
-                LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH,
-                LightStepConstants.Metrics.DEFAULT_PORT);
+        final int samplePeriodSeconds = LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS;
+        final String componentName = auth.getAccessToken();
+        final String servicePath = LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH;
+        final int servicePort = LightStepConstants.Metrics.DEFAULT_PORT;
+
+        final Sender<?,?> sender;
+        if (metricsCollectorClient == Options.CollectorClient.HTTP)
+          sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, servicePath, servicePort);
+        else if (metricsCollectorClient == Options.CollectorClient.GRPC)
+          sender = new GrpcSender(componentName, LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH, LightStepConstants.Metrics.DEFAULT_PORT);
+        else
+          throw new IllegalArgumentException("Unknown CollectorClient: " + metricsCollectorClient);
+
+        metricsThread = Metrics.getInstance(sender, samplePeriodSeconds);
         metricsThread.setDaemon(true);
         metricsThread.start();
     }

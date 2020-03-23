@@ -2,21 +2,21 @@ package com.lightstep.tracer.metrics;
 
 import java.io.IOException;
 
-abstract class Sender<I,O> implements AutoCloseable {
+public abstract class Sender<I,O> implements AutoCloseable {
   final String componentName;
-  final String hostName;
-  final int port;
+  final String servicePath;
+  final int servicePort;
 
-  Sender(final String componentName, final String hostName, final int port) {
+  Sender(final String componentName, final String servicePath, final int servicePort) {
     this.componentName = componentName;
-    this.hostName = hostName;
-    this.port = port;
+    this.servicePath = servicePath;
+    this.servicePort = servicePort;
   }
 
   abstract <V extends Number>void createMessage(I request, long timestampSeconds, long durationSeconds, Metric<?,V> metric, long current, long previous) throws IOException;
   abstract I newRequest();
   abstract I setIdempotency(I request);
-  abstract O invoke(long timeout) throws Exception;
+  abstract O invoke(I request, long timeout) throws Exception;
 
   private I request;
   private long previousTime = System.currentTimeMillis() / 1000;
@@ -24,7 +24,11 @@ abstract class Sender<I,O> implements AutoCloseable {
   private String reporter;
 
   final O exec(final long timeout) throws Exception {
-    final O response = invoke(timeout);
+    final I request = getRequest();
+    if (request == null)
+      throw new IllegalStateException("Request should not be null");
+
+    final O response = invoke(request, timeout);
     setRequest(null);
     return response;
   }

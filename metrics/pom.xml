@@ -18,6 +18,7 @@
         <io.grpc.version>1.23.0</io.grpc.version>
         <io.netty.version>2.0.25.Final</io.netty.version>
         <protobuf.version>3.7.0</protobuf.version>
+        <com.squareup.okhttp3.version>4.3.1</com.squareup.okhttp3.version>
     </properties>
 
   <build>
@@ -104,6 +105,12 @@
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
             <version>4.4.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${com.squareup.okhttp3.version}</version>
         </dependency>
 
         <dependency>

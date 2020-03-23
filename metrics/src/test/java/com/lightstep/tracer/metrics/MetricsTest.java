@@ -13,8 +13,8 @@ import com.lightstep.tracer.grpc.MetricPoint;
 public class MetricsTest {
   private static final int countsPerSample = 11;
   private static final String componentName = "test";
-  private static final String hostName = "localhost";
-  private static final int port = 8851;
+  private static final String servicePath = "localhost";
+  private static final int servicePort = 8851;
 
   @Test
   public void testSamplePeriod() throws Exception {
@@ -22,14 +22,14 @@ public class MetricsTest {
     final AtomicInteger counter = new AtomicInteger();
     final String[] id = new String[1];
     try (
-      final TestServer server = new TestServer(port, req -> {
+      final TestServer server = new TestServer(servicePort, req -> {
         assertEquals(id[0] = (id[0] == null ? req.getIdempotencyKey() : id[0]), req.getIdempotencyKey());
       }, (req,res) -> {
         assertMetric(countsPerSample, req);
         counter.getAndIncrement();
         id[0] = null;
       });
-      final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, servicePath, servicePort), samplePeriod);
     ) {
       server.start();
       metrics.start();
@@ -91,8 +91,8 @@ public class MetricsTest {
     final int[] expectedPointCounts = {countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
-      final TestServer server = new TestServer(port, req -> {
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, servicePath, servicePort), samplePeriod);
+      final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
         assertMetric(expectedPointCounts[counter.getAndIncrement()], req);
@@ -128,8 +128,8 @@ public class MetricsTest {
     final int[] expectedPointCounts = {2 * countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
-      final TestServer server = new TestServer(port, req -> {
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, servicePath, servicePort), samplePeriod);
+      final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
         assertMetric(expectedPointCounts[counter.getAndIncrement()], req);
@@ -163,8 +163,8 @@ public class MetricsTest {
     final int[] expectedPointCounts = {3 * countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(componentName, samplePeriod, hostName, port);
-      final TestServer server = new TestServer(port, req -> {
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, servicePath, servicePort), samplePeriod);
+      final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
         assertMetric(expectedPointCounts[counter.getAndIncrement()], req);
