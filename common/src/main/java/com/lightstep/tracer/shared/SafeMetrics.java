@@ -19,11 +19,10 @@ public class SafeMetrics {
     }
 
     final Sender<?,?> sender;
-    if (collectorClient == Options.CollectorClient.GRPC) {
+    if (collectorClient == Options.CollectorClient.GRPC)
       sender = new GrpcSender(componentName, servicePath, port);
-    } else { // Default to OkHttp
+    else // Default to OkHttp
       sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, accessToken, servicePath, port);
-    }
 
     return Metrics.getInstance(sender, samplePeriodSeconds);
   }

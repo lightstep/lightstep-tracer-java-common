@@ -13,7 +13,10 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
+import com.lightstep.tracer.metrics.GrpcSender;
 import com.lightstep.tracer.metrics.Metrics;
+import com.lightstep.tracer.metrics.OkHttpSender;
+import com.lightstep.tracer.metrics.Sender;
 
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
