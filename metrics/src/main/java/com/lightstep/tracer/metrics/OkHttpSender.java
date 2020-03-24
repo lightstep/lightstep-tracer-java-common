@@ -31,7 +31,7 @@ public class OkHttpSender extends ProtobufSender {
       throw new IllegalArgumentException("servicePath (" + servicePath + ") is invalid");
 
     try {
-      this.collectorURL = new URL("http", servicePath.substring(0, slash), servicePort, servicePath.substring(slash));
+      this.collectorURL = new URL("https", servicePath.substring(0, slash), servicePort, servicePath.substring(slash));
     }
     catch (final MalformedURLException e) {
       throw new IllegalArgumentException(e);

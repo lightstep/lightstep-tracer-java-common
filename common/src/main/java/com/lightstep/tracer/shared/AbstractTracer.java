@@ -230,22 +230,30 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
+        metricsThread = Metrics.getInstance(createMetricsSender(), LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
+        metricsThread.setDaemon(true);
+        metricsThread.start();
+    }
+
+    private Sender<?,?> createMetricsSender() {
         final int samplePeriodSeconds = LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS;
         final String componentName = auth.getAccessToken();
         final String servicePath = LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH;
         final int servicePort = LightStepConstants.Metrics.DEFAULT_PORT;
 
         final Sender<?,?> sender;
-        if (metricsCollectorClient == Options.CollectorClient.HTTP)
-          sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, servicePath, servicePort);
-        else if (metricsCollectorClient == Options.CollectorClient.GRPC)
-          sender = new GrpcSender(componentName, LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH, LightStepConstants.Metrics.DEFAULT_PORT);
-        else
-          throw new IllegalArgumentException("Unknown CollectorClient: " + metricsCollectorClient);
+        if (metricsCollectorClient == Options.CollectorClient.GRPC) {
+            sender = new GrpcSender(componentName,
+                    LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH,
+                    LightStepConstants.Metrics.DEFAULT_PORT);
+        } else { // Default is Okhttp.
+            sender = new OkHttpSender(LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS * 1000,
+                    componentName,
+                    servicePath,
+                    servicePort);
+        }
 
-        metricsThread = Metrics.getInstance(sender, samplePeriodSeconds);
-        metricsThread.setDaemon(true);
-        metricsThread.start();
+        return sender;
     }
 
     /**
