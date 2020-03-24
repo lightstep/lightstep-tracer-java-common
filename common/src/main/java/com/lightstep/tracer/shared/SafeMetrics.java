@@ -12,18 +12,17 @@ public class SafeMetrics {
   private static final Logger logger = LoggerFactory.getLogger(SafeMetrics.class);
   private static final boolean isJdk17 = System.getProperty("java.version").startsWith("1.7");
 
-  public static Metrics getInstance(final Options.CollectorClient collectorClient, final String componentName, final String accessToken, final int samplePeriodSeconds, final String servicePath, final int port) {
+  public static Metrics getInstance(final Options.CollectorClient collectorClient, final String componentName, final String accessToken, final int samplePeriodSeconds, final String servicePath, final int servicePort) {
     if (isJdk17) {
       logger.warn("Metrics supports jdk1.8+");
       return null;
     }
 
     final Sender<?,?> sender;
-    if (collectorClient == Options.CollectorClient.GRPC) {
-      sender = new GrpcSender(componentName, servicePath, port);
-    } else { // Default to OkHttp
-      sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, accessToken, servicePath, port);
-    }
+    if (collectorClient == Options.CollectorClient.GRPC)
+      sender = new GrpcSender(componentName, servicePath, servicePort);
+    else
+      sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, accessToken, servicePath, servicePort);
 
     return Metrics.getInstance(sender, samplePeriodSeconds);
   }

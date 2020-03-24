@@ -1,10 +1,14 @@
 package com.lightstep.tracer.shared;
 
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.DEBUG;
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.ERROR;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
+import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.*;
+import static com.lightstep.tracer.shared.Options.*;
+
+import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.lightstep.tracer.grpc.Auth;
 import com.lightstep.tracer.grpc.Command;
@@ -18,12 +22,6 @@ import com.lightstep.tracer.metrics.Metrics;
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class AbstractTracer implements Tracer, Closeable {
     // Maximum interval between reports
@@ -231,14 +229,17 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
-        metricsThread = SafeMetrics.getInstance(metricsCollectorClient,
-                    componentName,
-                    auth.getAccessToken(),
-                    LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS,
-                    LightStepConstants.Metrics.DEFAULT_FULL_PATH,
-                    LightStepConstants.Metrics.DEFAULT_PORT);
-        metricsThread.setDaemon(true);
-        metricsThread.start();
+        final int samplePeriodSeconds = LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS;
+        final String componentName = auth.getAccessToken();
+        final String servicePath = LightStepConstants.Metrics.DEFAULT_FULL_PATH;
+        final int servicePort = LightStepConstants.Metrics.DEFAULT_PORT;
+
+        metricsThread = SafeMetrics.getInstance(metricsCollectorClient, componentName, auth.getAccessToken(), samplePeriodSeconds, servicePath, servicePort);
+        // Can be null, if running on jdk1.7
+        if (metricsThread != null) {
+          metricsThread.setDaemon(true);
+          metricsThread.start();
+        }
     }
 
     /**

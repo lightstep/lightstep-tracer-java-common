@@ -7,7 +7,7 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 class MemoryMetricGroup extends MetricGroup {
   MemoryMetricGroup(final HardwareAbstractionLayer hal) {
-    super(hal, new GaugeMetric<>("mem.available", Long.class), new GaugeMetric<>("mem.total", Long.class));
+    super(hal, new GaugeMetric<>("mem.available", Long.class, 1), new GaugeMetric<>("mem.total", Long.class, 1));
   }
 
   @Override
