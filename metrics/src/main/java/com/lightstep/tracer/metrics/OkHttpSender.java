@@ -42,7 +42,6 @@ public class OkHttpSender extends ProtobufSender {
 
   @Override
   IngestResponse invoke(final IngestRequest.Builder request, final long timeout) throws IOException {
-    System.out.println("Access token = " + accessToken);
     final Response response = client().newCall(new Request.Builder()
         .url(collectorURL)
         .addHeader("Lightstep-Access-Token", accessToken)
