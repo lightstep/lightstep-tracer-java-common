@@ -13,10 +13,7 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
-import com.lightstep.tracer.metrics.GrpcSender;
 import com.lightstep.tracer.metrics.Metrics;
-import com.lightstep.tracer.metrics.OkHttpSender;
-import com.lightstep.tracer.metrics.Sender;
 
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
@@ -82,6 +79,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     }
 
     private final int verbosity;
+    private final String componentName;
     private final Auth.Builder auth;
     private final Reporter.Builder reporter;
     private final CollectorClient client;
@@ -134,6 +132,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
         verbosity = options.verbosity;
+
+        // Save component name for further usage.
+        componentName = options.getComponentName();
 
         // Save the maxBufferedSpans since we need it post-construction, too.
         maxBufferedSpans = options.maxBufferedSpans;
@@ -230,30 +231,14 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
-        metricsThread = Metrics.getInstance(createMetricsSender(), LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
+        metricsThread = SafeMetrics.getInstance(metricsCollectorClient,
+                    componentName,
+                    auth.getAccessToken(),
+                    LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS,
+                    LightStepConstants.Metrics.DEFAULT_FULL_PATH,
+                    LightStepConstants.Metrics.DEFAULT_PORT);
         metricsThread.setDaemon(true);
         metricsThread.start();
-    }
-
-    private Sender<?,?> createMetricsSender() {
-        final int samplePeriodSeconds = LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS;
-        final String componentName = auth.getAccessToken();
-        final String servicePath = LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH;
-        final int servicePort = LightStepConstants.Metrics.DEFAULT_PORT;
-
-        final Sender<?,?> sender;
-        if (metricsCollectorClient == Options.CollectorClient.GRPC) {
-            sender = new GrpcSender(componentName,
-                    LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH,
-                    LightStepConstants.Metrics.DEFAULT_PORT);
-        } else { // Default is Okhttp.
-            sender = new OkHttpSender(LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS * 1000,
-                    componentName,
-                    servicePath,
-                    servicePort);
-        }
-
-        return sender;
     }
 
     /**

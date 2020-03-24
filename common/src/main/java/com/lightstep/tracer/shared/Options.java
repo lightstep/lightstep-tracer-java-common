@@ -176,6 +176,10 @@ public final class Options {
         return (long) tags.get(LightStepConstants.Tags.GUID_KEY);
     }
 
+    String getComponentName() {
+        return (String) tags.get(LightStepConstants.Tags.COMPONENT_NAME_KEY);
+    }
+
     @SuppressWarnings({"WeakerAccess"})
     public static class OptionsBuilder {
         private String accessToken = "";

@@ -35,6 +35,7 @@ public final class LightStepConstants {
         // TODO: Update to ingest.lightstep.com
         static final String DEFAULT_HOST = "ingest.staging.lightstep.com";
         static final String PATH = "/metrics";
+        static final String DEFAULT_FULL_PATH = DEFAULT_HOST + PATH;
         static final int DEFAULT_PORT = 443;
     }
 

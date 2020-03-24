@@ -21,10 +21,12 @@ public class OkHttpSender extends ProtobufSender {
   private final AtomicReference<OkHttpClient> client;
   private final URL collectorURL;
   private final long deadlineMillis;
+  private final String accessToken;
 
-  public OkHttpSender(final int deadlineMillis, final String componentName, final String servicePath, final int servicePort) {
+  public OkHttpSender(final int deadlineMillis, final String componentName, final String accessToken, final String servicePath, final int servicePort) {
     super(componentName, servicePath, servicePort);
     this.deadlineMillis = deadlineMillis;
+    this.accessToken = accessToken;
     this.client = new AtomicReference<>(start(deadlineMillis));
     final int slash = servicePath.indexOf('/');
     if (slash == -1)
@@ -40,8 +42,12 @@ public class OkHttpSender extends ProtobufSender {
 
   @Override
   IngestResponse invoke(final IngestRequest.Builder request, final long timeout) throws IOException {
+    System.out.println("Access token = " + accessToken);
     final Response response = client().newCall(new Request.Builder()
         .url(collectorURL)
+        .addHeader("Lightstep-Access-Token", accessToken)
+        .addHeader("Accept", "application/octet-stream")
+        .addHeader("Content-Type", "application/octet-stream")
         .post(RequestBody.create(protoMediaType, request.build().toByteArray()))
         .build())
       .execute();

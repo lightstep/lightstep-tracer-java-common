@@ -20,7 +20,7 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
   @Override
   final <V extends Number>void createMessage(final IngestRequest.Builder request, final long timestampSeconds, final long durationSeconds, final Metric<?,V> metric, final long current, final long previous) throws IOException {
     final MetricPoint.Builder builder = MetricPoint.newBuilder();
-    builder.setKind(MetricKind.DELTA);
+    builder.setKind(MetricKind.COUNTER);
     builder.setMetricName(metric.getName());
 
     final Timestamp.Builder timestamp = Timestamp.newBuilder();

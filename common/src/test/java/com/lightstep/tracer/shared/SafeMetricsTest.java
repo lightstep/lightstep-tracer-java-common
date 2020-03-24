@@ -14,6 +14,6 @@ public class SafeMetricsTest {
       return;
     }
 
-    assertNull(SafeMetrics.getInstance(Options.CollectorClient.GRPC, null, 60, null, -1));
+    assertNull(SafeMetrics.getInstance(Options.CollectorClient.GRPC, null, null, 60, null, -1));
   }
 }
