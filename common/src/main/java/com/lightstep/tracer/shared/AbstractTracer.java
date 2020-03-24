@@ -1,10 +1,14 @@
 package com.lightstep.tracer.shared;
 
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.DEBUG;
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.ERROR;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
+import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.*;
+import static com.lightstep.tracer.shared.Options.*;
+
+import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.lightstep.tracer.grpc.Auth;
 import com.lightstep.tracer.grpc.Command;
@@ -13,20 +17,11 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
-import com.lightstep.tracer.metrics.GrpcSender;
 import com.lightstep.tracer.metrics.Metrics;
-import com.lightstep.tracer.metrics.OkHttpSender;
-import com.lightstep.tracer.metrics.Sender;
 
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class AbstractTracer implements Tracer, Closeable {
     // Maximum interval between reports
@@ -239,17 +234,12 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         final String servicePath = LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH;
         final int servicePort = LightStepConstants.Metrics.DEFAULT_PORT;
 
-        final Sender<?,?> sender;
-        if (metricsCollectorClient == Options.CollectorClient.HTTP)
-          sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, servicePath, servicePort);
-        else if (metricsCollectorClient == Options.CollectorClient.GRPC)
-          sender = new GrpcSender(componentName, LightStepConstants.Metrics.DEFAULT_HOST + LightStepConstants.Metrics.PATH, LightStepConstants.Metrics.DEFAULT_PORT);
-        else
-          throw new IllegalArgumentException("Unknown CollectorClient: " + metricsCollectorClient);
-
-        metricsThread = Metrics.getInstance(sender, samplePeriodSeconds);
-        metricsThread.setDaemon(true);
-        metricsThread.start();
+        metricsThread = SafeMetrics.getInstance(metricsCollectorClient, componentName, samplePeriodSeconds, servicePath, servicePort);
+        // Can be null, if running on jdk1.7
+        if (metricsThread != null) {
+          metricsThread.setDaemon(true);
+          metricsThread.start();
+        }
     }
 
     /**
