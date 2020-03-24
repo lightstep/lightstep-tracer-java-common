@@ -37,8 +37,7 @@ abstract class MetricGroup {
           logger.debug("'-- " + metrics[i].getName() + "[" + value + "]");
         }
 
-        final Metric<?,?> metric = metrics[i];
-        sender.createMessage(request, timestampSeconds, durationSeconds, metric, current[i], previous[i]);
+        sender.createMessage(request, timestampSeconds, durationSeconds, metrics[i], current[i], previous[i]);
       }
     }
 
