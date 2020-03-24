@@ -6,11 +6,11 @@ import oshi.hardware.CentralProcessor.TickType;
 import oshi.hardware.HardwareAbstractionLayer;
 
 class CpuMetricGroup extends MetricGroup {
-  private static final CounterMetric<CpuMetricGroup,Long> cpuUsage = new CounterMetric<>("cpu.usage", Long.class);
-  private static final CounterMetric<CpuMetricGroup,Long> cpuTotal = new CounterMetric<>("cpu.total", Long.class);
+  private static final CounterMetric<CpuMetricGroup,Long> cpuUsage = new CounterMetric<>("cpu.usage", Long.class, 1000);
+  private static final CounterMetric<CpuMetricGroup,Long> cpuTotal = new CounterMetric<>("cpu.total", Long.class, 1000);
 
   CpuMetricGroup(final HardwareAbstractionLayer hal) {
-    super(hal, new CounterMetric<>("cpu.user", Long.class), null, new CounterMetric<>("cpu.sys", Long.class), null, null, null, null, null);
+    super(hal, new CounterMetric<>("cpu.user", Long.class, 1000), null, new CounterMetric<>("cpu.sys", Long.class, 1000), null, null, null, null, null);
   }
 
   @Override

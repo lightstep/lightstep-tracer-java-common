@@ -1,8 +1,8 @@
 package com.lightstep.tracer.metrics;
 
 class CounterMetric<G extends MetricGroup,T extends Number> extends Metric<G,T> {
-  CounterMetric(final String name, final Class<T> type) {
-    super(name, type);
+  CounterMetric(final String name, final Class<T> type, final long factor) {
+    super(name, type, factor);
   }
 
   @Override

@@ -7,7 +7,7 @@ import oshi.hardware.NetworkIF;
 
 class NetworkMetricGroup extends MetricGroup {
   NetworkMetricGroup(final HardwareAbstractionLayer hal) {
-    super(hal, new CounterMetric<>("net.bytes_sent", Long.class), new CounterMetric<>("net.bytes_recv", Long.class));
+    super(hal, new CounterMetric<>("net.bytes_sent", Long.class, 1), new CounterMetric<>("net.bytes_recv", Long.class, 1));
   }
 
   @Override

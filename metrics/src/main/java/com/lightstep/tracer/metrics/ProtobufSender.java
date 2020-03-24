@@ -20,7 +20,6 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
   @Override
   final <V extends Number>void createMessage(final IngestRequest.Builder request, final long timestampSeconds, final long durationSeconds, final Metric<?,V> metric, final long current, final long previous) throws IOException {
     final MetricPoint.Builder builder = MetricPoint.newBuilder();
-    builder.setKind(MetricKind.COUNTER);
     builder.setMetricName(metric.getName());
 
     final Timestamp.Builder timestamp = Timestamp.newBuilder();
@@ -55,7 +54,13 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
     reporterPlatformVersionLabel.setStringValue(getPlatformVersion());
     builder.addLabels(reporterPlatformVersionLabel);
 
-    metric.getAdapter().setValue(builder, metric.compute(current, previous));
+    builder.setDoubleValue(metric.getValue(current, previous));
+//    metric.getAdapter().setValue(builder, metric.compute(current, previous));
+
+    if (metric instanceof CounterMetric)
+      builder.setKind(MetricKind.COUNTER);
+    else
+      builder.setKind(MetricKind.GAUGE);
 
     request.addPoints(builder.build());
   }
