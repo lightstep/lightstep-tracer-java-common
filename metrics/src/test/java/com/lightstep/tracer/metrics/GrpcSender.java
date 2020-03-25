@@ -10,6 +10,9 @@ import com.lightstep.tracer.grpc.MetricsServiceGrpc.MetricsServiceBlockingStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
+// Sender used for testing purposes.
+// Consider removing it once we have an OKHttp server with
+// its own tests.
 public class GrpcSender extends ProtobufSender {
   private final ManagedChannel channel;
   private final MetricsServiceBlockingStub stub;

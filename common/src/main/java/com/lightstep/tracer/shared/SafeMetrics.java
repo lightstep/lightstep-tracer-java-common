@@ -3,7 +3,6 @@ package com.lightstep.tracer.shared;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.lightstep.tracer.metrics.GrpcSender;
 import com.lightstep.tracer.metrics.Metrics;
 import com.lightstep.tracer.metrics.OkHttpSender;
 import com.lightstep.tracer.metrics.Sender;
@@ -18,12 +17,7 @@ public class SafeMetrics {
       return null;
     }
 
-    final Sender<?,?> sender;
-    if (collectorClient == Options.CollectorClient.GRPC)
-      sender = new GrpcSender(componentName, servicePath, servicePort);
-    else
-      sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, accessToken, servicePath, servicePort);
-
+    Sender<?,?> sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, accessToken, servicePath, servicePort);
     return Metrics.getInstance(sender, samplePeriodSeconds);
   }
 }
