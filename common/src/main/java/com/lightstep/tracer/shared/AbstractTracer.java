@@ -235,7 +235,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
 
         // Can be null, if running on jdk1.7
         metricsThread = SafeMetrics.getInstance(componentName, auth.getAccessToken(),
-              samplePeriodSeconds, servicePath, servicePort);
+              servicePath, servicePort, samplePeriodSeconds);
         if (metricsThread != null) {
           metricsThread.setDaemon(true);
           metricsThread.start();
