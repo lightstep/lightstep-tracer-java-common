@@ -11,13 +11,16 @@ public class SafeMetrics {
   private static final Logger logger = LoggerFactory.getLogger(SafeMetrics.class);
   private static final boolean isJdk17 = System.getProperty("java.version").startsWith("1.7");
 
-  public static Metrics getInstance(final Options.CollectorClient collectorClient, final String componentName, final String accessToken, final int samplePeriodSeconds, final String servicePath, final int servicePort) {
+  public static Metrics getInstance(final String componentName, final String accessToken,
+        final int samplePeriodSeconds, final String servicePath, final int servicePort) {
     if (isJdk17) {
       logger.warn("Metrics supports jdk1.8+");
       return null;
     }
 
-    Sender<?,?> sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, accessToken, servicePath, servicePort);
+    // TODO: Can we unify samplePeriodSeconds in a single place?
+    Sender<?,?> sender = new OkHttpSender(samplePeriodSeconds * 1000, componentName, accessToken,
+          servicePath, servicePort);
     return Metrics.getInstance(sender, samplePeriodSeconds);
   }
 }

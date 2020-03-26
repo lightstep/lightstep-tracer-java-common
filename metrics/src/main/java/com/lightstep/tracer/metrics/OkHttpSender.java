@@ -16,7 +16,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class OkHttpSender extends ProtobufSender {
-  private static final MediaType protoMediaType = MediaType.parse("application/octet-stream");
+  // TODO - unify constants with the main artifact.
+  private static final String OCTET_STREAM_TYPE = "application/octet-stream";
+  private static final MediaType protoMediaType = MediaType.parse(OCTET_STREAM_TYPE);
 
   private final AtomicReference<OkHttpClient> client;
   private final URL collectorURL;
@@ -44,9 +46,9 @@ public class OkHttpSender extends ProtobufSender {
   IngestResponse invoke(final IngestRequest.Builder request, final long timeout) throws IOException {
     final Response response = client().newCall(new Request.Builder()
         .url(collectorURL)
+        .addHeader("Accept", OCTET_STREAM_TYPE)
+        .addHeader("Content-Type", OCTET_STREAM_TYPE)
         .addHeader("Lightstep-Access-Token", accessToken)
-        .addHeader("Accept", "application/octet-stream")
-        .addHeader("Content-Type", "application/octet-stream")
         .post(RequestBody.create(protoMediaType, request.build().toByteArray()))
         .build())
       .execute();

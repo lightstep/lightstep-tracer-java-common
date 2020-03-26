@@ -230,12 +230,12 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread.start();
 
         final int samplePeriodSeconds = LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS;
-        final String componentName = auth.getAccessToken();
         final String servicePath = LightStepConstants.Metrics.DEFAULT_FULL_PATH;
         final int servicePort = LightStepConstants.Metrics.DEFAULT_PORT;
 
-        metricsThread = SafeMetrics.getInstance(metricsCollectorClient, componentName, auth.getAccessToken(), samplePeriodSeconds, servicePath, servicePort);
         // Can be null, if running on jdk1.7
+        metricsThread = SafeMetrics.getInstance(componentName, auth.getAccessToken(),
+              samplePeriodSeconds, servicePath, servicePort);
         if (metricsThread != null) {
           metricsThread.setDaemon(true);
           metricsThread.start();
