@@ -18,8 +18,8 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
   private final KeyValue.Builder[] labels;
 
   // TODO: Unify the constants.
-  ProtobufSender(final String componentName, final String servicePath, final int servicePort) {
-    super(componentName, servicePath, servicePort);
+  ProtobufSender(final String componentName, final String accessToken, final String servicePath, final int servicePort) {
+    super(componentName, accessToken, servicePath, servicePort);
 
     String hostname = getHostname();
 

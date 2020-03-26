@@ -3,12 +3,14 @@ package com.lightstep.tracer.metrics;
 import java.io.IOException;
 
 public abstract class Sender<I,O> implements AutoCloseable {
-  final String componentName;
-  final String servicePath;
-  final int servicePort;
+  protected final String componentName;
+  protected final String accessToken;
+  protected final String servicePath;
+  protected final int servicePort;
 
-  Sender(final String componentName, final String servicePath, final int servicePort) {
+  Sender(final String componentName, final String accessToken, final String servicePath, final int servicePort) {
     this.componentName = componentName;
+    this.accessToken = accessToken;
     this.servicePath = servicePath;
     this.servicePort = servicePort;
   }
