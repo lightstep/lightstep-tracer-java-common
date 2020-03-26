@@ -14,6 +14,6 @@ public class SafeMetricsTest {
       return;
     }
 
-    assertNull(SafeMetrics.getInstance(null, null, 60, null, -1));
+    assertNull(SafeMetrics.getInstance(null, null, null, -1, 60));
   }
 }
