@@ -91,6 +91,7 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
           }
         };
 
+        thread.setDaemon(true);
         thread.start();
 
         try {
