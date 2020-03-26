@@ -3,12 +3,14 @@ package com.lightstep.tracer.metrics;
 import java.io.IOException;
 
 public abstract class Sender<I,O> implements AutoCloseable {
-  final String componentName;
-  final String servicePath;
-  final int servicePort;
+  protected final String componentName;
+  protected final String accessToken;
+  protected final String servicePath;
+  protected final int servicePort;
 
-  Sender(final String componentName, final String servicePath, final int servicePort) {
+  Sender(final String componentName, final String accessToken, final String servicePath, final int servicePort) {
     this.componentName = componentName;
+    this.accessToken = accessToken;
     this.servicePath = servicePath;
     this.servicePort = servicePort;
   }
@@ -16,6 +18,7 @@ public abstract class Sender<I,O> implements AutoCloseable {
   abstract <V extends Number>void createMessage(I request, long timestampSeconds, long durationSeconds, Metric<?,V> metric, long current, long previous) throws IOException;
   abstract I newRequest();
   abstract I setIdempotency(I request);
+  abstract I setReporter(I request);
   abstract O invoke(I request, long timeout) throws Exception;
 
   private I request;
@@ -78,7 +81,7 @@ public abstract class Sender<I,O> implements AutoCloseable {
     final long durationSeconds = timestampSeconds - getPreviousTimestamp();
     previousTime = timestampSeconds;
 
-    final I request = setIdempotency(this.request != null ? this.request : newRequest());
+    final I request = setReporter(setIdempotency(this.request != null ? this.request : newRequest()));
     for (final MetricGroup metricGroup : metricGroups)
       metricGroup.execute(this, request, timestampSeconds, durationSeconds);
 

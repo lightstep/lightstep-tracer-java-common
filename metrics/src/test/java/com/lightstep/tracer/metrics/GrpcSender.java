@@ -17,8 +17,8 @@ public class GrpcSender extends ProtobufSender {
   private final ManagedChannel channel;
   private final MetricsServiceBlockingStub stub;
 
-  public GrpcSender(final String componentName, final String servicePath, final int servicePort) {
-    super(componentName, servicePath, servicePort);
+  public GrpcSender(final String componentName, final String accessToken, final String servicePath, final int servicePort) {
+    super(componentName, accessToken, servicePath, servicePort);
     channel = ManagedChannelBuilder.forAddress(servicePath, servicePort).usePlaintext().build();
     stub = MetricsServiceGrpc.newBlockingStub(channel);
   }

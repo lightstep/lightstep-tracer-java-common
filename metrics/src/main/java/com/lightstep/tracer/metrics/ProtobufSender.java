@@ -11,10 +11,32 @@ import com.lightstep.tracer.grpc.IngestResponse;
 import com.lightstep.tracer.grpc.KeyValue;
 import com.lightstep.tracer.grpc.MetricKind;
 import com.lightstep.tracer.grpc.MetricPoint;
+import com.lightstep.tracer.grpc.Reporter;
 
 abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
-  ProtobufSender(final String componentName, final String servicePath, final int servicePort) {
-    super(componentName, servicePath, servicePort);
+  private final Reporter.Builder reporter;
+  private final KeyValue.Builder[] labels;
+
+  // TODO: Unify the constants.
+  ProtobufSender(final String componentName, final String accessToken, final String servicePath, final int servicePort) {
+    super(componentName, accessToken, servicePath, servicePort);
+
+    String hostname = getHostname();
+
+    // TODO: Where to get the service version from?
+    reporter = Reporter.newBuilder();
+    reporter.addTags(KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"));
+    reporter.addTags(KeyValue.newBuilder().setKey("lightstep.component_name").setStringValue(componentName));
+    reporter.addTags(KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname));
+    reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform").setStringValue("java"));
+    reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform_version")
+          .setStringValue(getJavaVersion()));
+
+    labels = new KeyValue.Builder[] {
+      KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"),
+      KeyValue.newBuilder().setKey("lightstep.component_name").setStringValue(componentName),
+      KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname)
+    };
   }
 
   @Override
@@ -32,28 +54,6 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
 //    duration.setNanos(durationNanos);
     builder.setDuration(duration);
 
-    final KeyValue.Builder componentNameLabel = KeyValue.newBuilder();
-    componentNameLabel.setKey("lightstep.component_name");
-    componentNameLabel.setStringValue(componentName);
-    builder.addLabels(componentNameLabel);
-
-    // FIXME: Technically, the following line is the proper "java way" to get the hostname. However, this most always returns an internal IP address, which may be incorrect for our needs?!
-    final String hostname = InetAddress.getLocalHost().getHostName();
-    final KeyValue.Builder hostnameLabel = KeyValue.newBuilder();
-    hostnameLabel.setKey("lightstep.hostname");
-    hostnameLabel.setStringValue(hostname);
-    builder.addLabels(hostnameLabel);
-
-    final KeyValue.Builder reporterPlatformLabel = KeyValue.newBuilder();
-    reporterPlatformLabel.setKey("lightstep.reporter_platform");
-    reporterPlatformLabel.setStringValue(getPlatformReporter());
-    builder.addLabels(reporterPlatformLabel);
-
-    final KeyValue.Builder reporterPlatformVersionLabel = KeyValue.newBuilder();
-    reporterPlatformVersionLabel.setKey("lightstep.reporter_platform_version");
-    reporterPlatformVersionLabel.setStringValue(getPlatformVersion());
-    builder.addLabels(reporterPlatformVersionLabel);
-
     builder.setDoubleValue(metric.getValue(current, previous));
 //    metric.getAdapter().setValue(builder, metric.compute(current, previous));
 
@@ -62,7 +62,27 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
     else
       builder.setKind(MetricKind.GAUGE);
 
+    // Add the predefined labels.
+    for (int i = 0; i < labels.length; i++) {
+      builder.addLabels(labels[i]);
+    }
+
     request.addPoints(builder.build());
+  }
+
+  private static String getHostname() {
+    // FIXME: Technically, the following line is the proper "java way" to get the hostname.
+    // However, this most always returns an internal IP address, which may be incorrect for
+    // our needs?!
+    try {
+      return InetAddress.getLocalHost().getHostName();
+    } catch (IOException e) {
+      return "";
+    }
+  }
+
+  private static String getJavaVersion() {
+    return System.getProperty("java.version");
   }
 
   @Override
@@ -73,5 +93,10 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
   @Override
   IngestRequest.Builder setIdempotency(final IngestRequest.Builder request) {
     return request.setIdempotencyKey(UUID.randomUUID().toString());
+  }
+
+  @Override
+  IngestRequest.Builder setReporter(final IngestRequest.Builder request) {
+    return request.setReporter(reporter);
   }
 }
