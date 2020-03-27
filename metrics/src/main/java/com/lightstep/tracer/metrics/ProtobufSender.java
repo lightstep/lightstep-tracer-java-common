@@ -25,7 +25,7 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
 
     // TODO: Where to get the service version from?
     reporter = Reporter.newBuilder();
-    reporter.addTags(KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"));
+    //reporter.addTags(KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.component_name").setStringValue(componentName));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform").setStringValue("java"));
@@ -33,7 +33,7 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
           .setStringValue(getJavaVersion()));
 
     labels = new KeyValue.Builder[] {
-      KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"),
+      //KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"),
       KeyValue.newBuilder().setKey("lightstep.component_name").setStringValue(componentName),
       KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname)
     };
