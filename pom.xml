@@ -49,6 +49,15 @@
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+
+        <io.opentracing.version>0.33.0</io.opentracing.version>
+        <com.google.protobuf.version>3.9.0</com.google.protobuf.version>
+        <com.google.api.version>1.17.0</com.google.api.version>
+
+        <io.grpc.version>1.23.0</io.grpc.version>
+        <io.netty.version>2.0.25.Final</io.netty.version>
+
+        <com.squareup.okhttp3.version>4.3.1</com.squareup.okhttp3.version>
     </properties>
 
     <modules>

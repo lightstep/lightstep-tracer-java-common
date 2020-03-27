@@ -12,7 +12,6 @@
     <artifactId>tracer-okhttp</artifactId>
 
     <properties>
-        <com.squareup.okhttp3.version>4.3.1</com.squareup.okhttp3.version>
         <maven.deploy.skip>false</maven.deploy.skip>
     </properties>
 

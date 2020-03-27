@@ -15,10 +15,6 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <io.grpc.version>1.23.0</io.grpc.version>
-        <io.netty.version>2.0.25.Final</io.netty.version>
-        <protobuf.version>3.7.0</protobuf.version>
-        <com.squareup.okhttp3.version>4.3.1</com.squareup.okhttp3.version>
     </properties>
 
   <build>
@@ -93,14 +89,14 @@
         </dependency>
 
         <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-protobuf</artifactId>
-            <version>${io.grpc.version}</version>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${com.google.protobuf.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-stub</artifactId>
-            <version>${io.grpc.version}</version>
+            <groupId>com.google.api.grpc</groupId>
+            <artifactId>grpc-google-common-protos</artifactId>
+            <version>${com.google.api.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -122,6 +118,19 @@
             <version>2.18.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${io.grpc.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${io.grpc.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
