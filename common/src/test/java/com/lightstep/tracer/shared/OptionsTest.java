@@ -281,6 +281,7 @@ public class OptionsTest {
                 options.collectorUrl.toString()
         );
         assertEquals(COMPONENT_NAME, options.tags.get(COMPONENT_NAME_KEY));
+        assertEquals(COMPONENT_NAME, options.getComponentName());
         assertTrue(options.disableReportingLoop);
         assertTrue(options.resetClient);
         assertFalse(options.useClockCorrection);
