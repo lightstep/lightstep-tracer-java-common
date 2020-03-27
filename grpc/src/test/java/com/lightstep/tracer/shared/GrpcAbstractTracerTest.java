@@ -81,6 +81,7 @@ public class GrpcAbstractTracerTest {
         Options options = new Options.OptionsBuilder()
                 .withAccessToken(ACCESS_TOKEN)
                 .withVerbosity(verbosity)
+                .withDisableMetricsReporting(true)
                 .build();
         return createTracer(options);
     }

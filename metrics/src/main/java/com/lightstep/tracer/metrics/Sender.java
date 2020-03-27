@@ -5,14 +5,12 @@ import java.io.IOException;
 public abstract class Sender<I,O> implements AutoCloseable {
   protected final String componentName;
   protected final String accessToken;
-  protected final String servicePath;
-  protected final int servicePort;
+  protected final String serviceUrl;
 
-  Sender(final String componentName, final String accessToken, final String servicePath, final int servicePort) {
+  Sender(final String componentName, final String accessToken, final String serviceUrl) {
     this.componentName = componentName;
     this.accessToken = accessToken;
-    this.servicePath = servicePath;
-    this.servicePort = servicePort;
+    this.serviceUrl = serviceUrl;
   }
 
   abstract <V extends Number>void createMessage(I request, long timestampSeconds, long durationSeconds, Metric<?,V> metric, long current, long previous) throws IOException;

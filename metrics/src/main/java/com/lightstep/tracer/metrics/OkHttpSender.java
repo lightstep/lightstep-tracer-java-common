@@ -25,18 +25,14 @@ public class OkHttpSender extends ProtobufSender {
   private final long deadlineMillis;
 
   public OkHttpSender(final String componentName, final String accessToken,
-        final String servicePath, final int servicePort, final int deadlineMillis) {
-    super(componentName, accessToken, servicePath, servicePort);
+        final String serviceUrl, final int deadlineMillis) {
+    super(componentName, accessToken, serviceUrl);
     this.deadlineMillis = deadlineMillis;
     this.client = new AtomicReference<>(start(deadlineMillis));
-    final int slash = servicePath.indexOf('/');
-    if (slash == -1)
-      throw new IllegalArgumentException("servicePath (" + servicePath + ") is invalid");
 
     try {
-      this.collectorURL = new URL("https", servicePath.substring(0, slash), servicePort, servicePath.substring(slash));
-    }
-    catch (final MalformedURLException e) {
+      this.collectorURL = new URL(serviceUrl);
+    } catch (final MalformedURLException e) {
       throw new IllegalArgumentException(e);
     }
   }

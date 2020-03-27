@@ -32,11 +32,7 @@ public final class LightStepConstants {
         }
 
         static final int DEFAULT_INTERVAL_SECS = 30;
-        // TODO: Update to ingest.lightstep.com
-        static final String DEFAULT_HOST = "ingest.staging.lightstep.com";
-        static final String PATH = "/metrics";
-        static final String DEFAULT_FULL_PATH = DEFAULT_HOST + PATH;
-        static final int DEFAULT_PORT = 443;
+        static final String DEFAULT_URL = "https://ingest.lightstep.com:443/metrics";
     }
 
     public final class Tags {

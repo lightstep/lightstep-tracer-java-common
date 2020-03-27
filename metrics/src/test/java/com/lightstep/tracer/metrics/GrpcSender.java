@@ -16,9 +16,15 @@ import io.grpc.ManagedChannelBuilder;
 public class GrpcSender extends ProtobufSender {
   private final ManagedChannel channel;
   private final MetricsServiceBlockingStub stub;
+  private final String servicePath;
+  private final int servicePort;
 
-  public GrpcSender(final String componentName, final String accessToken, final String servicePath, final int servicePort) {
-    super(componentName, accessToken, servicePath, servicePort);
+  public GrpcSender(final String componentName, final String accessToken, final String serviceUrl) {
+    super(componentName, accessToken, serviceUrl);
+
+    int colon = serviceUrl.indexOf(":");
+    servicePath = serviceUrl.substring(0, colon);
+    servicePort = Integer.valueOf(serviceUrl.substring(colon + 1));
     channel = ManagedChannelBuilder.forAddress(servicePath, servicePort).usePlaintext().build();
     stub = MetricsServiceGrpc.newBlockingStub(channel);
   }
