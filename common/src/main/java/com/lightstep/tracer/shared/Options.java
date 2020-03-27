@@ -491,20 +491,20 @@ public final class Options {
          * Uses the specified value as the metrics collector url.
          */
         public OptionsBuilder withMetricsUrl(String metricsUrl) {
-          if (metricsUrl == null) {
-            throw new IllegalArgumentException("metricsUrl cannot be null");
-          }
+            if (metricsUrl == null) {
+                throw new IllegalArgumentException("metricsUrl cannot be null");
+            }
 
-          this.metricsUrl = metricsUrl;
-          return this;
+            this.metricsUrl = metricsUrl;
+            return this;
         }
 
         /**
          * If true, metrics reporting will be disabled. Default is {@code false}.
          */
         public OptionsBuilder withDisableMetricsReporting(boolean disable) {
-          this.disableMetricsReporting = disable;
-          return this;
+            this.disableMetricsReporting = disable;
+            return this;
         }
 
         /**
