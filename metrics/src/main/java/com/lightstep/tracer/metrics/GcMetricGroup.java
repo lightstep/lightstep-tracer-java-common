@@ -12,7 +12,7 @@ class GcMetricGroup extends MetricGroup {
   }
 
   @Override
-  <I,O>long[] newSample(final Sender<I,O> sender, final I request, final long timestampSeconds, final long durationSeconds) throws IOException {
+  <I,O>long[] newSample() throws IOException {
     long totalCount = 0;
     long totalTime = 0;
     for (final GarbageCollectorMXBean bean : ManagementFactory.getGarbageCollectorMXBeans()) {

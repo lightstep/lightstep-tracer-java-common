@@ -24,15 +24,15 @@ public class OkHttpSender extends ProtobufSender {
   private final URL collectorURL;
   private final long deadlineMillis;
 
-  public OkHttpSender(final String componentName, final String accessToken,
-        final String serviceUrl, final int deadlineMillis) {
+  public OkHttpSender(final String componentName, final String accessToken, final String serviceUrl, final int deadlineMillis) {
     super(componentName, accessToken, serviceUrl);
     this.deadlineMillis = deadlineMillis;
     this.client = new AtomicReference<>(start(deadlineMillis));
 
     try {
       this.collectorURL = new URL(serviceUrl);
-    } catch (final MalformedURLException e) {
+    }
+    catch (final MalformedURLException e) {
       throw new IllegalArgumentException(e);
     }
   }
