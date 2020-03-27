@@ -256,7 +256,7 @@ public class OptionsTest {
                 .withCollectorHost(COLLECTOR_HOST)
                 .withCollectorProtocol(HTTPS_PROTOCOL)
                 .withComponentName(COMPONENT_NAME)
-                .withDisableMetricsReporting(true)
+                .withDisableReportingLoop(true)
                 .withResetClient(true)
                 .withClockSkewCorrection(false)
                 .withMaxReportingIntervalMillis(MAX_REPORTING_INTERVAL_MILLIS)
@@ -267,7 +267,7 @@ public class OptionsTest {
                 .withPropagator(Builtin.TEXT_MAP, CUSTOM_PROPAGATOR)
                 .withScopeManager(new ThreadLocalScopeManager())
                 .withMetricsUrl(COLLECTOR_HOST)
-                .withDisableReportingLoop(true)
+                .withDisableMetricsReporting(true)
                 .withDisableMetaEventLogging(true)
                 .withOkHttpDns(CUSTOM_DNS)
                 .build();
