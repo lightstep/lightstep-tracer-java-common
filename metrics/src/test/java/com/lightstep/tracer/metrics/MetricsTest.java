@@ -18,7 +18,7 @@ public class MetricsTest {
 
   @Test
   public void testSamplePeriod() throws Exception {
-    final int samplePeriod = 2;
+    final int samplePeriod = 1;
     final AtomicInteger counter = new AtomicInteger();
     final String[] id = new String[1];
     try (
@@ -84,7 +84,7 @@ public class MetricsTest {
 
   @Test
   public void testRetryWithinSamplePeriod() throws Exception {
-    final int samplePeriod = 5;
+    final int samplePeriod = 2;
     final AtomicInteger counter = new AtomicInteger();
 
     // Set both expected point counts to `countsPerSample`, because the server will consume requests within the samplePeriod time.
@@ -102,16 +102,16 @@ public class MetricsTest {
       // 1. Start the metrics engine, but the server is off.
       metrics.start();
 
-      // 2. Sleep for 4 seconds, allowing the metrics engine to engage its retry mechanism.
-      Thread.sleep(2000);
+      // 2. Sleep for 1 seconds, allowing the metrics engine to engage its retry mechanism.
+      Thread.sleep(1000);
 
       // 3. Start the server.
       server.start();
 
-      Thread.sleep(3000);
+      Thread.sleep(1500);
       assertEquals(1, counter.get());
 
-      Thread.sleep(5000);
+      Thread.sleep(2500);
       assertEquals(2, counter.get());
 
       assertFalse(idTest.hasError);
@@ -120,7 +120,7 @@ public class MetricsTest {
 
   @Test
   public void testRetryBeyondOneSamplePeriod() throws Exception {
-    final int samplePeriod = 5;
+    final int samplePeriod = 2;
     final AtomicInteger counter = new AtomicInteger();
 
     // Set first expected point count to 2x `countsPerSample`, because the first request is not delivered in time until samplePeriod laps.
@@ -139,23 +139,23 @@ public class MetricsTest {
       // 1. Start the metrics engine, but the server is off.
       metrics.start();
 
-      // 2. Sleep for 6 seconds, allowing the metrics engine to engage its retry mechanism.
-      Thread.sleep(6000);
+      // 2. Sleep for 3 seconds, allowing the metrics engine to engage its retry mechanism.
+      Thread.sleep(3000);
 
       // 3. Start the server.
       server.start();
 
-      Thread.sleep(3000 + 100);
+      Thread.sleep(1500 + 100);
       assertEquals(1, counter.get());
 
-      Thread.sleep(5000);
+      Thread.sleep(2500);
       assertEquals(2, counter.get());
     }
   }
 
   @Test
   public void testRetryBeyondTwoSamplePeriods() throws Exception {
-    final int samplePeriod = 4;
+    final int samplePeriod = 2;
     final AtomicInteger counter = new AtomicInteger();
 
     // Set first expected point count to 3x `countsPerSample`, because the first and second requests are not delivered in time until samplePeriod laps.
@@ -174,16 +174,16 @@ public class MetricsTest {
       // 1. Start the metrics engine, but the server is off.
       metrics.start();
 
-      // 2. Sleep for 9 seconds, allowing the metrics engine to engage its retry mechanism, leading to 1 message failing.
-      Thread.sleep(8000);
+      // 2. Sleep for 4 seconds, allowing the metrics engine to engage its retry mechanism, leading to 1 message failing.
+      Thread.sleep(4000);
 
       // 3. Start the server.
       server.start();
 
-      Thread.sleep(4000);
+      Thread.sleep(2000);
       assertEquals(1, counter.get());
 
-      Thread.sleep(4000);
+      Thread.sleep(2000);
       assertEquals(2, counter.get());
     }
   }
