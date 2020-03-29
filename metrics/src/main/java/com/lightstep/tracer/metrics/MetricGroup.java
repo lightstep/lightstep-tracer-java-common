@@ -24,18 +24,17 @@ abstract class MetricGroup {
     return previous;
   }
 
-  abstract <I,O>long[] newSample(Sender<I,O> sender, I request, long timestampSeconds, long durationSeconds) throws IOException;
+  abstract <I,O>long[] newSample() throws IOException;
 
   <I,O>long[] execute(final Sender<I,O> sender, final I request, final long timestampSeconds, final long durationSeconds) throws IOException {
-    final long[] current = newSample(sender, request, timestampSeconds, durationSeconds);
+    final long[] current = newSample();
     if (logger.isDebugEnabled())
-    logger.debug(getClass().getSimpleName());
+      logger.debug(getClass().getSimpleName());
+
     for (int i = 0; i < metrics.length; ++i) {
       if (metrics[i] != null) {
-        if (logger.isDebugEnabled()) {
-          final Object value = metrics[i].compute(current[i], previous[i]);
-          logger.debug("'-- " + metrics[i].getName() + "[" + value + "]");
-        }
+        if (logger.isDebugEnabled())
+          logger.debug("'-- " + metrics[i].getName() + "[" + metrics[i].compute(current[i], previous[i]) + "]");
 
         sender.createMessage(request, timestampSeconds, durationSeconds, metrics[i], current[i], previous[i]);
       }
