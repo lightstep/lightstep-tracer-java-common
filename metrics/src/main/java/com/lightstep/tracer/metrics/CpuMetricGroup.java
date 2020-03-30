@@ -28,14 +28,13 @@ class CpuMetricGroup extends MetricGroup {
 
   @Override
   <I,O>long[] execute(final Sender<I,O> sender, final I request, final long timestampSeconds, final long durationSeconds) throws IOException {
-    final long[] current = super.execute(sender, request, timestampSeconds, durationSeconds);
-    final long currentTotal = sum(current);
-
     final long[] previous = getPrevious();
     final long previousTotal = sum(previous);
-
-    final long currentUsage = currentTotal - current[TickType.IDLE.getIndex()];
     final long previousUsage = previousTotal - previous[TickType.IDLE.getIndex()];
+
+    final long[] current = super.execute(sender, request, timestampSeconds, durationSeconds);
+    final long currentTotal = sum(current);
+    final long currentUsage = currentTotal - current[TickType.IDLE.getIndex()];
 
     if (logger.isDebugEnabled()) {
       logger.debug("'-- " + cpuUsage.getName() + "[" + (currentUsage - previousUsage) + "]");
