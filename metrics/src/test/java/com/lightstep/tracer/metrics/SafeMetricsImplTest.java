@@ -1,4 +1,4 @@
-package com.lightstep.tracer.shared;
+package com.lightstep.tracer.metrics;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.lightstep.tracer.shared.SafeMetrics;
 
-public class SafeMetricsTest {
+public class SafeMetricsImplTest {
   @Test
   public void test() {
     if (!System.getProperty("java.version").startsWith("1.7")) {
@@ -14,6 +14,6 @@ public class SafeMetricsTest {
       return;
     }
 
-    assertNull(SafeMetrics.getInstance(null, null, null, 60));
+    assertNull(new SafeMetricsImpl().getMetricsThread(null, null, null, 60));
   }
 }

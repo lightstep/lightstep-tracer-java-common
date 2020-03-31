@@ -13,20 +13,9 @@ import com.lightstep.tracer.grpc.MetricKind;
 import com.lightstep.tracer.grpc.MetricPoint;
 import com.lightstep.tracer.grpc.Reporter;
 
+import static com.lightstep.tracer.shared.LightStepConstants.Tags.COMPONENT_NAME_KEY;
+
 abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
-  private static String getHostname() {
-    // FIXME: Technically, the following line is the proper "java way" to get
-    // the hostname.
-    // However, this most always returns an internal IP address, which may be
-    // incorrect for
-    // our needs?!
-    try {
-      return InetAddress.getLocalHost().getHostName();
-    }
-    catch (final IOException e) {
-      return "";
-    }
-  }
 
   private final Reporter.Builder reporter;
   private final KeyValue.Builder[] labels;
@@ -40,14 +29,14 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
     // TODO: Where to get the service version from?
     reporter = Reporter.newBuilder();
     //reporter.addTags(KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"));
-    reporter.addTags(KeyValue.newBuilder().setKey("lightstep.component_name").setStringValue(componentName));
+    reporter.addTags(KeyValue.newBuilder().setKey(COMPONENT_NAME_KEY).setStringValue(componentName));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform").setStringValue("java"));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform_version").setStringValue(getJavaVersion()));
 
     labels = new KeyValue.Builder[] {
       //KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"),
-      KeyValue.newBuilder().setKey("lightstep.component_name").setStringValue(componentName),
+      KeyValue.newBuilder().setKey(COMPONENT_NAME_KEY).setStringValue(componentName),
       KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname)
     };
   }
@@ -79,6 +68,20 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
     }
 
     request.addPoints(builder.build());
+  }
+
+  private static String getHostname() {
+    // FIXME: Technically, the following line is the proper "java way" to get
+    // the hostname.
+    // However, this most always returns an internal IP address, which may be
+    // incorrect for
+    // our needs?!
+    try {
+      return InetAddress.getLocalHost().getHostName();
+    }
+    catch (final IOException e) {
+      return "";
+    }
   }
 
   private static String getJavaVersion() {

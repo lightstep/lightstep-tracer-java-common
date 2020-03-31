@@ -68,12 +68,6 @@
             <version>${com.google.api.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.lightstep.tracer</groupId>
-            <artifactId>tracer-metrics</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- Test Dependencies -->
         <dependency>
             <groupId>junit</groupId>
