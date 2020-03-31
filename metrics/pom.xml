@@ -93,18 +93,6 @@
             <version>${com.squareup.okhttp3.version}</version>
         </dependency>
 
-        <!-- TODO: Try to remove these two? Maybe even some tests? -->
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${com.google.protobuf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.api.grpc</groupId>
-            <artifactId>grpc-google-common-protos</artifactId>
-            <version>${com.google.api.version}</version>
-        </dependency>
-
         <!-- Test Dependencies -->
       <dependency>
         <groupId>ch.qos.logback</groupId>

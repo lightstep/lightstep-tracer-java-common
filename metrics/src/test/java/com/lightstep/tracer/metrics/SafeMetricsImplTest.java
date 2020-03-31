@@ -14,6 +14,6 @@ public class SafeMetricsImplTest {
       return;
     }
 
-    assertNull(new SafeMetricsImpl().getMetricsThread(null, null, null, 60));
+    assertNull(new SafeMetricsImpl().createMetricsThread(null, null, null, 60));
   }
 }
