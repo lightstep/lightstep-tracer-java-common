@@ -8,8 +8,6 @@ import com.lightstep.tracer.shared.SafeMetrics;
 import com.lightstep.tracer.metrics.OkHttpSender;
 import com.lightstep.tracer.metrics.Sender;
 
-// TODO: Tests for this class!
-// TODO: And tests for the AbstractTracer working just fine!
 public class MetricsProviderImpl extends MetricsProvider {
     @Override
     public SafeMetrics create() {
