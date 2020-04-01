@@ -17,7 +17,6 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
-import com.lightstep.tracer.metrics.Metrics;
 
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
@@ -110,7 +109,8 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     private Thread reportingThread;
 
     // This is set to non-null when a background Thread is sending metrics.
-    private Metrics metricsThread;
+    private Thread metricsThread;
+    private SafeMetrics safeMetrics;
 
     private boolean isDisabled;
 
@@ -176,6 +176,11 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             disable();
         }
 
+        safeMetrics = MetricsProvider.provider().create();
+        if (safeMetrics == null) {
+            debug("No MetricsProvider found.");
+        }
+
         for (Map.Entry<String, Object> entry : options.tags.entrySet()) {
             addTracerTag(entry.getKey(), entry.getValue());
         }
@@ -232,9 +237,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
-        if (!disableMetricsReporting) {
+        if (!disableMetricsReporting && safeMetrics != null) {
           // Can be null, if running on jdk1.7
-          metricsThread = SafeMetrics.getInstance(componentName, auth.getAccessToken(),
+          metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
                 metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
           if (metricsThread != null) {
             metricsThread.setDaemon(true);

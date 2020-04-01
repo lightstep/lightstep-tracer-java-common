@@ -32,6 +32,14 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
     }
   }
 
+  /**
+   * Creates a new independent instance that is not cached as part of
+   * {@code getInstance()}.
+   */
+  public static Metrics createInstance(final Sender<?,?> sender, final int samplePeriodSeconds) {
+      return new Metrics(sender, samplePeriodSeconds);
+  }
+
   private static final int attempts = Integer.MAX_VALUE;
   private static final int startDelay = 1000;
   private static final int factor = 2;
