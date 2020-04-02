@@ -29,12 +29,12 @@ public class MetricsTest {
         counter.getAndIncrement();
         id[0] = null;
       });
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl), samplePeriod);
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
     ) {
       server.start();
       metrics.start();
       Thread.sleep(2 * samplePeriod * 1000 + 500);
-      assertEquals(0, counter.get()); // First report is not sent.
+      assertEquals(3, counter.get());
     }
   }
 
@@ -91,7 +91,7 @@ public class MetricsTest {
     final int[] expectedPointCounts = {countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl), samplePeriod);
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
       final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
@@ -128,7 +128,7 @@ public class MetricsTest {
     final int[] expectedPointCounts = {2 * countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl), samplePeriod);
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
       final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
@@ -163,7 +163,7 @@ public class MetricsTest {
     final int[] expectedPointCounts = {3 * countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl), samplePeriod);
+      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
       final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
