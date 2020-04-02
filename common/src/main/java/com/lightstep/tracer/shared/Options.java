@@ -129,6 +129,9 @@ public final class Options {
 
     final OkHttpDns okhttpDns;
 
+    final String metricsUrl;
+    final boolean disableMetricsReporting;
+
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
      */
@@ -147,6 +150,8 @@ public final class Options {
             ScopeManager scopeManager,
             long deadlineMillis,
             Map<Format<?>, Propagator> propagators,
+            String metricsUrl,
+            boolean disableMetricsReporting,
             CollectorClient collectorClient,
             String grpcCollectorTarget,
             boolean grpcRoundRobin,
@@ -165,6 +170,8 @@ public final class Options {
         this.scopeManager = scopeManager;
         this.deadlineMillis = deadlineMillis;
         this.propagators = propagators;
+        this.metricsUrl = metricsUrl;
+        this.disableMetricsReporting = disableMetricsReporting;
         this.collectorClient = collectorClient;
         this.grpcCollectorTarget = grpcCollectorTarget;
         this.grpcRoundRobin = grpcRoundRobin;
@@ -174,6 +181,10 @@ public final class Options {
 
     long getGuid() {
         return (long) tags.get(LightStepConstants.Tags.GUID_KEY);
+    }
+
+    String getComponentName() {
+        return (String) tags.get(LightStepConstants.Tags.COMPONENT_NAME_KEY);
     }
 
     @SuppressWarnings({"WeakerAccess"})
@@ -193,6 +204,8 @@ public final class Options {
         private long deadlineMillis = -1;
         private Map<Format<?>, Propagator> propagators = new HashMap<>();
         private boolean disableMetaEventLogging = false;
+        private String metricsUrl = LightStepConstants.Metrics.DEFAULT_URL;
+        private boolean disableMetricsReporting = false;
         private CollectorClient collectorClient;
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
@@ -216,6 +229,8 @@ public final class Options {
             this.useClockCorrection = options.useClockCorrection;
             this.deadlineMillis = options.deadlineMillis;
             this.propagators = options.propagators;
+            this.metricsUrl = options.metricsUrl;
+            this.disableMetricsReporting = options.disableMetricsReporting;
             this.disableMetaEventLogging = options.disableMetaEventLogging;
             this.collectorClient = options.collectorClient;
             this.grpcCollectorTarget = options.grpcCollectorTarget;
@@ -473,6 +488,26 @@ public final class Options {
         }
 
         /**
+         * Uses the specified value as the metrics collector url.
+         */
+        public OptionsBuilder withMetricsUrl(String metricsUrl) {
+            if (metricsUrl == null) {
+                throw new IllegalArgumentException("metricsUrl cannot be null");
+            }
+
+            this.metricsUrl = metricsUrl;
+            return this;
+        }
+
+        /**
+         * If true, metrics reporting will be disabled. Default is {@code false}.
+         */
+        public OptionsBuilder withDisableMetricsReporting(boolean disable) {
+            this.disableMetricsReporting = disable;
+            return this;
+        }
+
+        /**
          * Disables LightStep Meta Event Reporting
          * even if a server command requested it.
          * @param disableMetaEventLogging
@@ -517,6 +552,8 @@ public final class Options {
                     scopeManager,
                     deadlineMillis,
                     propagators,
+                    metricsUrl,
+                    disableMetricsReporting,
                     collectorClient,
                     grpcCollectorTarget,
                     grpcRoundRobin,

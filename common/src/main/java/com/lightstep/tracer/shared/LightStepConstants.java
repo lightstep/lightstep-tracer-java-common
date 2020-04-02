@@ -27,6 +27,14 @@ public final class LightStepConstants {
       public static final String PROTOCOL_HTTP = "http";
     }
 
+    public final class Metrics {
+        private Metrics() {
+        }
+
+        static final int DEFAULT_INTERVAL_SECS = 30;
+        static final String DEFAULT_URL = "https://ingest.lightstep.com:443/metrics";
+    }
+
     public final class Tags {
         private Tags() {}
 

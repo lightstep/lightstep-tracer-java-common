@@ -232,6 +232,22 @@ public class OptionsTest {
         assertEquals(111, newOptions.maxReportingIntervalMillis);
     }
 
+    @Test
+    public void testOptionsBuilder_defaultMetricsUrl() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .build();
+
+        assertEquals(LightStepConstants.Metrics.DEFAULT_URL, options.metricsUrl);
+    }
+
+    @Test
+    public void testOptionsBuilder_defaultDisableMetricsReporting() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .build();
+
+        assertFalse(options.disableMetricsReporting);
+    }
+
     private Options createFullyPopulatedOptions() throws Exception {
         return new Options.OptionsBuilder()
                 .withVerbosity(VERBOSITY_DEBUG)
@@ -250,6 +266,8 @@ public class OptionsTest {
                 .withDeadlineMillis(DEADLINE_MILLIS)
                 .withPropagator(Builtin.TEXT_MAP, CUSTOM_PROPAGATOR)
                 .withScopeManager(new ThreadLocalScopeManager())
+                .withMetricsUrl(COLLECTOR_HOST)
+                .withDisableMetricsReporting(true)
                 .withDisableMetaEventLogging(true)
                 .withOkHttpDns(CUSTOM_DNS)
                 .build();
@@ -263,6 +281,7 @@ public class OptionsTest {
                 options.collectorUrl.toString()
         );
         assertEquals(COMPONENT_NAME, options.tags.get(COMPONENT_NAME_KEY));
+        assertEquals(COMPONENT_NAME, options.getComponentName());
         assertTrue(options.disableReportingLoop);
         assertTrue(options.resetClient);
         assertFalse(options.useClockCorrection);
@@ -273,6 +292,8 @@ public class OptionsTest {
         assertEquals(DEADLINE_MILLIS, options.deadlineMillis);
         assertFalse(options.propagators.keySet().isEmpty());
         assertEquals(CUSTOM_PROPAGATOR, options.propagators.get(Builtin.TEXT_MAP));
+        assertEquals(COLLECTOR_HOST, options.metricsUrl);
+        assertTrue(options.disableMetricsReporting);
         assertTrue(options.disableMetaEventLogging);
         assertEquals(CUSTOM_DNS, options.okhttpDns);
     }

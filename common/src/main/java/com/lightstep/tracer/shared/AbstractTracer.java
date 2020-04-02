@@ -1,10 +1,15 @@
 package com.lightstep.tracer.shared;
 
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.DEBUG;
-import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.ERROR;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_DEBUG;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_FIRST_ERROR_ONLY;
-import static com.lightstep.tracer.shared.Options.VERBOSITY_INFO;
+import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.*;
+import static com.lightstep.tracer.shared.Options.*;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.lightstep.tracer.grpc.Auth;
 import com.lightstep.tracer.grpc.Command;
@@ -13,17 +18,12 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.grpc.Reporter;
 import com.lightstep.tracer.grpc.Span;
+
 import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 
-public abstract class AbstractTracer implements Tracer, Closeable {
+public abstract class AbstractTracer implements Tracer {
     // Maximum interval between reports
     private static final long DEFAULT_CLOCK_STATE_INTERVAL_MILLIS = 500;
     private static final int DEFAULT_CLIENT_RESET_INTERVAL_MILLIS = 5 * 60 * 1000; // 5 min
@@ -77,6 +77,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     }
 
     private final int verbosity;
+    private final String componentName;
     private final Auth.Builder auth;
     private final Reporter.Builder reporter;
     private final CollectorClient client;
@@ -108,6 +109,10 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     // This is set to non-null when a background Thread is actually reporting.
     private Thread reportingThread;
 
+    // This is set to non-null when a background Thread is sending metrics.
+    private Thread metricsThread;
+    private SafeMetrics safeMetrics;
+
     private boolean isDisabled;
 
     private boolean resetClient;
@@ -115,6 +120,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
     private final ScopeManager scopeManager;
 
     private final Map<Format<?>, Propagator> propagators;
+
+    private final String metricsUrl;
+    private final boolean disableMetricsReporting;
 
     boolean firstReportHasRun;
     boolean disableMetaEventLogging;
@@ -124,6 +132,9 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         scopeManager = options.scopeManager;
         // Set verbosity first so debug logs from the constructor take effect
         verbosity = options.verbosity;
+
+        // Save component name for further usage.
+        componentName = options.getComponentName();
 
         // Save the maxBufferedSpans since we need it post-construction, too.
         maxBufferedSpans = options.maxBufferedSpans;
@@ -148,6 +159,10 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         resetClient = options.resetClient;
         clientMetrics = new ClientMetrics();
 
+        // TODO: Review and remove `clientMetrics`?
+        metricsUrl = options.metricsUrl;
+        disableMetricsReporting = options.disableMetricsReporting;
+
         // initialize collector client
         boolean validCollectorClient = true;
         client = CollectorClientProvider.provider(options.collectorClient, new Warner() {
@@ -160,6 +175,11 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             error("Exception creating client.");
             validCollectorClient = false;
             disable();
+        }
+
+        safeMetrics = MetricsProvider.provider().create();
+        if (safeMetrics == null) {
+            debug("No MetricsProvider found.");
         }
 
         for (Map.Entry<String, Object> entry : options.tags.entrySet()) {
@@ -191,6 +211,14 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             }
             reportingThread.interrupt();
             reportingThread = null;
+
+            // We ought to beautify this properly.
+            if (metricsThread instanceof Closeable) {
+                try { ((Closeable)metricsThread).close(); } catch (IOException e) {}
+            } else {
+                metricsThread.interrupt();
+            }
+            metricsThread = null;
         }
     }
 
@@ -198,6 +226,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
      * This call is synchronized
      */
     private void maybeStartReporting() {
+        // We set both reporting/metrics thread in a single step.
         if (reportingThread != null) {
             return;
         }
@@ -213,6 +242,16 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         reportingThread = new Thread(reportingLoop, LightStepConstants.Internal.REPORTING_THREAD_NAME);
         reportingThread.setDaemon(true);
         reportingThread.start();
+
+        if (!disableMetricsReporting && safeMetrics != null) {
+          // Can be null, if running on jdk1.7
+          metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
+                metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
+          if (metricsThread != null) {
+            metricsThread.setDaemon(true);
+            metricsThread.start();
+          }
+        }
     }
 
     /**
