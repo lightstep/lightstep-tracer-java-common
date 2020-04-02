@@ -34,7 +34,7 @@ public class MetricsTest {
       server.start();
       metrics.start();
       Thread.sleep(2 * samplePeriod * 1000 + 500);
-      assertEquals(3, counter.get());
+      assertEquals(0, counter.get()); // First report is not sent.
     }
   }
 

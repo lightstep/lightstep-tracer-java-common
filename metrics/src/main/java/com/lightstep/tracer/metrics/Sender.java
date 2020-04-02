@@ -21,6 +21,7 @@ public abstract class Sender<I,O> implements AutoCloseable {
 
   private I request;
   private long previousTime = System.currentTimeMillis() / 1000;
+  private boolean firstReportHasRun;
 
   private String reporter;
 
@@ -28,6 +29,12 @@ public abstract class Sender<I,O> implements AutoCloseable {
     final I request = getRequest();
     if (request == null)
       throw new IllegalStateException("Request should not be null");
+
+    // Do not send the first report, as we get accumulated data.
+    if (!firstReportHasRun) {
+        firstReportHasRun = true;
+        return null;
+    }
 
     final O response = invoke(request, timeout);
     setRequest(null);
