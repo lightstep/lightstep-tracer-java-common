@@ -11,8 +11,8 @@ public class MetricsProviderImplTest {
     final SafeMetricsImpl safeMetrics = (SafeMetricsImpl)provider.create();
     assertNotNull(safeMetrics);
 
-    final Thread metricsThread = safeMetrics.createMetricsThread("", "", "https://localhost", 464, true);
+    final Thread metricsThread = safeMetrics.createMetricsThread("", "", "https://localhost", 464);
     assertNotNull(metricsThread);
-    assertNotSame(metricsThread, safeMetrics.createMetricsThread("", "", "https://localhost", 464, true));
+    assertNotSame(metricsThread, safeMetrics.createMetricsThread("", "", "https://localhost", 464));
   }
 }
