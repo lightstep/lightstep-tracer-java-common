@@ -9,11 +9,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.lightstep.tracer.grpc.IngestRequest;
 import com.lightstep.tracer.grpc.IngestResponse;
 
+import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class OkHttpSender extends ProtobufSender {
   // TODO - unify constants with the main artifact.
@@ -24,8 +24,8 @@ public class OkHttpSender extends ProtobufSender {
   private final URL collectorURL;
   private final long deadlineMillis;
 
-  public OkHttpSender(final String componentName, final String accessToken, final String serviceUrl, final int deadlineMillis) {
-    super(componentName, accessToken, serviceUrl, true /* disable first run */);
+  public OkHttpSender(final String componentName, final String accessToken, final String serviceUrl, final int deadlineMillis, final boolean sendFirstReport) {
+    super(componentName, accessToken, serviceUrl, sendFirstReport);
     this.deadlineMillis = deadlineMillis;
     this.client = new AtomicReference<>(start(deadlineMillis));
 
@@ -39,16 +39,16 @@ public class OkHttpSender extends ProtobufSender {
 
   @Override
   IngestResponse invoke(final IngestRequest.Builder request, final long timeout) throws IOException {
-    final Response response = client().newCall(new Request.Builder()
+    final Call call = client().newCall(new Request.Builder()
         .url(collectorURL)
         .addHeader("Accept", OCTET_STREAM_TYPE)
         .addHeader("Content-Type", OCTET_STREAM_TYPE)
         .addHeader("Lightstep-Access-Token", accessToken)
         .post(RequestBody.create(protoMediaType, request.build().toByteArray()))
-        .build())
-      .execute();
+      .build());
 
-    return IngestResponse.parseFrom(response.body().byteStream());
+    call.timeout().deadline(timeout, TimeUnit.MILLISECONDS);
+    return IngestResponse.parseFrom(call.execute().body().byteStream());
   }
 
   private OkHttpClient client() {

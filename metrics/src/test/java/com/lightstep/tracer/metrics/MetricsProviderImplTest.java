@@ -7,12 +7,12 @@ import org.junit.Test;
 public class MetricsProviderImplTest {
   @Test
   public void test() {
-      MetricsProviderImpl provider = new MetricsProviderImpl();
-      SafeMetricsImpl safeMetrics = (SafeMetricsImpl) provider.create();
-      assertNotNull(safeMetrics);
+    final MetricsProviderImpl provider = new MetricsProviderImpl();
+    final SafeMetricsImpl safeMetrics = (SafeMetricsImpl)provider.create();
+    assertNotNull(safeMetrics);
 
-      Thread metricsThread = safeMetrics.createMetricsThread("", "", "https://localhost", 464);
-      assertNotNull(metricsThread);
-      assertNotSame(metricsThread, safeMetrics.createMetricsThread("", "", "https://localhost", 464));
+    final Thread metricsThread = safeMetrics.createMetricsThread("", "", "https://localhost", 464, true);
+    assertNotNull(metricsThread);
+    assertNotSame(metricsThread, safeMetrics.createMetricsThread("", "", "https://localhost", 464, true));
   }
 }

@@ -23,7 +23,7 @@ import io.opentracing.ScopeManager;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 
-public abstract class AbstractTracer implements Tracer, Closeable {
+public abstract class AbstractTracer implements Tracer {
     // Maximum interval between reports
     private static final long DEFAULT_CLOCK_STATE_INTERVAL_MILLIS = 500;
     private static final int DEFAULT_CLIENT_RESET_INTERVAL_MILLIS = 5 * 60 * 1000; // 5 min
@@ -246,7 +246,7 @@ public abstract class AbstractTracer implements Tracer, Closeable {
         if (!disableMetricsReporting && safeMetrics != null) {
           // Can be null, if running on jdk1.7
           metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
-                metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
+                metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS, false /* disable first run */);
           if (metricsThread != null) {
             metricsThread.setDaemon(true);
             metricsThread.start();

@@ -15,6 +15,13 @@ public class MetricsTest {
   private static final String componentName = "test";
   private static final int servicePort = 8851;
   private static final String serviceUrl = "localhost:" + servicePort;
+  private static final String[] pointNames = {"cpu.sys", "cpu.total", "cpu.usage", "cpu.user", "mem.available", "mem.total", "net.bytes_recv", "net.bytes_sent", "runtime.java.gc.count", "runtime.java.gc.time", "runtime.java.heap_size"};
+
+  private static void assertMetric(final int expectedCount, final IngestRequest request) {
+    assertEquals(expectedCount, request.getPointsCount());
+    for (final MetricPoint point : request.getPointsList())
+      assertNotEquals(-1, Arrays.binarySearch(pointNames, point.getMetricName()));
+  }
 
   @Test
   public void testSamplePeriod() throws Exception {
@@ -29,21 +36,13 @@ public class MetricsTest {
         counter.getAndIncrement();
         id[0] = null;
       });
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
+      final Metrics metrics = new Metrics(new GrpcSender(componentName, null, serviceUrl, true), samplePeriod);
     ) {
       server.start();
       metrics.start();
       Thread.sleep(2 * samplePeriod * 1000 + 500);
       assertEquals(3, counter.get());
     }
-  }
-
-  private static final String[] pointNames = {"cpu.sys", "cpu.total", "cpu.usage", "cpu.user", "mem.available", "mem.total", "net.bytes_recv", "net.bytes_sent", "runtime.java.gc.count", "runtime.java.gc.time", "runtime.java.heap_size"};
-
-  private static void assertMetric(final int expectedCount, final IngestRequest req) {
-    assertEquals(expectedCount, req.getPointsCount());
-    for (final MetricPoint point : req.getPointsList())
-      assertNotEquals(-1, Arrays.binarySearch(pointNames, point.getMetricName()));
   }
 
   private class IdTest {
@@ -91,7 +90,7 @@ public class MetricsTest {
     final int[] expectedPointCounts = {countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
+      final Metrics metrics = new Metrics(new GrpcSender(componentName, null, serviceUrl, true), samplePeriod);
       final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
@@ -128,7 +127,7 @@ public class MetricsTest {
     final int[] expectedPointCounts = {2 * countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
+      final Metrics metrics = new Metrics(new GrpcSender(componentName, null, serviceUrl, true), samplePeriod);
       final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {
@@ -163,7 +162,7 @@ public class MetricsTest {
     final int[] expectedPointCounts = {3 * countsPerSample, countsPerSample};
     final IdTest idTest = new IdTest();
     try (
-      final Metrics metrics = Metrics.getInstance(new GrpcSender(componentName, null, serviceUrl, false), samplePeriod);
+      final Metrics metrics = new Metrics(new GrpcSender(componentName, null, serviceUrl, true), samplePeriod);
       final TestServer server = new TestServer(servicePort, req -> {
         idTest.assertIds(req);
       }, (req,res) -> {

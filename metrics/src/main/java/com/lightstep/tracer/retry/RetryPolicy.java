@@ -115,7 +115,7 @@ public abstract class RetryPolicy implements Serializable {
 
         long delayMs = getDelayMs(attemptNo);
         if (jitter > 0)
-          delayMs *= Math.random() + 1;
+          delayMs *= jitter * Math.random() + 1;
 
         if (timeout > 0) {
           final long remaining = timeout - runTime;
