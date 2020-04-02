@@ -19,10 +19,10 @@ public class GrpcSender extends ProtobufSender {
   private final String servicePath;
   private final int servicePort;
 
-  public GrpcSender(final String componentName, final String accessToken, final String serviceUrl, boolean disableFirstReport) {
-    super(componentName, accessToken, serviceUrl, disableFirstReport);
+  public GrpcSender(final String componentName, final String accessToken, final String serviceUrl, final boolean sendFirstReport) {
+    super(componentName, accessToken, serviceUrl, sendFirstReport);
 
-    int colon = serviceUrl.indexOf(":");
+    final int colon = serviceUrl.indexOf(":");
     servicePath = serviceUrl.substring(0, colon);
     servicePort = Integer.valueOf(serviceUrl.substring(colon + 1));
     channel = ManagedChannelBuilder.forAddress(servicePath, servicePort).usePlaintext().build();

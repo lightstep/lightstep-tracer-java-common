@@ -20,7 +20,7 @@ class GcMetricGroup extends MetricGroup {
       if (count > 0)
         totalCount += count;
 
-      long time = bean.getCollectionTime();
+      final long time = bean.getCollectionTime();
       if (time > 0)
         totalTime += time;
     }

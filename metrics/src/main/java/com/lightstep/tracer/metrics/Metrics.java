@@ -16,29 +16,6 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(Metrics.class);
-  private static volatile boolean inited;
-  private static Metrics instance;
-
-  public static Metrics getInstance(final Sender<?,?> sender, final int samplePeriodSeconds) {
-    if (inited)
-      return instance;
-
-    synchronized (Metrics.class) {
-      if (inited)
-        return instance;
-
-      inited = true;
-      return instance = new Metrics(sender, samplePeriodSeconds);
-    }
-  }
-
-  /**
-   * Creates a new independent instance that is not cached as part of
-   * {@code getInstance()}.
-   */
-  public static Metrics createInstance(final Sender<?,?> sender, final int samplePeriodSeconds) {
-      return new Metrics(sender, samplePeriodSeconds);
-  }
 
   private static final int attempts = Integer.MAX_VALUE;
   private static final int startDelay = 1000;
@@ -66,12 +43,24 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   private final Sender<?,?> sender;
   private boolean closed;
 
-  private Metrics(final Sender<?,?> sender, final int samplePeriodSeconds) {
+  public Metrics(final Sender<?,?> sender, final int samplePeriodSeconds) {
     if (samplePeriodSeconds < 1)
       throw new IllegalArgumentException("samplePeriodSeconds (" + samplePeriodSeconds + ") < 1");
 
     this.samplePeriodSeconds = samplePeriodSeconds;
     this.sender = sender;
+  }
+
+  private static String stackTraceToString(final StackTraceElement[] elements) {
+    final StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < elements.length; ++i) {
+      if (i > 0)
+        builder.append('\n');
+
+      builder.append("  ").append(elements[i].toString());
+    }
+
+    return builder.toString();
   }
 
   @Override
@@ -80,8 +69,13 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
       Thread thread = null;
       while (!closed) {
         sender.updateSampleRequest(metricGroups);
-        if (thread != null && thread.isAlive())
-          throw new IllegalStateException("Thread should have self-terminated by now: " + (finishBy - System.currentTimeMillis()));
+        if (thread != null && thread.isAlive()) {
+          final String message = "Thread should have self-terminated by now: " + (finishBy - System.currentTimeMillis());
+          if (logger.isDebugEnabled())
+            logger.warn(message + "\n" + stackTraceToString(thread.getStackTrace()));
+          else
+            logger.warn(message);
+        }
 
         thread = new Thread() {
           @Override
@@ -125,7 +119,7 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
   @Override
   public Void retry(final RetryPolicy retryPolicy, final int attemptNo) throws Exception {
     final long timeout = finishBy - System.currentTimeMillis();
-    if (timeout < 0)
+    if (timeout <= 0)
       throw new RetryFailureException(attemptNo, retryPolicy.getDelayMs(attemptNo - 1));
 
     sender.exec(timeout);
@@ -148,7 +142,5 @@ public class Metrics extends Thread implements Retryable<Void>, AutoCloseable {
         wait();
       }
     }
-
-    inited = false;
   }
 }

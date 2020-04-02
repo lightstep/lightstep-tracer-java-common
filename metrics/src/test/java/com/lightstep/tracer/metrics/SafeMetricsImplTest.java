@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.lightstep.tracer.shared.SafeMetrics;
-
 public class SafeMetricsImplTest {
   @Test
   public void test() {
@@ -14,6 +12,6 @@ public class SafeMetricsImplTest {
       return;
     }
 
-    assertNull(new SafeMetricsImpl().createMetricsThread(null, null, null, 60));
+    assertNull(new SafeMetricsImpl().createMetricsThread(null, null, null, 60, true));
   }
 }

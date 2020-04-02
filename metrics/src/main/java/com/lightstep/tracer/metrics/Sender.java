@@ -7,11 +7,11 @@ public abstract class Sender<I,O> implements AutoCloseable {
   protected final String accessToken;
   protected final String serviceUrl;
 
-  Sender(final String componentName, final String accessToken, final String serviceUrl, boolean disableFirstReport) {
+  Sender(final String componentName, final String accessToken, final String serviceUrl, final boolean sendFirstReport) {
     this.componentName = componentName;
     this.accessToken = accessToken;
     this.serviceUrl = serviceUrl;
-    this.readyToReport = !disableFirstReport;
+    this.readyToReport = sendFirstReport;
   }
 
   abstract <V extends Number>void createMessage(I request, long timestampSeconds, long durationSeconds, Metric<?,V> metric, long current, long previous) throws IOException;
@@ -21,7 +21,7 @@ public abstract class Sender<I,O> implements AutoCloseable {
   abstract O invoke(I request, long timeout) throws Exception;
 
   private I request;
-  private long previousTime = System.currentTimeMillis() / 1000;
+  private long previousTimestamp = System.currentTimeMillis() / 1000;
   private boolean readyToReport;
 
   private String reporter;
@@ -33,8 +33,8 @@ public abstract class Sender<I,O> implements AutoCloseable {
 
     // We might not want the first report, as we'd get accumulated data.
     if (!readyToReport) {
-        readyToReport = true;
-        return null;
+      readyToReport = true;
+      return null;
     }
 
     final O response = invoke(request, timeout);
@@ -79,13 +79,13 @@ public abstract class Sender<I,O> implements AutoCloseable {
   }
 
   final long getPreviousTimestamp() {
-    return previousTime;
+    return previousTimestamp;
   }
 
   final void updateSampleRequest(final MetricGroup[] metricGroups) throws IOException {
     final long timestampSeconds = System.currentTimeMillis() / 1000;
     final long durationSeconds = timestampSeconds - getPreviousTimestamp();
-    previousTime = timestampSeconds;
+    previousTimestamp = timestampSeconds;
 
     final I request = setReporter(setIdempotency(this.request != null ? this.request : newRequest()));
     for (final MetricGroup metricGroup : metricGroups)

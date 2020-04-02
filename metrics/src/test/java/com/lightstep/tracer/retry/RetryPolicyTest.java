@@ -6,12 +6,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.lightstep.tracer.retry.ExponentialBackoffRetryPolicy;
-import com.lightstep.tracer.retry.LinearDelayRetryPolicy;
-import com.lightstep.tracer.retry.RetryException;
-import com.lightstep.tracer.retry.RetryFailureException;
-import com.lightstep.tracer.retry.RetryPolicy;
-
 public class RetryPolicyTest {
   private static final Logger logger = LoggerFactory.getLogger(RetryPolicyTest.class);
 

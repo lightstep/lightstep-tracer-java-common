@@ -1,5 +1,7 @@
 package com.lightstep.tracer.metrics;
 
+import static com.lightstep.tracer.shared.LightStepConstants.Tags.*;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.UUID;
@@ -13,17 +15,13 @@ import com.lightstep.tracer.grpc.MetricKind;
 import com.lightstep.tracer.grpc.MetricPoint;
 import com.lightstep.tracer.grpc.Reporter;
 
-import static com.lightstep.tracer.shared.LightStepConstants.Tags.COMPONENT_NAME_KEY;
-
 abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestResponse> {
-
   private final Reporter.Builder reporter;
   private final KeyValue.Builder[] labels;
 
   // TODO: Unify the constants.
-  ProtobufSender(final String componentName, final String accessToken, final String serviceUrl,
-          boolean disableFirstRun) {
-    super(componentName, accessToken, serviceUrl, disableFirstRun);
+  ProtobufSender(final String componentName, final String accessToken, final String serviceUrl, final boolean sendFirstReport) {
+    super(componentName, accessToken, serviceUrl, sendFirstReport);
 
     final String hostname = getHostname();
 
@@ -73,10 +71,8 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
 
   private static String getHostname() {
     // FIXME: Technically, the following line is the proper "java way" to get
-    // the hostname.
-    // However, this most always returns an internal IP address, which may be
-    // incorrect for
-    // our needs?!
+    // the hostname. However, this most always returns an internal IP address,
+    // which may be incorrect for our needs?!
     try {
       return InetAddress.getLocalHost().getHostName();
     }
