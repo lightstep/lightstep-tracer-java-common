@@ -4,6 +4,7 @@ import static com.lightstep.tracer.shared.AbstractTracer.InternalLogLevel.*;
 import static com.lightstep.tracer.shared.Options.*;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -211,7 +212,12 @@ public abstract class AbstractTracer implements Tracer, Closeable {
             reportingThread.interrupt();
             reportingThread = null;
 
-            metricsThread.interrupt();
+            // We ought to beautify this properly.
+            if (metricsThread instanceof Closeable) {
+                try { ((Closeable)metricsThread).close(); } catch (IOException e) {}
+            } else {
+                metricsThread.interrupt();
+            }
             metricsThread = null;
         }
     }
