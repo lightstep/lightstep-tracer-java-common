@@ -18,6 +18,7 @@ mvn versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
 
 # Add and commit the changes
 git add common/pom.xml
+git add metrics/pom.xml
 git add grpc/pom.xml
 git add okhttp/pom.xml
 git add bundle-test/pom.xml
