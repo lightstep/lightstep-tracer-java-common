@@ -5,11 +5,14 @@ import java.io.IOException;
 public abstract class Sender<I,O> implements AutoCloseable {
   protected final String componentName;
   protected final String accessToken;
+  protected final String serviceVersion;
   protected final String serviceUrl;
 
-  Sender(final String componentName, final String accessToken, final String serviceUrl, final boolean sendFirstReport) {
+  Sender(final String componentName, final String accessToken, final String serviceVersion,
+            final String serviceUrl, final boolean sendFirstReport) {
     this.componentName = componentName;
     this.accessToken = accessToken;
+    this.serviceVersion = serviceVersion;
     this.serviceUrl = serviceUrl;
     this.readyToReport = sendFirstReport;
   }

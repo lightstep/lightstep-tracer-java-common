@@ -20,23 +20,23 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
   private final KeyValue.Builder[] labels;
 
   // TODO: Unify the constants.
-  ProtobufSender(final String componentName, final String accessToken, final String serviceUrl, final boolean sendFirstReport) {
-    super(componentName, accessToken, serviceUrl, sendFirstReport);
+  ProtobufSender(final String componentName, final String accessToken, final String serviceVersion,
+            final String serviceUrl, final boolean sendFirstReport) {
+    super(componentName, accessToken, serviceVersion, serviceUrl, sendFirstReport);
 
     final String hostname = getHostname();
 
-    // TODO: Where to get the service version from?
     reporter = Reporter.newBuilder();
-    //reporter.addTags(KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"));
     reporter.addTags(KeyValue.newBuilder().setKey(COMPONENT_NAME_KEY).setStringValue(componentName));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform").setStringValue("java"));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform_version").setStringValue(getJavaVersion()));
+    reporter.addTags(KeyValue.newBuilder().setKey("service.version").setStringValue(serviceVersion));
 
     labels = new KeyValue.Builder[] {
-      //KeyValue.newBuilder().setKey("service.version").setStringValue("vTest"),
       KeyValue.newBuilder().setKey(COMPONENT_NAME_KEY).setStringValue(componentName),
-      KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname)
+      KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname),
+      KeyValue.newBuilder().setKey("service.version").setStringValue(serviceVersion)
     };
   }
 

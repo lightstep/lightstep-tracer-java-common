@@ -33,6 +33,7 @@ import org.junit.Test;
 
 public class OptionsTest {
     private static final String ACCESS_TOKEN = "my-access-token";
+    private static final String SERVICE_VERSION = "v0.1.0";
     private static final String COLLECTOR_HOST = "my-collector-host";
     private static final String HTTPS_PROTOCOL = "https";
     private static final String COMPONENT_NAME = "my-component";
@@ -125,6 +126,13 @@ public class OptionsTest {
         Options options = new Options.OptionsBuilder()
                 .build();
         assertEquals("", options.accessToken);
+    }
+
+    @Test
+    public void testOptionsBuilder_defaultServiceVersion() throws Exception {
+        Options options = new Options.OptionsBuilder()
+                .build();
+        assertEquals("", options.serviceVersion);
     }
 
     @Test
@@ -252,6 +260,7 @@ public class OptionsTest {
         return new Options.OptionsBuilder()
                 .withVerbosity(VERBOSITY_DEBUG)
                 .withAccessToken(ACCESS_TOKEN)
+                .withServiceVersion(SERVICE_VERSION)
                 .withCollectorPort(123)
                 .withCollectorHost(COLLECTOR_HOST)
                 .withCollectorProtocol(HTTPS_PROTOCOL)
@@ -276,6 +285,7 @@ public class OptionsTest {
     private void validateFullyPopulatedOptions(Options options) {
         assertEquals(VERBOSITY_DEBUG, options.verbosity);
         assertEquals(ACCESS_TOKEN, options.accessToken);
+        assertEquals(SERVICE_VERSION, options.serviceVersion);
         assertEquals(
                 "https://my-collector-host:123" + PATH,
                 options.collectorUrl.toString()
