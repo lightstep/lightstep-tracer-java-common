@@ -78,6 +78,7 @@ public abstract class AbstractTracer implements Tracer {
 
     private final int verbosity;
     private final String componentName;
+    private final String serviceVersion;
     private final Auth.Builder auth;
     private final Reporter.Builder reporter;
     private final CollectorClient client;
@@ -135,6 +136,9 @@ public abstract class AbstractTracer implements Tracer {
 
         // Save component name for further usage.
         componentName = options.getComponentName();
+
+        // Save serviceVersion for further usage.
+        serviceVersion = options.serviceVersion;
 
         // Save the maxBufferedSpans since we need it post-construction, too.
         maxBufferedSpans = options.maxBufferedSpans;
@@ -246,7 +250,7 @@ public abstract class AbstractTracer implements Tracer {
         if (!disableMetricsReporting && safeMetrics != null) {
           // Can be null, if running on jdk1.7
           metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
-                metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
+                    serviceVersion, metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
           if (metricsThread != null) {
             metricsThread.setDaemon(true);
             metricsThread.start();

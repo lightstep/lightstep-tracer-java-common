@@ -11,14 +11,15 @@ public class SafeMetricsImpl implements SafeMetrics {
 
   @Override
   public Thread createMetricsThread(final String componentName, final String accessToken,
-            final String serviceUrl, final int samplePeriodSeconds) {
+            final String serviceVersion, final String serviceUrl, final int samplePeriodSeconds) {
     if (isJdk17) {
       logger.warn("Metrics supports jdk1.8+");
       return null;
     }
 
     // TODO: Can we unify samplePeriodSeconds in a single place?
-    final Sender<?,?> sender = new OkHttpSender(componentName, accessToken, serviceUrl, samplePeriodSeconds * 1000, false);
+    final Sender<?,?> sender = new OkHttpSender(componentName, accessToken, serviceVersion,
+                serviceUrl, samplePeriodSeconds * 1000, false);
     return new Metrics(sender, samplePeriodSeconds);
   }
 }
