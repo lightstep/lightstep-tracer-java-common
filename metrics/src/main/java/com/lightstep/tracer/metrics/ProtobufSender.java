@@ -31,12 +31,12 @@ abstract class ProtobufSender extends Sender<IngestRequest.Builder,IngestRespons
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform").setStringValue("java"));
     reporter.addTags(KeyValue.newBuilder().setKey("lightstep.reporter_platform_version").setStringValue(getJavaVersion()));
-    reporter.addTags(KeyValue.newBuilder().setKey("service.version").setStringValue(serviceVersion));
+    reporter.addTags(KeyValue.newBuilder().setKey(SERVICE_VERSION_KEY).setStringValue(serviceVersion));
 
     labels = new KeyValue.Builder[] {
       KeyValue.newBuilder().setKey(COMPONENT_NAME_KEY).setStringValue(componentName),
       KeyValue.newBuilder().setKey("lightstep.hostname").setStringValue(hostname),
-      KeyValue.newBuilder().setKey("service.version").setStringValue(serviceVersion)
+      KeyValue.newBuilder().setKey(SERVICE_VERSION_KEY).setStringValue(serviceVersion)
     };
   }
 

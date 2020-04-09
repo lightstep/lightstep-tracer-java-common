@@ -138,7 +138,7 @@ public abstract class AbstractTracer implements Tracer {
         componentName = options.getComponentName();
 
         // Save serviceVersion for further usage.
-        serviceVersion = options.serviceVersion;
+        serviceVersion = options.getServiceVersion();
 
         // Save the maxBufferedSpans since we need it post-construction, too.
         maxBufferedSpans = options.maxBufferedSpans;

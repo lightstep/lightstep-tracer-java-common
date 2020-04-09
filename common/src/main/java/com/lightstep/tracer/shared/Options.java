@@ -110,7 +110,6 @@ public final class Options {
     final boolean disableMetaEventLogging;
 
     final String accessToken;
-    final String serviceVersion;
     final URL collectorUrl;
     final Map<String, Object> tags;
     final long maxReportingIntervalMillis;
@@ -140,7 +139,6 @@ public final class Options {
 
     private Options(
             String accessToken,
-            String serviceVersion,
             URL collectorUrl,
             long maxReportingIntervalMillis,
             int maxBufferedSpans,
@@ -161,7 +159,6 @@ public final class Options {
             boolean disableMetaEventLogging
     ) {
         this.accessToken = accessToken;
-        this.serviceVersion = serviceVersion;
         this.collectorUrl = collectorUrl;
         this.maxReportingIntervalMillis = maxReportingIntervalMillis;
         this.maxBufferedSpans = maxBufferedSpans;
@@ -190,10 +187,13 @@ public final class Options {
         return (String) tags.get(LightStepConstants.Tags.COMPONENT_NAME_KEY);
     }
 
+    String getServiceVersion() {
+        return (String) tags.get(LightStepConstants.Tags.SERVICE_VERSION_KEY);
+    }
+
     @SuppressWarnings({"WeakerAccess"})
     public static class OptionsBuilder {
         private String accessToken = "";
-        private String serviceVersion = "";
         private String collectorProtocol = LightStepConstants.Collector.PROTOCOL_HTTPS;
         private String collectorHost = LightStepConstants.Collector.DEFAULT_HOST;
         private int collectorPort = -1;
@@ -220,7 +220,6 @@ public final class Options {
 
         public OptionsBuilder(Options options) {
             this.accessToken = options.accessToken;
-            this.serviceVersion = options.serviceVersion;
             this.collectorProtocol = options.collectorUrl.getProtocol();
             this.collectorHost = options.collectorUrl.getHost();
             this.collectorPort = options.collectorUrl.getPort();
@@ -294,9 +293,7 @@ public final class Options {
             if (serviceVersion == null) {
                 throw new IllegalArgumentException("serviceVersion cannot be null");
             }
-
-            this.serviceVersion = serviceVersion;
-            return this;
+            return withTag(LightStepConstants.Tags.SERVICE_VERSION_KEY, serviceVersion);
         }
 
         /**
@@ -558,7 +555,6 @@ public final class Options {
 
             return new Options(
                     accessToken,
-                    serviceVersion,
                     getCollectorUrl(),
                     maxReportingIntervalMillis,
                     maxBufferedSpans,

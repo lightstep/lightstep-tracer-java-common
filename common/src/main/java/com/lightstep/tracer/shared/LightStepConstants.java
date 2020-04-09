@@ -40,6 +40,7 @@ public final class LightStepConstants {
 
         public static final String LEGACY_COMPONENT_NAME_KEY = "component_name";
         public static final String COMPONENT_NAME_KEY = "lightstep.component_name";
+        public static final String SERVICE_VERSION_KEY = "service.version";
         public static final String GUID_KEY = "lightstep.guid";
     }
 
