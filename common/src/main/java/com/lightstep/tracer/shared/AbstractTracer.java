@@ -216,13 +216,16 @@ public abstract class AbstractTracer implements Tracer {
             reportingThread.interrupt();
             reportingThread = null;
 
-            // We ought to beautify this properly.
-            if (metricsThread instanceof Closeable) {
-                try { ((Closeable)metricsThread).close(); } catch (IOException e) {}
-            } else {
-                metricsThread.interrupt();
+            // metricsThread might be unused.
+            if (metricsThread != null) {
+              // We ought to beautify this properly.
+              if (metricsThread instanceof Closeable) {
+                  try { ((Closeable)metricsThread).close(); } catch (IOException e) {}
+              } else {
+                  metricsThread.interrupt();
+              }
+              metricsThread = null;
             }
-            metricsThread = null;
         }
     }
 
