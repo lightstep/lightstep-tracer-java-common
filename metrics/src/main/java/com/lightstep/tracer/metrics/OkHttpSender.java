@@ -53,9 +53,9 @@ public class OkHttpSender extends ProtobufSender {
     call.timeout().deadline(timeout, TimeUnit.MILLISECONDS);
     Response response = call.execute();
 
-    // Don't try to further process requests with 4xx/5xx.
+    // Don't try to further process requests with 4xx/5xx (mostly).
     // TODO: 5xx errors should be retried properly.
-    if (response.code() >= 400) {
+    if (response.code() != 200) {
       return IngestResponse.parseFrom(EMPTY_BUFFER);
     }
 
