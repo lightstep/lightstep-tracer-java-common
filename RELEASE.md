@@ -3,11 +3,12 @@
 Publishing artifacts relies on credentials stored in CircleCI,
 which are uploaded and deployed to Maven Central through Bintray.
 
-It is *strongly* recommended CHANGELOG is updated prior to publishing.
+It is **strongly** recommended CHANGELOG is updated prior to publishing.
 
-Releasing is done through two steps:
+Releasing is done by 1) Updating the version and 2) Triggering deployment
+through a new TAG.
 
-1. Update the version.
+### Update the version.
 
 This is done through a branch/PR with the version being bumped.
 
@@ -26,16 +27,16 @@ make inc-version NEW_VERSION=1.2.7
 ```
 
 The resulting branch will be named `v1.2.7_bump`. Create a PR out of this branch
-and merge to master.
+and merge to `master`.
 
-1. Deploying to Bintray/Maven Central.
+### Deploying to Bintray/Maven Central.
 
-Once `master` is updated with the changes from step 1), deployment needs to be triggered,
-explicitly specifying the VERSION through a tag.
+Once `master` is updated with the new version (from the previous step), deployment
+needs to be triggered, **explicitly** specifying the new version through a tag.
 
 From `master`:
 
-```
+```sh
 git tag 1.2.7 && git push --tags
 ```
 
