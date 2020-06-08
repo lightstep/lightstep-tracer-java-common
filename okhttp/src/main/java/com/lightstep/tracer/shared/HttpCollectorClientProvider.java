@@ -30,7 +30,8 @@ public class HttpCollectorClientProvider extends CollectorClientProvider {
                 tracer,
                 options.collectorUrl,
                 options.deadlineMillis,
-                options.okhttpDns
+                options.okhttpDns,
+                options.customHeaders
         );
     }
 }

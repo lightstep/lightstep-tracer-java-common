@@ -4,6 +4,8 @@ import com.lightstep.tracer.grpc.ReportRequest;
 import com.lightstep.tracer.grpc.ReportResponse;
 import com.lightstep.tracer.shared.Options.OkHttpDns;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import okhttp3.Dns;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -27,18 +29,21 @@ class HttpCollectorClient extends CollectorClient {
     private final URL collectorURL;
     private final long deadlineMillis;
     private final OkHttpDns dns;
+    private final Map<String, String> customHeaders;
 
     HttpCollectorClient(
             AbstractTracer tracer,
             URL collectorURL,
             long deadlineMillis,
-            OkHttpDns dns
+            OkHttpDns dns,
+            Map<String, String> customHeaders
     ) {
         this.client = new AtomicReference<>(start(deadlineMillis, dns));
         this.tracer = tracer;
         this.collectorURL = collectorURL;
         this.deadlineMillis = deadlineMillis;
         this.dns = dns;
+        this.customHeaders = customHeaders;
     }
 
     @Override
@@ -66,11 +71,20 @@ class HttpCollectorClient extends CollectorClient {
     }
 
     private Request toRequest(ReportRequest request) {
-        return new Request.Builder()
+        return addCustomHeaders(new Request.Builder())
                 .url(this.collectorURL)
                 .post(RequestBody.create(protoMediaType, request.toByteArray()))
                 .addHeader("Lightstep-Access-Token", request.getAuth().getAccessToken())
                 .build();
+    }
+
+    private Request.Builder addCustomHeaders(Request.Builder builder) {
+        if (customHeaders != null && !customHeaders.isEmpty()) {
+            for (Entry<String, String> entry : customHeaders.entrySet()) {
+                builder = builder.addHeader(entry.getKey(), entry.getValue());
+            }
+        }
+        return builder;
     }
 
     private ReportResponse fromResponse(Response response) throws IOException {

@@ -132,6 +132,7 @@ public final class Options {
 
     final String metricsUrl;
     final boolean disableMetricsReporting;
+    final Map<String, String> customHeaders;
 
     /**
      * The maximum amount of time the tracer should wait for a response from the collector when sending a report.
@@ -158,7 +159,8 @@ public final class Options {
             String grpcCollectorTarget,
             boolean grpcRoundRobin,
             OkHttpDns okhttpDns,
-            boolean disableMetaEventLogging
+            boolean disableMetaEventLogging,
+            Map<String, String> customHeaders
     ) {
         this.accessToken = accessToken;
         this.serviceVersion = serviceVersion;
@@ -180,6 +182,7 @@ public final class Options {
         this.grpcRoundRobin = grpcRoundRobin;
         this.okhttpDns = okhttpDns;
         this.disableMetaEventLogging = disableMetaEventLogging;
+        this.customHeaders = customHeaders;
     }
 
     long getGuid() {
@@ -214,6 +217,7 @@ public final class Options {
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
         private OkHttpDns okhttpDns;
+        private Map<String, String> customHeaders = new HashMap<>();
 
         public OptionsBuilder() {
         }
@@ -241,6 +245,7 @@ public final class Options {
             this.grpcCollectorTarget = options.grpcCollectorTarget;
             this.grpcRoundRobin = options.grpcRoundRobin;
             this.okhttpDns = options.okhttpDns;
+            this.customHeaders = options.customHeaders;
         }
 
         /**
@@ -541,6 +546,24 @@ public final class Options {
 	}
 
         /**
+         * Sets user-defined key-value pairs that should be sent in the HTTP header of all of the
+         * reports produced by this tracer.
+         */
+        public OptionsBuilder withCustomHeader(String key, String value) {
+            customHeaders.put(key, value);
+            return this;
+        }
+
+        /**
+         * Sets user-defined map of key-value pairs that should be sent in the HTTP header of all
+         * of the reports produced by this tracer.
+         */
+        public OptionsBuilder withCustomHeaders(Map<String, String> headers) {
+            customHeaders.putAll(headers);
+            return this;
+        }
+
+        /**
          * Sets the defaults for values not provided and constructs a new Options object.
          *
          * @return Options object configured with the built values.
@@ -576,7 +599,8 @@ public final class Options {
                     grpcCollectorTarget,
                     grpcRoundRobin,
                     okhttpDns,
-                    disableMetaEventLogging
+                    disableMetaEventLogging,
+                    customHeaders
             );
         }
 

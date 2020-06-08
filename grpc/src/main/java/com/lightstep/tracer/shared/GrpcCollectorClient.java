@@ -9,6 +9,7 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 class GrpcCollectorClient extends CollectorClient {
@@ -17,6 +18,7 @@ class GrpcCollectorClient extends CollectorClient {
   private CollectorServiceBlockingStub blockingStub;
   private final AbstractTracer tracer;
   private final long deadlineMillis;
+  private final Map<String, String> customHeaders;
 
   /**
    * Constructor client for accessing CollectorService using the existing channel
@@ -24,11 +26,13 @@ class GrpcCollectorClient extends CollectorClient {
   GrpcCollectorClient(
           AbstractTracer tracer,
           ManagedChannelBuilder channelBuilder,
-          long deadlineMillis
+          long deadlineMillis,
+          Map<String, String> customHeaders
   ) {
     this.tracer = tracer;
     this.channelBuilder = channelBuilder;
     this.deadlineMillis = deadlineMillis;
+    this.customHeaders = customHeaders;
     connect();
   }
 
@@ -48,8 +52,8 @@ class GrpcCollectorClient extends CollectorClient {
     try {
       ReportResponse response = blockingStub.
               withDeadlineAfter(deadlineMillis, TimeUnit.MILLISECONDS).
-              withInterceptors(new GrpcClientInterceptor(request.getAuth().getAccessToken())).
-              report(request);
+              withInterceptors(new GrpcClientInterceptor(request.getAuth().getAccessToken(),
+                  customHeaders)).report(request);
 
       return response;
     } catch (StatusRuntimeException e) {

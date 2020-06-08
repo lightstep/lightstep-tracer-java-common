@@ -83,6 +83,7 @@ public abstract class AbstractTracer implements Tracer {
     private final Reporter.Builder reporter;
     private final CollectorClient client;
     private final ClientMetrics clientMetrics;
+    private final Map<String, String> customHeaders;
 
     /**
      * False, until the first error has been logged, after which it is true, and if verbosity says
@@ -199,6 +200,7 @@ public abstract class AbstractTracer implements Tracer {
         firstReportHasRun = false;
         metaEventLoggingEnabled = false;
         disableMetaEventLogging = options.disableMetaEventLogging;
+        customHeaders = options.customHeaders;
     }
 
     /**

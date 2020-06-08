@@ -2,7 +2,6 @@ package com.lightstep.tracer.shared;
 
 import static com.lightstep.tracer.shared.LightStepConstants.Tags.COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.LightStepConstants.Tags.GUID_KEY;
-import static com.lightstep.tracer.shared.LightStepConstants.Tags.LEGACY_COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.LightStepConstants.Collector.DEFAULT_PLAINTEXT_PORT;
 import static com.lightstep.tracer.shared.LightStepConstants.Collector.DEFAULT_SECURE_PORT;
 import static com.lightstep.tracer.shared.LightStepConstants.Collector.PATH;
@@ -19,16 +18,16 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format.Builtin;
-import io.opentracing.propagation.TextMap;
 import io.opentracing.util.ThreadLocalScopeManager;
 import java.net.InetAddress;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import com.lightstep.tracer.shared.Options.OkHttpDns;
 
+import java.util.Map;
 import org.junit.Test;
 
 public class OptionsTest {
@@ -41,6 +40,8 @@ public class OptionsTest {
     private static final int MAX_BUFFERED_SPANS = 999;
     private static final String TAG_KEY = "my-tag-key";
     private static final String TAG_VALUE = "my-tag-value";
+    private static final String HEADER_KEY = "header-1";
+    private static final String HEADER_VALUE = "value-1";
     private static final long GUID_VALUE = 123;
     private static final long DEADLINE_MILLIS = 150;
     private static final Propagator CUSTOM_PROPAGATOR = new B3Propagator();
@@ -256,6 +257,22 @@ public class OptionsTest {
         assertFalse(options.disableMetricsReporting);
     }
 
+    @Test
+    public void testOptionsBuilder_noCustomHeaders() throws Exception {
+        Options options = new Options.OptionsBuilder().build();
+        assertTrue(options.customHeaders.isEmpty());
+    }
+
+    @Test
+    public void testOptionsBuilder_customHeadersMap() throws Exception {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("key-1", "value-1");
+        Options options = new Options.OptionsBuilder().withCustomHeaders(headers).build();
+
+        assertEquals(1, options.customHeaders.size());
+        assertEquals("value-1", options.customHeaders.get("key-1"));
+    }
+
     private Options createFullyPopulatedOptions() throws Exception {
         return new Options.OptionsBuilder()
                 .withVerbosity(VERBOSITY_DEBUG)
@@ -279,6 +296,7 @@ public class OptionsTest {
                 .withDisableMetricsReporting(true)
                 .withDisableMetaEventLogging(true)
                 .withOkHttpDns(CUSTOM_DNS)
+                .withCustomHeader(HEADER_KEY, HEADER_VALUE)
                 .build();
     }
 
@@ -306,5 +324,6 @@ public class OptionsTest {
         assertTrue(options.disableMetricsReporting);
         assertTrue(options.disableMetaEventLogging);
         assertEquals(CUSTOM_DNS, options.okhttpDns);
+        assertEquals(HEADER_VALUE, options.customHeaders.get(HEADER_KEY));
     }
 }

@@ -53,7 +53,8 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
             return new GrpcCollectorClient(
                     tracer,
                     builder,
-                    options.deadlineMillis
+                    options.deadlineMillis,
+                    options.customHeaders
             );
         } catch (ManagedChannelProvider.ProviderNotFoundException e) {
             // TODO - let the user know that they need to include a grpc channel dependency.
