@@ -256,6 +256,18 @@ public class OptionsTest {
         assertFalse(options.disableMetricsReporting);
     }
 
+    @Test
+    public void testOptionsBuilder_hostname_notSet() throws Exception {
+        Options options = new Options.OptionsBuilder().build();
+        assertFalse(options.hostname.isEmpty());
+    }
+
+    @Test
+    public void testOptionsBuilder_hostname_set() throws Exception {
+        Options options = new Options.OptionsBuilder().withHostname("my-host").build();
+        assertEquals("my-host", options.hostname);
+    }
+
     private Options createFullyPopulatedOptions() throws Exception {
         return new Options.OptionsBuilder()
                 .withVerbosity(VERBOSITY_DEBUG)

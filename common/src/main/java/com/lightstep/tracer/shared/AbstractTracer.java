@@ -65,6 +65,8 @@ public abstract class AbstractTracer implements Tracer {
     @SuppressWarnings("unused")
     protected static final String LIGHTSTEP_TRACER_VERSION_KEY = "lightstep.tracer_version";
 
+    private static final String LIGHTSTEP_HOSTNAME_KEY = "hostname";
+
     /**
      * For mapping internal logs to Android log levels without importing Android
      * packages.
@@ -189,6 +191,8 @@ public abstract class AbstractTracer implements Tracer {
         for (Map.Entry<String, Object> entry : options.tags.entrySet()) {
             addTracerTag(entry.getKey(), entry.getValue());
         }
+
+        addTracerTag(LIGHTSTEP_HOSTNAME_KEY, options.hostname);
 
         if (validCollectorClient && !options.disableReportingLoop) {
             reportingLoop = new ReportingLoop(options.maxReportingIntervalMillis);
