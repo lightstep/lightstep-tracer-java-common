@@ -258,6 +258,18 @@ public class OptionsTest {
     }
 
     @Test
+    public void testOptionsBuilder_hostname_notSet() throws Exception {
+        Options options = new Options.OptionsBuilder().build();
+        assertFalse(options.hostname.isEmpty());
+    }
+
+    @Test
+    public void testOptionsBuilder_hostname_set() throws Exception {
+        Options options = new Options.OptionsBuilder().withHostname("my-host").build();
+        assertEquals("my-host", options.hostname);
+    }
+
+    @Test
     public void testOptionsBuilder_noCustomHeaders() throws Exception {
         Options options = new Options.OptionsBuilder().build();
         assertTrue(options.customHeaders.isEmpty());
