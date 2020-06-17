@@ -591,7 +591,7 @@ public abstract class AbstractTracer implements Tracer {
         if (!response.getErrorsList().isEmpty()) {
             List<String> errs = response.getErrorsList();
             for (String err : errs) {
-                this.error("Collector response contained error: ", err);
+                this.error("Collector response contained error: " + err);
             }
             return ReportResult.Error(spans.size());
         }
@@ -677,11 +677,11 @@ public abstract class AbstractTracer implements Tracer {
      * Internal logging.
      */
     @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
-    protected void debug(String msg, Object payload) {
+    protected void debug(String msg, Throwable throwable) {
         if (verbosity < VERBOSITY_DEBUG) {
             return;
         }
-        printLogToConsole(DEBUG, msg, payload);
+        printLogToConsole(DEBUG, msg, throwable);
     }
 
     /**
@@ -696,11 +696,11 @@ public abstract class AbstractTracer implements Tracer {
      * Internal logging.
      */
     @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
-    protected void info(String msg, Object payload) {
+    protected void info(String msg, Throwable throwable) {
         if (verbosity < VERBOSITY_INFO) {
             return;
         }
-        printLogToConsole(InternalLogLevel.INFO, msg, payload);
+        printLogToConsole(InternalLogLevel.INFO, msg, throwable);
     }
 
     /**
@@ -715,11 +715,11 @@ public abstract class AbstractTracer implements Tracer {
      * Internal warning.
      */
     @SuppressWarnings({"WeakerAccess", "SameParameterValue"})
-    protected void warn(String msg, Object payload) {
+    protected void warn(String msg, Throwable throwable) {
         if (verbosity < VERBOSITY_INFO) {
             return;
         }
-        printLogToConsole(InternalLogLevel.WARN, msg, payload);
+        printLogToConsole(InternalLogLevel.WARN, msg, throwable);
     }
 
     /**
@@ -734,7 +734,7 @@ public abstract class AbstractTracer implements Tracer {
      * Internal error.
      */
     @SuppressWarnings("WeakerAccess")
-    protected void error(String msg, Object payload) {
+    protected void error(String msg, Throwable throwable) {
         if (verbosity < VERBOSITY_FIRST_ERROR_ONLY) {
             return;
         }
@@ -742,10 +742,10 @@ public abstract class AbstractTracer implements Tracer {
             return;
         }
         firstErrorLogged = true;
-        printLogToConsole(ERROR, msg, payload);
+        printLogToConsole(ERROR, msg, throwable);
     }
 
-    protected abstract void printLogToConsole(InternalLogLevel level, String msg, Object payload);
+    protected abstract void printLogToConsole(InternalLogLevel level, String msg, Throwable throwable);
 
 
     String generateTraceURL(long spanId) {
