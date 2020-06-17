@@ -48,9 +48,12 @@ public abstract class CollectorClientProvider {
             }
         }
 
-        if (type != null) {
+        if (type != null && candidate != null) {
             warner.warn("expected " + type + " collector client was not present in classpath. " +
                 "Using " + candidate.type() + " instead.");
+        } else if (candidate == null) {
+            warner.error(
+                "No functional collector client provider found. Try adding a dependency on the tracer-okhttp or tracer-grpc artifact.");
         }
 
         return candidate;
