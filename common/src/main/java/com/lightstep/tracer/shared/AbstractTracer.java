@@ -176,6 +176,11 @@ public abstract class AbstractTracer implements Tracer {
             public void warn(String message) {
                 AbstractTracer.this.warn(message);
             }
+
+            @Override
+            public void error(String message) {
+                AbstractTracer.this.error(message);
+            }
         }).forOptions(this, options);
         if (client == null) {
             error("Exception creating client.");
