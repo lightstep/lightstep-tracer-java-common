@@ -4,6 +4,7 @@ package com.lightstep.tracer.shared;
 import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.InetAddress;
 import java.net.URL;
@@ -111,6 +112,7 @@ public final class Options {
 
     final String accessToken;
     final String serviceVersion;
+    final String hostname;
     final URL collectorUrl;
     final Map<String, Object> tags;
     final long maxReportingIntervalMillis;
@@ -141,6 +143,7 @@ public final class Options {
     private Options(
             String accessToken,
             String serviceVersion,
+            String hostname,
             URL collectorUrl,
             long maxReportingIntervalMillis,
             int maxBufferedSpans,
@@ -162,6 +165,7 @@ public final class Options {
     ) {
         this.accessToken = accessToken;
         this.serviceVersion = serviceVersion;
+        this.hostname = hostname;
         this.collectorUrl = collectorUrl;
         this.maxReportingIntervalMillis = maxReportingIntervalMillis;
         this.maxBufferedSpans = maxBufferedSpans;
@@ -194,6 +198,7 @@ public final class Options {
     public static class OptionsBuilder {
         private String accessToken = "";
         private String serviceVersion = "";
+        private String hostname = "";
         private String collectorProtocol = LightStepConstants.Collector.PROTOCOL_HTTPS;
         private String collectorHost = LightStepConstants.Collector.DEFAULT_HOST;
         private int collectorPort = -1;
@@ -221,6 +226,7 @@ public final class Options {
         public OptionsBuilder(Options options) {
             this.accessToken = options.accessToken;
             this.serviceVersion = options.serviceVersion;
+            this.hostname = options.hostname;
             this.collectorProtocol = options.collectorUrl.getProtocol();
             this.collectorHost = options.collectorUrl.getHost();
             this.collectorPort = options.collectorUrl.getPort();
@@ -296,6 +302,20 @@ public final class Options {
             }
 
             this.serviceVersion = serviceVersion;
+            return this;
+        }
+
+        /**
+         * Sets the hostname. If not set, will default to the {@code InetAddress.getLocalHost().getHostName()}.
+         *
+         * @param hostname hostname
+         */
+        public OptionsBuilder withHostname(String hostname) {
+            if (hostname == null) {
+                throw new IllegalArgumentException("hostname cannot be null");
+            }
+
+            this.hostname = hostname;
             return this;
         }
 
@@ -555,10 +575,12 @@ public final class Options {
             defaultPropagators();
             defaultScopeManager();
             defaultDeadlineMillis();
+            defaultHostname();
 
             return new Options(
                     accessToken,
                     serviceVersion,
+                    hostname,
                     getCollectorUrl(),
                     maxReportingIntervalMillis,
                     maxBufferedSpans,
@@ -617,6 +639,20 @@ public final class Options {
                         withComponentName(name);
                     }
                 }
+            }
+        }
+
+        private void defaultHostname() {
+            if (hostname == null || hostname.isEmpty()) {
+                hostname = getHostName();
+            }
+        }
+
+        private static String getHostName() {
+            try {
+                return InetAddress.getLocalHost().getHostName();
+            } catch (final IOException e) {
+                return "";
             }
         }
 

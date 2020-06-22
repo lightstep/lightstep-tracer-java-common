@@ -30,6 +30,11 @@ public class GrpcCollectorClientProviderTest {
                 public void warn(String message) {
                     log.add(message);
                 }
+
+                @Override
+                public void error(String message) {
+                    log.add(message);
+                }
             });
         assertNotNull(provider);
         assertEquals(GrpcCollectorClientProvider.provider().getClass(), provider.getClass());

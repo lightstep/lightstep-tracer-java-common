@@ -10,7 +10,7 @@ class StubTracer extends AbstractTracer {
     private final List<LogCall> consoleLogCalls;
     SimpleFuture<Boolean> flushResult = null;
 
-    private static final SimpleFuture<Boolean> SUCCESS_FUTURE = new SimpleFuture(true);
+    private static final SimpleFuture<Boolean> SUCCESS_FUTURE = new SimpleFuture<>(true);
 
     StubTracer(Options options) {
         super(options);
@@ -27,10 +27,10 @@ class StubTracer extends AbstractTracer {
     }
 
     @Override
-    protected void printLogToConsole(InternalLogLevel level, String msg, Object payload) {
+    protected void printLogToConsole(InternalLogLevel level, String msg, Throwable throwable) {
         // this can only be null when print is called during Tracer construction
         if (consoleLogCalls != null) {
-            consoleLogCalls.add(new LogCall(level, msg, payload));
+            consoleLogCalls.add(new LogCall(level, msg, throwable));
         }
     }
 
@@ -45,15 +45,15 @@ class StubTracer extends AbstractTracer {
         return consoleLogCalls.size();
     }
 
-    class LogCall {
+    static class LogCall {
         final InternalLogLevel level;
         final String msg;
-        final Object payload;
+        final Throwable throwable;
 
-        private LogCall(InternalLogLevel level, String msg, Object payload)  {
+        private LogCall(InternalLogLevel level, String msg, Throwable throwable)  {
             this.level = level;
             this.msg = msg;
-            this.payload = payload;
+            this.throwable = throwable;
         }
     }
 }
