@@ -1,10 +1,5 @@
 package com.lightstep.tracer.shared;
 
-import com.lightstep.tracer.shared.AbstractTracer;
-import com.lightstep.tracer.shared.Options;
-import com.lightstep.tracer.shared.SimpleFuture;
-import io.opentracing.Span;
-
 public class ExampleTracer extends AbstractTracer {
     public ExampleTracer(Options options) {
         super(options);
@@ -17,11 +12,10 @@ public class ExampleTracer extends AbstractTracer {
     }
 
     @Override
-    protected void printLogToConsole(InternalLogLevel level, String msg, Object payload) {
-        String s = msg;
-        if (payload != null) {
-            s += " " + payload.toString();
+    protected void printLogToConsole(InternalLogLevel level, String msg, Throwable throwable) {
+        System.out.println(msg);
+        if (throwable != null) {
+            throwable.printStackTrace();
         }
-        System.out.println(s);
     }
 }
