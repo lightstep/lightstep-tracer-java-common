@@ -1,5 +1,13 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.21.0...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.0...master)
+
+<a name="0.30.0"></a>
+## [0.30.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.21.0...0.30.0)
+* Deployment is automated and happens through CircleCI.
+* Use the same major/minor version as the jre/android tracers.
+* Metrics has been moved to its own repo.
+* Small improvement logging errors.
+* Add hostname tag.
 
 <a name="0.21.0"></a>
 ## [0.21.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.20.0...0.21.0)
