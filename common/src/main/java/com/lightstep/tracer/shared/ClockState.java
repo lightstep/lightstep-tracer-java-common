@@ -154,9 +154,7 @@ class ClockState {
      * in the current offset.
      */
     boolean isReady() {
-        synchronized (mutex) {
-            return samples.size() > 3;
-        }
+        return activeSampleCount() > 3;
     }
 
     int activeSampleCount() {
