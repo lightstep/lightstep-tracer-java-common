@@ -1,5 +1,6 @@
 package com.lightstep.tracer.shared;
 
+import com.google.common.hash.Hashing;
 import com.google.protobuf.Timestamp;
 import com.lightstep.tracer.grpc.KeyValue;
 
@@ -24,11 +25,12 @@ class Util {
         protected Random initialValue() {
             // It'd be nice to get the process ID into the mix, but there's no clear
             // cross-platform, Java 6-compatible way to determine that
-            return new Random(
-                    System.currentTimeMillis() *
-                            (System.nanoTime() % 1000000) *
-                            Thread.currentThread().getId() *
-                            (long) (1024 * Math.random()));
+            final long seed = Hashing.sha256().newHasher()
+                    .putLong(System.currentTimeMillis())
+                    .putLong(System.nanoTime())
+                    .putLong(Thread.currentThread().getId())
+                    .hash().asLong();
+            return new Random(seed);
         }
     };
 
