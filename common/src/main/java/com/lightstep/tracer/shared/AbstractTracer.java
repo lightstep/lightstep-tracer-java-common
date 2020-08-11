@@ -259,7 +259,8 @@ public abstract class AbstractTracer implements Tracer {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
-        if (!disableMetricsReporting && safeMetrics != null) {
+        if (!disableMetricsReporting && safeMetrics != null
+            && !"false".equals(System.getenv(LightStepConstants.Metrics.LS_METRICS_ENABLED))) {
           // Can be null, if running on jdk1.7
           metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
                     serviceVersion, metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
