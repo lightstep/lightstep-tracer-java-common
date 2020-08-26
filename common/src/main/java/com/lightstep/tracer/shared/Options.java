@@ -1,6 +1,7 @@
 package com.lightstep.tracer.shared;
 
 
+import com.lightstep.tracer.shared.LightStepConstants.Metrics;
 import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
@@ -214,7 +215,7 @@ public final class Options {
         private Map<Format<?>, Propagator> propagators = new HashMap<>();
         private boolean disableMetaEventLogging = false;
         private String metricsUrl = LightStepConstants.Metrics.DEFAULT_URL;
-        private boolean disableMetricsReporting = false;
+        private boolean disableMetricsReporting = getEnvMetricsDisabled();
         private CollectorClient collectorClient;
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
@@ -247,6 +248,14 @@ public final class Options {
             this.grpcCollectorTarget = options.grpcCollectorTarget;
             this.grpcRoundRobin = options.grpcRoundRobin;
             this.okhttpDns = options.okhttpDns;
+        }
+
+        private static boolean getEnvMetricsDisabled() {
+            String metricEnabled = System.getenv(Metrics.LS_METRICS_ENABLED);
+            if (metricEnabled != null) {
+                return "false".equals(metricEnabled);
+            }
+            return Metrics.DEFAULT_DISABLE_METRICS;
         }
 
         /**
