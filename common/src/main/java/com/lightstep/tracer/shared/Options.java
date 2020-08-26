@@ -1,7 +1,6 @@
 package com.lightstep.tracer.shared;
 
 
-import com.lightstep.tracer.shared.LightStepConstants.Metrics;
 import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format;
 import io.opentracing.util.ThreadLocalScopeManager;
@@ -251,11 +250,11 @@ public final class Options {
         }
 
         private static boolean getEnvMetricsDisabled() {
-            String metricEnabled = System.getenv(Metrics.LS_METRICS_ENABLED);
+            String metricEnabled = System.getenv(LightStepConstants.Metrics.LS_METRICS_ENABLED);
             if (metricEnabled != null) {
                 return "false".equals(metricEnabled);
             }
-            return Metrics.DEFAULT_DISABLE_METRICS;
+            return LightStepConstants.Metrics.DEFAULT_DISABLE_METRICS;
         }
 
         /**
