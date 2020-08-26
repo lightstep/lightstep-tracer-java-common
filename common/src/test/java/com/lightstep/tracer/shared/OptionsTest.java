@@ -2,7 +2,6 @@ package com.lightstep.tracer.shared;
 
 import static com.lightstep.tracer.shared.LightStepConstants.Tags.COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.LightStepConstants.Tags.GUID_KEY;
-import static com.lightstep.tracer.shared.LightStepConstants.Tags.LEGACY_COMPONENT_NAME_KEY;
 import static com.lightstep.tracer.shared.LightStepConstants.Collector.DEFAULT_PLAINTEXT_PORT;
 import static com.lightstep.tracer.shared.LightStepConstants.Collector.DEFAULT_SECURE_PORT;
 import static com.lightstep.tracer.shared.LightStepConstants.Collector.PATH;
@@ -18,10 +17,9 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 
-import io.opentracing.ScopeManager;
 import io.opentracing.propagation.Format.Builtin;
-import io.opentracing.propagation.TextMap;
 import io.opentracing.util.ThreadLocalScopeManager;
 import java.net.InetAddress;
 import java.util.Collections;
@@ -30,7 +28,16 @@ import java.util.List;
 import com.lightstep.tracer.shared.Options.OkHttpDns;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Options.class})
 public class OptionsTest {
     private static final String ACCESS_TOKEN = "my-access-token";
     private static final String SERVICE_VERSION = "v0.1.0";
@@ -50,6 +57,17 @@ public class OptionsTest {
             return Collections.emptyList();
         }
     };
+
+    private void mockSystem() {
+        PowerMockito.mockStatic(System.class);
+        Mockito.when(System.getProperty(anyString(), anyString())).thenAnswer(
+            new Answer<String>() {
+                @Override
+                public String answer(InvocationOnMock invocationOnMock) {
+                    return invocationOnMock.getArgument(1);
+                }
+            });
+    }
 
     /**
      * Basic test of OptionsBuilder that ensures if I set everything explicitly, that these values
@@ -252,6 +270,42 @@ public class OptionsTest {
     public void testOptionsBuilder_defaultDisableMetricsReporting() throws Exception {
         Options options = new Options.OptionsBuilder()
                 .build();
+
+        assertFalse(options.disableMetricsReporting);
+    }
+
+    @Test
+    public void testOptionsBuilder_disableMetricsReporting_fromEnvVariable_True() throws Exception {
+        mockSystem();
+        Mockito.when(System.getenv(LightStepConstants.Metrics.LS_METRICS_ENABLED))
+            .thenReturn("true");
+
+        Options options = new Options.OptionsBuilder()
+            .build();
+
+        assertFalse(options.disableMetricsReporting);
+    }
+
+    @Test
+    public void testOptionsBuilder_disableMetricsReporting_fromEnvVariable_False() throws Exception {
+        mockSystem();
+        Mockito.when(System.getenv(LightStepConstants.Metrics.LS_METRICS_ENABLED))
+            .thenReturn("false");
+
+        Options options = new Options.OptionsBuilder()
+            .build();
+
+        assertTrue(options.disableMetricsReporting);
+    }
+
+    @Test
+    public void testOptionsBuilder_disableMetricsReporting_fromEnvVariable_NotBoolean() throws Exception {
+        mockSystem();
+        Mockito.when(System.getenv(LightStepConstants.Metrics.LS_METRICS_ENABLED))
+            .thenReturn("not-boolean");
+
+        Options options = new Options.OptionsBuilder()
+            .build();
 
         assertFalse(options.disableMetricsReporting);
     }

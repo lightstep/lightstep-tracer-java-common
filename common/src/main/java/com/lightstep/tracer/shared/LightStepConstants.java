@@ -33,6 +33,8 @@ public final class LightStepConstants {
 
         static final int DEFAULT_INTERVAL_SECS = 30;
         static final String DEFAULT_URL = "https://ingest.lightstep.com:443/metrics";
+        static final String LS_METRICS_ENABLED = "LS_METRICS_ENABLED";
+        static final boolean DEFAULT_DISABLE_METRICS = false;
     }
 
     public final class Tags {
