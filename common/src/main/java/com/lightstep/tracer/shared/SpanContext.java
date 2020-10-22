@@ -89,7 +89,8 @@ public class SpanContext implements io.opentracing.SpanContext {
         return baggage;
     }
 
-    SpanContext withBaggageItem(String key, String value) {
+    @SuppressWarnings("WeakerAccess")
+    public SpanContext withBaggageItem(String key, String value) {
         // This is really a "set" not a "with" but keeping as is to preserve behavior.
         this.baggage.put(key, value);
         return new SpanContext(this.getTraceId(), this.getSpanId(), this.baggage, this.foreignTraceId);
