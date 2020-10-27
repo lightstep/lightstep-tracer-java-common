@@ -90,9 +90,10 @@ public class SpanContext implements io.opentracing.SpanContext {
     }
 
     SpanContext withBaggageItem(String key, String value) {
-        // This is really a "set" not a "with" but keeping as is to preserve behavior.
-        this.baggage.put(key, value);
-        return new SpanContext(this.getTraceId(), this.getSpanId(), this.baggage, this.foreignTraceId);
+        // Do NOT modify our own baggage, as SpanContext is expected to be immutable.
+        Map<String, String> newBaggage = new HashMap<String, String>(this.baggage);
+        newBaggage.put(key, value);
+        return new SpanContext(this.getTraceId(), this.getSpanId(), newBaggage, this.foreignTraceId);
     }
 
     @Override
