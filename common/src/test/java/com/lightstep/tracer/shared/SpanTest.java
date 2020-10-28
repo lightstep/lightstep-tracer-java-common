@@ -53,9 +53,9 @@ public class SpanTest {
     public void testContext_isImmutable() {
       undertest.setBaggageItem("foo", "bar");
       SpanContext anotherSpanContext = undertest.context();
-      assertNotEquals(spanContext, anotherSpanContext);
       assertNull(spanContext.getBaggageItem("foo"));
       assertNotNull(anotherSpanContext.getBaggageItem("foo"));
+      assertNotNull(undertest.getBaggageItem("foo"));
     }
 
     @Test
