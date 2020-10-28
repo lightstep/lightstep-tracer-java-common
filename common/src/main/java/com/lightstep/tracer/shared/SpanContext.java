@@ -89,7 +89,8 @@ public class SpanContext implements io.opentracing.SpanContext {
         return baggage;
     }
 
-    SpanContext withBaggageItem(String key, String value) {
+    @SuppressWarnings("WeakerAccess")
+    public SpanContext withBaggageItem(String key, String value) {
         // Do NOT modify our own baggage, as SpanContext is expected to be immutable.
         Map<String, String> newBaggage = new HashMap<String, String>(this.baggage);
         newBaggage.put(key, value);
