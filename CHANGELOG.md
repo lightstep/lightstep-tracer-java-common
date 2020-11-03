@@ -1,6 +1,11 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.0...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.1...master)
+
+<a name="0.30.1"></a>
+## [0.30.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.0...0.30.1)
 * Allow users to disable metrics via environment variable: `LS_METRICS_ENABLED=false`
+* Make `SpanContext` truly immutable.
+* Allow `SpanContext` to directly create a copy with updated values.
 
 <a name="0.30.0"></a>
 ## [0.30.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.21.0...0.30.0)
