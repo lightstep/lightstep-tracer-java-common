@@ -15,6 +15,11 @@
 * Small improvement logging errors.
 * Add hostname tag.
 
+<a name="0.25.0"></a>
+## [0.25.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.21.0...0.25.0)
+* Use the 'old' okhttp 3.10.0, to stay compatible with our Android target version, which needs
+  jvm 1.6 bytecode.
+
 <a name="0.21.0"></a>
 ## [0.21.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.20.0...0.21.0)
 * (Optional) Metrics reporting in the Tracer.
