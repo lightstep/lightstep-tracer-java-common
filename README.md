@@ -1,6 +1,6 @@
 # Lightstep Tracer Common
 
-[ ![Download](https://api.bintray.com/packages/lightstep/maven/java-common/images/download.svg) ](https://bintray.com/lightstep/maven/) [![MIT license](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
+[ ![Download](https://maven-badges.herokuapp.com/maven-central/com.lightstep.tracer/java-common/badge.svg) ](https://maven-badges.herokuapp.com/maven-central/com.lightstep.tracer/java-common) [![MIT license](http://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
 
 The core LightStep distributed tracing library for the Java runtime environment. For specific documentation
 see [lightstep-tracer-java](https://github.com/lightstep/lightstep-tracer-java) or
