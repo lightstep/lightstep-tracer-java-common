@@ -9,7 +9,7 @@ make build      # builds common library
 make publish    # increment versions and publish the artifact to bintray
 ```
 
-NOTE: to publish, `BINTRAY_USER` and `BINTRAY_API_KEY` need to be set in the shell environment.
+NOTE: to publish, `SONATYPE_USERNAME` and `SONATYPE_PASSWORD` need to be set in the shell environment.
 
 ###  Directory structure
 
