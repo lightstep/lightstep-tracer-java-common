@@ -1,5 +1,9 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.1...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.2...master)
+
+<a name="0.30.2"></a>
+## [0.30.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.1...0.30.2)
+* Use shaded okhttp
 
 <a name="0.30.1"></a>
 ## [0.30.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.0...0.30.1)
