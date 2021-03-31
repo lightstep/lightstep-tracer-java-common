@@ -11,4 +11,4 @@ VERSION=`mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpress
 echo "Publishing $VERSION"
 
 # Build and deploy to Sonatype
-mvn -s settings.xml -Dmaven.test.skip=true -P deploy deploy
+mvn -s settings.xml -Dmaven.test.skip=true -P deploy deploy -pl .,common,grpc,okhttp
