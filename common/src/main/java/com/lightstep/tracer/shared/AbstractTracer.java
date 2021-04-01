@@ -243,30 +243,40 @@ public abstract class AbstractTracer implements Tracer {
      */
     private void maybeStartReporting() {
         // We set both reporting/metrics thread in a single step.
-        if (reportingThread != null) {
-            return;
+        boolean buildFirstSpan = false;
+        synchronized (this) {
+            if (reportingThread != null) {
+                return;
+            }
+
+            reportingThread = new Thread(reportingLoop, LightStepConstants.Internal.REPORTING_THREAD_NAME);
+            reportingThread.setDaemon(true);
+            reportingThread.start();
+
+            if (metaEventLoggingEnabled && !firstReportHasRun) {
+                firstReportHasRun = true;
+                buildFirstSpan = true;
+            }
+
+            if (!disableMetricsReporting && safeMetrics != null) {
+                // Can be null, if running on jdk1.7
+                metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
+                        serviceVersion, metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
+                if (metricsThread != null) {
+                    metricsThread.setDaemon(true);
+                    metricsThread.start();
+                }
+
+            }
         }
-        if (metaEventLoggingEnabled && !firstReportHasRun) {
+
+        if (buildFirstSpan) {
             buildSpan(LightStepConstants.MetaEvents.TracerCreateOperation)
                     .ignoreActiveSpan()
                     .withTag(LightStepConstants.MetaEvents.MetaEventKey, true)
                     .withTag(LightStepConstants.MetaEvents.TracerGuidKey, reporter.getReporterId())
                     .start()
                     .finish();
-            firstReportHasRun = true;
-        }
-        reportingThread = new Thread(reportingLoop, LightStepConstants.Internal.REPORTING_THREAD_NAME);
-        reportingThread.setDaemon(true);
-        reportingThread.start();
-
-        if (!disableMetricsReporting && safeMetrics != null) {
-          // Can be null, if running on jdk1.7
-          metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
-                    serviceVersion, metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
-          if (metricsThread != null) {
-            metricsThread.setDaemon(true);
-            metricsThread.start();
-          }
         }
     }
 
