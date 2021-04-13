@@ -1,5 +1,6 @@
 <a name="Pending Release"></a>
 ## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.2...master)
+- Do not try to recreate Metrics thread if initialization failed
 
 <a name="0.30.2"></a>
 ## [0.30.2](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.1...0.30.2)
