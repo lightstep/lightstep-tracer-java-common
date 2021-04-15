@@ -268,7 +268,7 @@ public abstract class AbstractTracer implements Tracer {
                         LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
             } catch (Throwable e) {
                 // Can be due to dependency conflict e.g. Kotlin libs.
-                warn("Failed to initialize Metrics thread, new initialization will not be retried.",
+                error("Failed to initialize Metrics thread, new initialization will not be retried.",
                     e);
                 metricsThreadInitializationFailed = true;
             }
