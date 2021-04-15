@@ -126,6 +126,7 @@ public abstract class AbstractTracer implements Tracer {
 
     private final String metricsUrl;
     private final boolean disableMetricsReporting;
+    private boolean metricsThreadInitializationFailed;
 
     boolean firstReportHasRun;
     boolean disableMetaEventLogging;
@@ -259,14 +260,23 @@ public abstract class AbstractTracer implements Tracer {
         reportingThread.setDaemon(true);
         reportingThread.start();
 
-        if (!disableMetricsReporting && safeMetrics != null) {
-          // Can be null, if running on jdk1.7
-          metricsThread = safeMetrics.createMetricsThread(componentName, auth.getAccessToken(),
-                    serviceVersion, metricsUrl, LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
-          if (metricsThread != null) {
-            metricsThread.setDaemon(true);
-            metricsThread.start();
-          }
+        if (!disableMetricsReporting && safeMetrics != null && !metricsThreadInitializationFailed) {
+            try {
+                metricsThread = safeMetrics
+                    .createMetricsThread(componentName, auth.getAccessToken(),
+                        serviceVersion, metricsUrl,
+                        LightStepConstants.Metrics.DEFAULT_INTERVAL_SECS);
+            } catch (Throwable e) {
+                // Can be due to dependency conflict e.g. Kotlin libs.
+                error("Failed to initialize Metrics thread, new initialization will not be retried.",
+                    e);
+                metricsThreadInitializationFailed = true;
+            }
+            // Can be null, if running on jdk1.7 or if initialization failed.
+            if (metricsThread != null) {
+                metricsThread.setDaemon(true);
+                metricsThread.start();
+            }
         }
     }
 
