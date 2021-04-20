@@ -1,5 +1,5 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.2...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.3...master)
 
 <a name="0.30.3"></a>
 ## [0.30.3](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.2...0.30.3)
