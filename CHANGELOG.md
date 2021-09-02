@@ -15,6 +15,12 @@
 * Small improvement logging errors.
 * Add hostname tag.
 
+<a name="0.25.1"></a>
+## [0.25.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.25.0...0.25.1)
+* Publish directly to sonatype.
+* Have a new experimental common-with-okhttp jar, used to facilite shading a few libraries
+  when leveraged from Android.
+
 <a name="0.25.0"></a>
 ## [0.25.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.21.0...0.25.0)
 * Use the 'old' okhttp 3.10.0, to stay compatible with our Android target version, which needs
