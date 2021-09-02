@@ -37,11 +37,15 @@
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <includeDependencySources>true</includeDependencySources>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
