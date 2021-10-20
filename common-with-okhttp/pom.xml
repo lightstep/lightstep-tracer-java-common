@@ -72,8 +72,9 @@
                             </artifactSet>
                             <relocations>
                                 <relocation>
-                                    <pattern>google.protobuf</pattern>
-                                    <shadedPattern>lightstep.google.protobuf</shadedPattern>
+                                    <!-- proto files start with google.* -->
+                                    <pattern>google</pattern>
+                                    <shadedPattern>lightstep.google</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.google.protobuf</pattern>
