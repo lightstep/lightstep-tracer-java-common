@@ -85,6 +85,15 @@
                                     <shadedPattern>lightstep.com.google.api</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <filters>
+                              <!-- Be conservative and remove any META-INF that includes non-shaded protobuf info -->
+                              <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                  <exclude>META-INF/maven/com.google.protobuf/</exclude>
+                                </excludes>
+                              </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
