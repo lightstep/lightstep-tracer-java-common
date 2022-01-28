@@ -1,19 +1,10 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.1...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.26.1...master)
 
-<a name="0.30.1"></a>
-## [0.30.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.0...0.30.1)
-* Allow users to disable metrics via environment variable: `LS_METRICS_ENABLED=false`
-* Make `SpanContext` truly immutable.
-* Allow `SpanContext` to directly create a copy with updated values.
-
-<a name="0.30.0"></a>
-## [0.30.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.21.0...0.30.0)
-* Deployment is automated and happens through CircleCI.
-* Use the same major/minor version as the jre/android tracers.
-* Metrics has been moved to its own repo.
-* Small improvement logging errors.
-* Add hostname tag.
+<a name="0.26.1"></a>
+## [0.26.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.26.0...0.26.1)
+* Filter out the unshaded protobuf reference in META-INF for common-with-okhttp,
+  trying to avoid conflicts.
 
 <a name="0.25.1"></a>
 ## [0.25.1](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.25.0...0.25.1)
