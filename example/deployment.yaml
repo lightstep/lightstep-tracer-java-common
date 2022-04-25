@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "java-trace-spammer"
+  namespace: "tracing"
+  labels:
+    application: "tracing"
+    component: "java-trace-spammer"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: "tracing"
+      component: "java-trace-spammer"
+  template:
+    metadata:
+      labels:
+        application: "tracing"
+        component: "java-trace-spammer"
+    spec:
+      containers:
+        - name: "main"
+          image: "pierone.stups.zalan.do/telemetry/java-trace-spammer:2.0"
+          resources:
+            limits:
+              cpu: 300m
+              memory: 500Mi
+            requests:
+              cpu: 300m
+              memory: 500Mi

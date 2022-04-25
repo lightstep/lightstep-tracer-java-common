@@ -15,6 +15,33 @@
        <maven.deploy.skip>true</maven.deploy.skip>
    </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.lightstep.tracer.shared.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.lightstep.tracer</groupId>
@@ -25,8 +52,13 @@
         <!-- Provided Dependencies -->
         <dependency>
             <groupId>com.lightstep.tracer</groupId>
-            <artifactId>tracer-okhttp</artifactId>
+            <artifactId>tracer-grpc</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty</artifactId>
+            <version>1.23.0</version>
         </dependency>
     </dependencies>
 </project>
