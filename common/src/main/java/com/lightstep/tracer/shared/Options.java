@@ -140,6 +140,8 @@ public final class Options {
      */
     final long deadlineMillis;
 
+    final boolean dropSpansOnFailure;
+
     private Options(
             String accessToken,
             String serviceVersion,
@@ -161,7 +163,8 @@ public final class Options {
             String grpcCollectorTarget,
             boolean grpcRoundRobin,
             OkHttpDns okhttpDns,
-            boolean disableMetaEventLogging
+            boolean disableMetaEventLogging,
+            boolean dropSpansOnFailure
     ) {
         this.accessToken = accessToken;
         this.serviceVersion = serviceVersion;
@@ -184,6 +187,7 @@ public final class Options {
         this.grpcRoundRobin = grpcRoundRobin;
         this.okhttpDns = okhttpDns;
         this.disableMetaEventLogging = disableMetaEventLogging;
+        this.dropSpansOnFailure = dropSpansOnFailure;
     }
 
     long getGuid() {
@@ -219,6 +223,7 @@ public final class Options {
         private String grpcCollectorTarget;
         private boolean grpcRoundRobin = false;
         private OkHttpDns okhttpDns;
+        private boolean dropSpansOnFailure = true;
 
         public OptionsBuilder() {
         }
@@ -247,6 +252,7 @@ public final class Options {
             this.grpcCollectorTarget = options.grpcCollectorTarget;
             this.grpcRoundRobin = options.grpcRoundRobin;
             this.okhttpDns = options.okhttpDns;
+            this.dropSpansOnFailure = options.dropSpansOnFailure;
         }
 
         private static boolean getEnvMetricsDisabled() {
@@ -255,6 +261,19 @@ public final class Options {
                 return "false".equals(metricEnabled);
             }
             return LightStepConstants.Metrics.DEFAULT_DISABLE_METRICS;
+        }
+
+        /**
+         * Instructs the Tracer to either to drop Spans for failed requests
+         * or else do a best effort to keep them in the current buffer.
+         *
+         * Defaults to true.
+         *
+         * @param dropSpansOnFailure whether the tracer should drop spans for failed requests.
+         */
+        public OptionsBuilder withDropSpansOnFailure(boolean dropSpansOnFailure) {
+          this.dropSpansOnFailure = dropSpansOnFailure;
+          return this;
         }
 
         /**
@@ -606,7 +625,8 @@ public final class Options {
                     grpcCollectorTarget,
                     grpcRoundRobin,
                     okhttpDns,
-                    disableMetaEventLogging
+                    disableMetaEventLogging,
+                    dropSpansOnFailure
             );
         }
 

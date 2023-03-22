@@ -77,8 +77,8 @@ class HttpCollectorClient extends CollectorClient {
         try {
             if (!response.isSuccessful()) {
                 this.tracer.error(String.format(
-                        "Collector returned non-successful http code %d",
-                        response.code()
+                        "Collector returned non-successful http code %d, message: %s",
+                        response.code(), response.message()
                 ));
                 return null;
             }

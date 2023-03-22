@@ -131,6 +131,7 @@ public abstract class AbstractTracer implements Tracer {
     boolean firstReportHasRun;
     boolean disableMetaEventLogging;
     boolean metaEventLoggingEnabled;
+    boolean dropSpansOnFailure;
 
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
@@ -209,6 +210,8 @@ public abstract class AbstractTracer implements Tracer {
         firstReportHasRun = false;
         metaEventLoggingEnabled = false;
         disableMetaEventLogging = options.disableMetaEventLogging;
+
+        dropSpansOnFailure = options.dropSpansOnFailure;
     }
 
     /**
@@ -290,7 +293,7 @@ public abstract class AbstractTracer implements Tracer {
      */
     private class ReportingLoop implements Runnable {
         // Controls how often the reporting loop itself checks if the status.
-        private static final int POLL_INTERVAL_MILLIS = 40;
+        private static final int MIN_REPORTING_PERIOD_MILLIS = 500;
 
         private static final int THREAD_TIMEOUT_MILLIS = 2000;
 
@@ -347,7 +350,7 @@ public abstract class AbstractTracer implements Tracer {
                     doStopReporting();
                 } else {
                     try {
-                        Thread.sleep(POLL_INTERVAL_MILLIS);
+                        Thread.sleep(MIN_REPORTING_PERIOD_MILLIS);
                     } catch (InterruptedException e) {
                         warn("Exception trying to sleep in reporting thread");
                         Thread.currentThread().interrupt();
@@ -567,26 +570,28 @@ public abstract class AbstractTracer implements Tracer {
      */
     private ReportResult sendReportWorker(boolean explicitRequest) {
         // Data to be sent.
-        ArrayList<Span> spans;
+        ArrayList<Span> reportedSpans;
 
         synchronized (mutex) {
             if (clockState.isReady() || explicitRequest) {
                 // Copy the reference to the spans and make a new array for other spans.
-                spans = this.spans;
+                reportedSpans = this.spans;
                 this.spans = new ArrayList<>(maxBufferedSpans);
-                debug(String.format("Sending report, %d spans", spans.size()));
+                debug(String.format("Sending report, %d spans", reportedSpans.size()));
             } else {
                 // Otherwise, if the clock state is not ready, we'll send an empty
                 // report.
                 debug("Sending empty report to prime clock state");
-                spans = new ArrayList<>();
+                reportedSpans = new ArrayList<>();
             }
         }
+
+        int droppedSpansCount = clientMetrics.getSpansDropped();
 
         ReportRequest request = ReportRequest.newBuilder()
                 .setReporter(reporter)
                 .setAuth(auth)
-                .addAllSpans(spans)
+                .addAllSpans(reportedSpans)
                 .setTimestampOffsetMicros(clockState.offsetMicros())
                 .setInternalMetrics(clientMetrics.toInternalMetricsAndReset())
                 .build();
@@ -599,16 +604,25 @@ public abstract class AbstractTracer implements Tracer {
             response = client.report(request);
         }
 
-        if (response == null) {
-            return ReportResult.Error(spans.size());
-        }
+        // Discard the report if there was no response or the response included errors.
+        if (response == null || !response.getErrorsList().isEmpty()) {
 
-        if (!response.getErrorsList().isEmpty()) {
+          if (response != null) {
             List<String> errs = response.getErrorsList();
             for (String err : errs) {
                 this.error("Collector response contained error: " + err);
             }
-            return ReportResult.Error(spans.size());
+          }
+
+          if (dropSpansOnFailure || reportedSpans.size() == 0) {
+            return ReportResult.Error(droppedSpansCount + reportedSpans.size());
+          }
+
+          // Do a best effort to restore spans from the failed report, up to maxBufferedSpans.
+          synchronized (mutex) {
+            int restoredSpans = mergeSpans(this.spans, reportedSpans, maxBufferedSpans);
+            return ReportResult.Error(droppedSpansCount + reportedSpans.size() - restoredSpans);
+          }
         }
 
         if (response.hasReceiveTimestamp() && response.hasTransmitTimestamp()) {
@@ -637,9 +651,33 @@ public abstract class AbstractTracer implements Tracer {
             }
         }
 
-        debug(String.format("Report sent successfully (%d spans)", spans.size()));
+        debug(String.format("Report sent successfully (%d spans)", reportedSpans.size()));
 
         return ReportResult.Success();
+    }
+
+    /**
+     * Merges spans `fromList` into `targetList`, filling `targetList` up to `maxSpanCount`.
+     *
+     * @param targetList the list where spans will be merged to.
+     * @param fromList the list where spans will be merged from.
+     * @param maxSpanCount maximum count `targetList` will have after this operation.
+     *
+     * Returns the count of actual spans that were merged into `targetList`.
+     */
+    int mergeSpans(ArrayList<Span> targetList, ArrayList<Span> fromList, int maxSpanCount) {
+        int available = maxSpanCount - targetList.size();
+        if (available <= 0) {
+          warn("Buffer is full, dropping " + fromList.size() + " spans.");
+          return 0;
+        }
+
+        /* Note: Somewhat arbitrarily dropping the spans that won't
+         * fit; could be more principled here to avoid bias. */
+        int restoredCount = Math.min(available, fromList.size());
+        targetList.addAll(fromList.subList(0, restoredCount));
+        warn("About to restore " + restoredCount + " spans out of " + fromList.size() + " from a failed report");
+        return restoredCount;
     }
 
     /**
