@@ -586,6 +586,8 @@ public abstract class AbstractTracer implements Tracer {
             }
         }
 
+        int droppedSpansCount = clientMetrics.getSpansDropped();
+
         ReportRequest request = ReportRequest.newBuilder()
                 .setReporter(reporter)
                 .setAuth(auth)
@@ -613,12 +615,13 @@ public abstract class AbstractTracer implements Tracer {
           }
 
           if (dropSpansOnFailure || reportedSpans.size() == 0) {
-            return ReportResult.Error(reportedSpans.size());
+            return ReportResult.Error(droppedSpansCount + reportedSpans.size());
           }
 
+          // Do a best effort to restore spans from the failed report, up to maxBufferedSpans.
           synchronized (mutex) {
-            int droppedSpansCount = reportedSpans.size() - mergeSpans(this.spans, reportedSpans, maxBufferedSpans);
-            return ReportResult.Error(droppedSpansCount);
+            int restoredSpans = mergeSpans(this.spans, reportedSpans, maxBufferedSpans);
+            return ReportResult.Error(droppedSpansCount + reportedSpans.size() - restoredSpans);
           }
         }
 

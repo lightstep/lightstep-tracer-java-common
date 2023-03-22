@@ -4,13 +4,13 @@ import com.lightstep.tracer.grpc.InternalMetrics;
 import com.lightstep.tracer.grpc.MetricsSample;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Tracks client metrics for internal purposes.
  */
 class ClientMetrics {
-    private final AtomicLong spansDropped = new AtomicLong(0);
+    private final AtomicInteger spansDropped = new AtomicInteger(0);
 
     void addSpansDropped(int size) {
         if (size != 0) {
@@ -18,7 +18,7 @@ class ClientMetrics {
         }
     }
 
-    long getSpansDropped() {
+    int getSpansDropped() {
         return spansDropped.get();
     }
 
@@ -31,7 +31,7 @@ class ClientMetrics {
                 ).build();
     }
 
-    private long getAndResetSpansDropped() {
+    private int getAndResetSpansDropped() {
         return spansDropped.getAndSet(0);
     }
 }
