@@ -131,6 +131,7 @@ public abstract class AbstractTracer implements Tracer {
     boolean firstReportHasRun;
     boolean disableMetaEventLogging;
     boolean metaEventLoggingEnabled;
+    boolean dropSpansOnFailure;
 
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
@@ -209,6 +210,8 @@ public abstract class AbstractTracer implements Tracer {
         firstReportHasRun = false;
         metaEventLoggingEnabled = false;
         disableMetaEventLogging = options.disableMetaEventLogging;
+
+        dropSpansOnFailure = options.dropSpansOnFailure;
     }
 
     /**
@@ -609,7 +612,7 @@ public abstract class AbstractTracer implements Tracer {
             }
           }
 
-          if (reportedSpans.size() == 0) {
+          if (dropSpansOnFailure || reportedSpans.size() == 0) {
             return ReportResult.Error(reportedSpans.size());
           }
 
