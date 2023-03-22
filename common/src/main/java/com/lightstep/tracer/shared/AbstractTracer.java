@@ -656,25 +656,27 @@ public abstract class AbstractTracer implements Tracer {
         return ReportResult.Success();
     }
 
-    static int mergeSpans(ArrayList<Span> targetList, ArrayList<Span> fromList, int maxSpanCount) {
+    /**
+     * Merges spans `fromList` into `targetList`, filling `targetList` up to `maxSpanCount`.
+     *
+     * @param targetList the list where spans will be merged to.
+     * @param fromList the list where spans will be merged from.
+     * @param maxSpanCount maximum count `targetList` will have after this operation.
+     *
+     * Returns the count of actual spans that were merged into `targetList`.
+     */
+    int mergeSpans(ArrayList<Span> targetList, ArrayList<Span> fromList, int maxSpanCount) {
         int available = maxSpanCount - targetList.size();
         if (available <= 0) {
-          System.out.println("-- mergeSpans: not available --");
-          System.out.println(" maxBufferedSpans = " + maxSpanCount);
-          System.out.println(" current buffer size = " + targetList.size());
-          System.out.println(" to-restore buffer size = " + fromList.size());
-          System.out.println("----");
+          warn("Buffer is full, dropping " + fromList.size() + " spans.");
           return 0;
         }
 
+        /* Note: Somewhat arbitrarily dropping the spans that won't
+         * fit; could be more principled here to avoid bias. */
         int restoredCount = Math.min(available, fromList.size());
-        System.out.println("-- mergeSpans: restoring --");
-        System.out.println(" maxBufferedSpans = " + maxSpanCount);
-        System.out.println(" current buffer size = " + targetList.size());
-        System.out.println(" to-restore buffer size = " + fromList.size());
-        System.out.println(" restored count = " + restoredCount);
         targetList.addAll(fromList.subList(0, restoredCount));
-        System.out.println(" current buffer size (updated) = " + targetList.size());
+        warn("About to restore " + restoredCount + " spans out of " + fromList.size() + " from a failed report");
         return restoredCount;
     }
 
