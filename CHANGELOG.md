@@ -1,5 +1,9 @@
 <a name="Pending Release"></a>
-## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.3...master)
+## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.31.0...master)
+
+<a name="0.31.0"></a>
+## [0.31.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.3...0.31.0)
+* Implement retry logic upon failed requests.
 
 <a name="0.30.3"></a>
 ## [0.30.3](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.2...0.30.3)
