@@ -141,6 +141,7 @@ public final class Options {
     final long deadlineMillis;
 
     final boolean dropSpansOnFailure;
+    final int resetSpansOnConsecutiveFailures;
 
     private Options(
             String accessToken,
@@ -164,7 +165,8 @@ public final class Options {
             boolean grpcRoundRobin,
             OkHttpDns okhttpDns,
             boolean disableMetaEventLogging,
-            boolean dropSpansOnFailure
+            boolean dropSpansOnFailure,
+            int resetSpansOnConsecutiveFailures
     ) {
         this.accessToken = accessToken;
         this.serviceVersion = serviceVersion;
@@ -188,6 +190,7 @@ public final class Options {
         this.okhttpDns = okhttpDns;
         this.disableMetaEventLogging = disableMetaEventLogging;
         this.dropSpansOnFailure = dropSpansOnFailure;
+        this.resetSpansOnConsecutiveFailures = resetSpansOnConsecutiveFailures;
     }
 
     long getGuid() {
@@ -224,6 +227,7 @@ public final class Options {
         private boolean grpcRoundRobin = false;
         private OkHttpDns okhttpDns;
         private boolean dropSpansOnFailure = true;
+        private int resetSpansOnConsecutiveFailures = -1;
 
         public OptionsBuilder() {
         }
@@ -253,6 +257,7 @@ public final class Options {
             this.grpcRoundRobin = options.grpcRoundRobin;
             this.okhttpDns = options.okhttpDns;
             this.dropSpansOnFailure = options.dropSpansOnFailure;
+            this.resetSpansOnConsecutiveFailures = options.resetSpansOnConsecutiveFailures;
         }
 
         private static boolean getEnvMetricsDisabled() {
@@ -273,6 +278,20 @@ public final class Options {
          */
         public OptionsBuilder withDropSpansOnFailure(boolean dropSpansOnFailure) {
           this.dropSpansOnFailure = dropSpansOnFailure;
+          return this;
+        }
+
+        /**
+         * Instructs the Tracer to reset the span buffer after n-number of consecutive
+         * failures retryng unsuccesful requests. This is done to avoid memory/cpu pressure
+         * on excessive consecutive errors.
+         *
+         * Defaults to -1, which is interpreted as infinite.
+         *
+         * @param resetSpansOnConsecutiveFailures number of failed consecutuve requests before span is reset.
+         */
+        public OptionsBuilder withResetSpansOnConsecutiveFailures(int resetSpansOnConsecutiveFailures) {
+          this.resetSpansOnConsecutiveFailures = resetSpansOnConsecutiveFailures;
           return this;
         }
 
@@ -626,7 +645,8 @@ public final class Options {
                     grpcRoundRobin,
                     okhttpDns,
                     disableMetaEventLogging,
-                    dropSpansOnFailure
+                    dropSpansOnFailure,
+                    resetSpansOnConsecutiveFailures
             );
         }
 

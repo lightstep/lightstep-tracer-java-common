@@ -132,6 +132,7 @@ public abstract class AbstractTracer implements Tracer {
     boolean disableMetaEventLogging;
     boolean metaEventLoggingEnabled;
     boolean dropSpansOnFailure;
+    final int resetSpansOnConsecutiveFailures;
 
     public AbstractTracer(Options options) {
         scopeManager = options.scopeManager;
@@ -212,6 +213,7 @@ public abstract class AbstractTracer implements Tracer {
         disableMetaEventLogging = options.disableMetaEventLogging;
 
         dropSpansOnFailure = options.dropSpansOnFailure;
+        resetSpansOnConsecutiveFailures = options.resetSpansOnConsecutiveFailures;
     }
 
     /**
@@ -349,6 +351,11 @@ public abstract class AbstractTracer implements Tracer {
                         lastSpanAgeMillis > THREAD_TIMEOUT_MILLIS) {
                     doStopReporting();
                 } else {
+                    if (resetSpansOnConsecutiveFailures > -1 && consecutiveFailures > resetSpansOnConsecutiveFailures) {
+                      warn("Max consecutive failures reached, dropping buffer with size " + resetSpans());
+                      consecutiveFailures = 0;
+                    }
+
                     try {
                         Thread.sleep(MIN_REPORTING_PERIOD_MILLIS);
                     } catch (InterruptedException e) {
@@ -678,6 +685,21 @@ public abstract class AbstractTracer implements Tracer {
         targetList.addAll(fromList.subList(0, restoredCount));
         warn("About to restore " + restoredCount + " spans out of " + fromList.size() + " from a failed report");
         return restoredCount;
+    }
+
+    /**
+     * Resets the current span buffer, updating the dropped span count metric.
+     *
+     * Returns the count of spans that were dropped due to resetting the buffer.
+     */
+    int resetSpans() {
+      int droppedSpanCount;
+      synchronized (mutex) {
+        droppedSpanCount = spans.size();
+        spans.clear();
+      }
+      clientMetrics.addSpansDropped(droppedSpanCount);
+      return droppedSpanCount;
     }
 
     /**
