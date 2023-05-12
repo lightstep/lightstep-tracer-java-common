@@ -1,5 +1,6 @@
 <a name="Pending Release"></a>
 ## [Pending Release](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.31.0...master)
+* Allow span buffer to be reset after n-number of consecutive retries (relax cpu/memory pressure).
 
 <a name="0.31.0"></a>
 ## [0.31.0](https://github.com/lightstep/lightstep-tracer-java-common/compare/0.30.3...0.31.0)
