@@ -46,16 +46,20 @@ class GrpcCollectorClient extends CollectorClient {
    */
   synchronized ReportResponse report(ReportRequest request) {
     try {
+      tracer.info(String.format("Sending report GRPC: %s spans", request.getSpansCount()));
       ReportResponse response = blockingStub.
               withDeadlineAfter(deadlineMillis, TimeUnit.MILLISECONDS).
               withInterceptors(new GrpcClientInterceptor(request.getAuth().getAccessToken())).
               report(request);
 
+      tracer.info(String.format("Report sent GRPC: %s errors, %s infos, %s errors, %s infos", response.getErrorsCount(), response.getInfosCount(), response.getErrorsList(), response.getInfosList()));
       return response;
     } catch (StatusRuntimeException e) {
       tracer.error("Status runtime exception (likely malformed spans): ", e);
+      e.printStackTrace();
     } catch (Exception e) {
       tracer.error("Exception sending report to collector: ", e);
+      e.printStackTrace();
     }
 
     return null;
