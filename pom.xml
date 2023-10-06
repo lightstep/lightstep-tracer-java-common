@@ -59,6 +59,7 @@
         <module>common</module>
         <module>example</module>
         <module>bundle-test</module>
+        <module>shadow</module>
     </modules>
 
     <profiles>
