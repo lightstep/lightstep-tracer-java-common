@@ -15,7 +15,9 @@ NOTE: To publish, see the [Release documentation](RELEASE.md).
 
 ```
 Makefile                    # Top-level Makefile to encapsulate tool-specifics
-common/                     # Shared source code for JRE and Android    
+common/                     # Shared source code for JRE and Android
+okhttp/                     # protobuf over http transport
+grpc/                       # grpc transport
 ```
 
 ## Formatting
@@ -31,17 +33,17 @@ and it must be used via either the standard Java or the Android layers. See more
 
 Three artifacts are produced here:
 
-* com.lightstep.tracer:java-common: Core Tracer functionality.
-* com.lightstep.tracer:tracer-okhttp: Transport layer for protobuf over http.
-* com.lightstep.tracer:tracer-grpc: Transport layer for gRPC.
+* **com.lightstep.tracer:java-common**: Core Tracer functionality.
+* **com.lightstep.tracer:tracer-okhttp**: Transport layer for protobuf over http.
+* **com.lightstep.tracer:tracer-grpc**: Transport layer for gRPC.
 
 Core Tracer functionality and ONE transport layer needs to be imported when
 performing actual tracing.
 
 The following client tracers use the artifacts mentioned above:
 
-* com.lightstep.tracer:lightstep-tracer-java: [Standard Java Tracer](https://github.com/lightstep/lightstep-tracer-java).
-* com.lightstep.tracer:lightstep-tracer-android: [Android Tracer](https://github.com/lightstep/lightstep-tracer-android).
+* **com.lightstep.tracer:lightstep-tracer-java**: [Standard Java Tracer](https://github.com/lightstep/lightstep-tracer-java).
+* **com.lightstep.tracer:lightstep-tracer-android**: [Android Tracer](https://github.com/lightstep/lightstep-tracer-android).
 
 Examples of imports are then:
 
